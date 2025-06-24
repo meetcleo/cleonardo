@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 
-import { CropType, PhotographyConfig } from '../src/modules/shared/components/Photography/helpers/types';
+import { CropType, PhotographyConfig } from '../packages/photography/types/types';
 
 // Promisify fs functions
 const readdir = promisify(fs.readdir);
@@ -11,8 +11,8 @@ const mkdir = promisify(fs.mkdir);
 const access = promisify(fs.access);
 
 // Paths configuration
-const RAW_IMAGES_DIR = './assets/photography/raw';
-const CONFIG_DIR = './src/modules/shared/components/Photography/config';
+const RAW_IMAGES_DIR = './packages/photography/assets/raw';
+const CONFIG_DIR = './packages/photography/config';
 const DEFAULT_CROP_TYPES = [CropType.PORTRAIT_LARGE];
 
 function toCamelCase(filename: string): string {
@@ -55,7 +55,7 @@ async function createDefaultConfig(baseName: string): Promise<void> {
     crops: DEFAULT_CROP_TYPES,
   };
 
-  const defaultConfigContent = `import { CropType, PhotographyConfig } from "../helpers/types";
+  const defaultConfigContent = `import { CropType, PhotographyConfig } from '../types/types';
 
 const config: PhotographyConfig = {
   crops: [${defaultConfig.crops.map((crop) => `CropType.${crop.toUpperCase()}`).join(', ')}],

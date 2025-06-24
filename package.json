@@ -20,7 +20,8 @@
     "husky": "^9.1.7",
     "prettier": "^3.6.0",
     "tsx": "^4.19.3",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "sharp": "^0.34.1"
   },
   "dependencies": {}
 }

@@ -2,11 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-import appData from '../app.json';
-import configsRecord from '../src/modules/shared/components/Photography/config';
-import { cropSpecs, CropType, PhotographyConfig } from '../src/modules/shared/components/Photography/helpers/types';
+import configsRecord from '../packages/photography/config';
+import { cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
 
-const appVersion = appData?.expo?.runtimeVersion || 'unknown';
+const appVersion = 'unknown';
 
 type ConfigMap = Record<string, PhotographyConfig>;
 const configs: ConfigMap = configsRecord;
@@ -108,7 +107,7 @@ export type PhotosWithLandscapeLargeCrop = PhotoCropAvailability[CropType.LANDSC
 
   // Generate the photos mapping
   let photoMapDefinition = 'export const Photos: PhotographyMap = {\n';
-  const pathName = '@Assets/photography/generated';
+  const pathName = './packages/photography/assets/generated';
 
   uniqueBaseNames.forEach((baseName) => {
     const enumKey = toEnumIdentifier(baseName);
@@ -293,16 +292,15 @@ async function processImage(file: string, inputDir: string, outputDir: string, p
 
 // Main function to process images
 async function processImages() {
-  const inputDir = './assets/photography/raw';
-  const outputDir = './assets/photography/generated';
+  const inputDir = './packages/photography/assets/raw';
+  const outputDir = './packages/photography/assets/generated';
   const processedBaseNames = new Map<string, CropType[]>();
 
   // Create output directory if it doesn't exist
   await mkdir(outputDir, { recursive: true });
 
   // Create directory for TypeScript files
-  const tsDir = './src/modules/shared/components/Photography';
-  await mkdir(path.join(tsDir, 'helpers'), { recursive: true });
+  const tsDir = './packages/photography/';
 
   // Get list of files in input directory
   const files = await readdir(inputDir);
@@ -320,8 +318,8 @@ async function processImages() {
 
   // Generate TypeScript definitions with crop availability
   const tsDefinitions = generateTypesAndPhotos(processedBaseNames);
-  await writeFile(path.join(tsDir, 'helpers/photographyMap.ts'), tsDefinitions);
-  console.log(`Generated TypeScript definitions in ${tsDir}/helpers/photographyMap.ts`);
+  await writeFile(path.join(tsDir, 'types/photographyMap.ts'), tsDefinitions);
+  console.log(`Generated TypeScript definitions in ${tsDir}/types/photographyMap.ts`);
 
   console.log('Image processing complete!');
 }
