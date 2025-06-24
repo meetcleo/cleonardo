@@ -1,0 +1,26 @@
+{
+  "name": "Cleonardo",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "lint": "eslint ./packages",
+    "generate-image-config": "tsx scripts/generate-image-config.ts",
+    "generate-images": "tsx scripts/generate-images.ts"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.36.0",
+    "typescript-eslint": "^8.35.0",
+    "dotenv": "^8.0.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.0",
+    "tsx": "^4.19.3",
+    "typescript": "5.5.4"
+  },
+  "dependencies": {}
+}
