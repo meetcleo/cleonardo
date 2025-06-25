@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "lib": ["es2019", "es6"],
+    "module": "es2015",
+    "noErrorTruncation": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "strict": true,
+    "typeRoots": ["./node_modules/@types"],
+    "useUnknownInCatchVariables": false,
+    "moduleResolution": "bundler"
+  },
+  "include": ["packages"],
+  "exclude": ["node_modules"]
+}
