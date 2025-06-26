@@ -1,5 +1,6 @@
 export enum CropType {
   PORTRAIT_LARGE = 'PORTRAIT_LARGE',
+  PORTRAIT_MEDIUM = 'PORTRAIT_MEDIUM',
   PORTRAIT_SMALL = 'PORTRAIT_SMALL',
   LANDSCAPE_LARGE = 'LANDSCAPE_LARGE',
 }
@@ -45,6 +46,11 @@ export const cropSpecs: Record<CropType, { width: number; height: number; crop: 
   [CropType.PORTRAIT_LARGE]: {
     width: 375,
     height: 812,
+    crop: 'cover',
+  },
+  [CropType.PORTRAIT_MEDIUM]: {
+    width: 360,
+    height: 500,
     crop: 'cover',
   },
   [CropType.PORTRAIT_SMALL]: {

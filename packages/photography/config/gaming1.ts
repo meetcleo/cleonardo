@@ -5,12 +5,12 @@ const config: PhotographyConfig = {
   focalPoint: {
     originalImage: {
       dimensions: {
-        width: 4039,
-        height: 4154,
+        width: 7542,
+        height: 8192,
       },
       focalPoint: {
-        x: 2019.5,
-        y: 2077,
+        x: 3771,
+        y: 4096,
         normalizedX: 0.5,
         normalizedY: 0.5,
       },
@@ -19,9 +19,9 @@ const config: PhotographyConfig = {
       PORTRAIT_LARGE: {
         extractParams: {
           top: 0,
-          left: 1060,
-          width: 1918,
-          height: 4154,
+          left: 1879,
+          width: 3783,
+          height: 8192,
         },
         targetDimensions: {
           width: 375,
@@ -31,29 +31,42 @@ const config: PhotographyConfig = {
       },
       PORTRAIT_SMALL: {
         extractParams: {
-          top: 1140,
-          left: 1688,
-          width: 1021,
-          height: 1385,
+          top: 0,
+          left: 752,
+          width: 6038,
+          height: 8192,
         },
         targetDimensions: {
           width: 143,
           height: 194,
         },
-        zoom: 3,
+        zoom: 1,
       },
       LANDSCAPE_LARGE: {
         extractParams: {
-          top: 1311,
-          left: 1224,
-          width: 2020,
-          height: 1136,
+          top: 1626,
+          left: 0,
+          width: 7542,
+          height: 4242,
         },
         targetDimensions: {
           width: 400,
           height: 225,
         },
-        zoom: 2,
+        zoom: 1,
+      },
+      PORTRAIT_MEDIUM: {
+        extractParams: {
+          top: 0,
+          left: 822,
+          width: 5898,
+          height: 8192,
+        },
+        targetDimensions: {
+          width: 360,
+          height: 500,
+        },
+        zoom: 1,
       },
     },
   },
