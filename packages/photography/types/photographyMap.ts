@@ -162,11 +162,98 @@ export const photoCropAvailability = {
     PhotographyName.POSITIVE9
   ],
   [CropType.PORTRAIT_SMALL]: [
+    PhotographyName.BRANDMOMENT10,
+    PhotographyName.BRANDMOMENT9,
+    PhotographyName.CARDRENDER1,
+    PhotographyName.CARDRENDER2,
     PhotographyName.GENERAL1,
-    PhotographyName.POSITIVE4
+    PhotographyName.GENERAL10,
+    PhotographyName.GENERAL12,
+    PhotographyName.GENERAL22,
+    PhotographyName.GENERAL3,
+    PhotographyName.PLACEHOLDER,
+    PhotographyName.POSITIVE1
   ],
   [CropType.LANDSCAPE_LARGE]: [
-    PhotographyName.BRANDMOMENT13
+    PhotographyName.BRANDMOMENT1,
+    PhotographyName.BRANDMOMENT13,
+    PhotographyName.BRANDMOMENT3,
+    PhotographyName.BRANDMOMENT5,
+    PhotographyName.CARDRENDER1,
+    PhotographyName.CARDRENDER2,
+    PhotographyName.GENERAL1,
+    PhotographyName.GENERAL2,
+    PhotographyName.GENERAL6,
+    PhotographyName.GENERAL8,
+    PhotographyName.GENERAL9,
+    PhotographyName.PLACEHOLDER,
+    PhotographyName.POSITIVE1
+  ],
+  [CropType.PORTRAIT_MEDIUM]: [
+    PhotographyName.BRANDMOMENT1,
+    PhotographyName.BRANDMOMENT10,
+    PhotographyName.BRANDMOMENT11,
+    PhotographyName.BRANDMOMENT12,
+    PhotographyName.BRANDMOMENT13,
+    PhotographyName.BRANDMOMENT2,
+    PhotographyName.BRANDMOMENT3,
+    PhotographyName.BRANDMOMENT4,
+    PhotographyName.BRANDMOMENT5,
+    PhotographyName.BRANDMOMENT6,
+    PhotographyName.BRANDMOMENT7,
+    PhotographyName.BRANDMOMENT8,
+    PhotographyName.BRANDMOMENT9,
+    PhotographyName.CARDRENDER1,
+    PhotographyName.CARDRENDER2,
+    PhotographyName.CARDRENDER3,
+    PhotographyName.GENERAL1,
+    PhotographyName.GENERAL10,
+    PhotographyName.GENERAL11,
+    PhotographyName.GENERAL12,
+    PhotographyName.GENERAL13,
+    PhotographyName.GENERAL14,
+    PhotographyName.GENERAL15,
+    PhotographyName.GENERAL16,
+    PhotographyName.GENERAL17,
+    PhotographyName.GENERAL18,
+    PhotographyName.GENERAL19,
+    PhotographyName.GENERAL2,
+    PhotographyName.GENERAL20,
+    PhotographyName.GENERAL21,
+    PhotographyName.GENERAL22,
+    PhotographyName.GENERAL23,
+    PhotographyName.GENERAL24,
+    PhotographyName.GENERAL25,
+    PhotographyName.GENERAL26,
+    PhotographyName.GENERAL27,
+    PhotographyName.GENERAL3,
+    PhotographyName.GENERAL4,
+    PhotographyName.GENERAL5,
+    PhotographyName.GENERAL6,
+    PhotographyName.GENERAL7,
+    PhotographyName.GENERAL8,
+    PhotographyName.GENERAL9,
+    PhotographyName.NEGATIVE1,
+    PhotographyName.NEGATIVE2,
+    PhotographyName.NEGATIVE3,
+    PhotographyName.NEGATIVE4,
+    PhotographyName.NEGATIVE5,
+    PhotographyName.NEGATIVE6,
+    PhotographyName.NEGATIVE7,
+    PhotographyName.NEGATIVE8,
+    PhotographyName.POSITIVE1,
+    PhotographyName.POSITIVE10,
+    PhotographyName.POSITIVE11,
+    PhotographyName.POSITIVE12,
+    PhotographyName.POSITIVE13,
+    PhotographyName.POSITIVE2,
+    PhotographyName.POSITIVE3,
+    PhotographyName.POSITIVE4,
+    PhotographyName.POSITIVE5,
+    PhotographyName.POSITIVE6,
+    PhotographyName.POSITIVE7,
+    PhotographyName.POSITIVE8,
+    PhotographyName.POSITIVE9
   ],
 } as const;
 
@@ -184,6 +271,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment1_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment1_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment1_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -191,6 +280,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment10_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/brandMoment10_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment10_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -198,6 +289,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment11_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment11_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -205,6 +297,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment12_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment12_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -212,6 +305,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment13_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment13_portrait_medium.webp'),
       [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment13_landscape_large.webp'),
     },
     appVersion: "2.6.0",
@@ -220,6 +314,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment2_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment2_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -227,6 +322,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment3_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment3_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment3_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -234,6 +331,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment4_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment4_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -241,6 +339,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment5_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment5_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment5_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -248,6 +348,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment6_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment6_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -255,6 +356,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment7_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment7_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -262,6 +364,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment8_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment8_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -269,6 +372,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment9_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/brandMoment9_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/brandMoment9_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -276,6 +381,9 @@ export const Photos: PhotographyMap = {
   [PhotographyName.CARDRENDER1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender1_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/cardRender1_portrait_small.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/cardRender1_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/cardRender1_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -283,6 +391,9 @@ export const Photos: PhotographyMap = {
   [PhotographyName.CARDRENDER2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender2_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/cardRender2_portrait_small.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/cardRender2_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/cardRender2_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -290,6 +401,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.CARDRENDER3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender3_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/cardRender3_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -297,6 +409,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general1_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/general1_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general1_portrait_medium.webp'),
       [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general1_portrait_small.webp'),
     },
     appVersion: "2.6.0",
@@ -305,6 +419,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general10_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general10_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general10_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -312,6 +428,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general11_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general11_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -319,6 +436,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general12_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general12_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general12_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -326,6 +445,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general13_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general13_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -333,6 +453,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL14]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general14_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general14_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -340,6 +461,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL15]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general15_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general15_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -347,6 +469,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL16]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general16_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general16_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -354,6 +477,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL17]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general17_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general17_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -361,6 +485,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL18]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general18_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general18_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -368,6 +493,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL19]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general19_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general19_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -375,6 +501,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general2_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/general2_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general2_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -382,6 +510,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL20]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general20_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general20_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -389,6 +518,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL21]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general21_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general21_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -396,6 +526,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL22]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general22_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general22_portrait_medium.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general22_portrait_small.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -403,6 +535,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL23]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general23_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general23_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -410,6 +543,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL24]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general24_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general24_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -417,6 +551,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL25]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general25_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general25_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -424,6 +559,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL26]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general26_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general26_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -431,6 +567,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL27]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general27_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general27_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -438,6 +575,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general3_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general3_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general3_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -445,6 +584,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general4_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general4_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -452,6 +592,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general5_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general5_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -459,6 +600,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general6_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/general6_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general6_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -466,6 +609,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general7_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general7_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -473,6 +617,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general8_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/general8_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general8_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -480,6 +626,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general9_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/general9_landscape_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/general9_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -487,6 +635,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative1_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative1_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -494,6 +643,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative2_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative2_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -501,6 +651,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative3_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative3_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -508,6 +659,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative4_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative4_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -515,6 +667,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative5_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative5_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -522,6 +675,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative6_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative6_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -529,6 +683,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative7_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative7_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -536,6 +691,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.NEGATIVE8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative8_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/negative8_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -543,6 +699,8 @@ export const Photos: PhotographyMap = {
   [PhotographyName.PLACEHOLDER]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/placeholder_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/placeholder_portrait_small.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/placeholder_landscape_large.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -550,6 +708,9 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive1_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive1_portrait_medium.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/positive1_portrait_small.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/positive1_landscape_large.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -557,6 +718,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive10_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive10_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -564,6 +726,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive11_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive11_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -571,6 +734,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive12_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive12_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -578,6 +742,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive13_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive13_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -585,6 +750,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive2_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive2_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -592,6 +758,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive3_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive3_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -599,7 +766,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive4_portrait_large.webp'),
-      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/positive4_portrait_small.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive4_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -607,6 +774,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive5_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive5_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -614,6 +782,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive6_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive6_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -621,6 +790,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive7_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive7_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -628,6 +798,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive8_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive8_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
@@ -635,6 +806,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive9_portrait_large.webp'),
+      [CropType.PORTRAIT_MEDIUM]: require('./packages/photography/assets/generated/positive9_portrait_medium.webp'),
     },
     appVersion: "2.6.0",
     isBackendDependant: false,
