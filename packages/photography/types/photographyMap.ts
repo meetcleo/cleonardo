@@ -185,28 +185,28 @@ export const Photos: PhotographyMap = {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment1_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment10_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment11_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment12_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT13]: {
@@ -214,84 +214,84 @@ export const Photos: PhotographyMap = {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment13_portrait_large.webp'),
       [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment13_landscape_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment2_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment3_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment4_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment5_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment6_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment7_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment8_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.BRANDMOMENT9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment9_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.CARDRENDER1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender1_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.CARDRENDER2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender2_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.CARDRENDER3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/cardRender3_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL1]: {
@@ -299,301 +299,301 @@ export const Photos: PhotographyMap = {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general1_portrait_large.webp'),
       [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general1_portrait_small.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general10_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general11_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general12_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general13_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL14]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general14_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL15]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general15_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL16]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general16_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL17]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general17_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL18]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general18_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL19]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general19_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general2_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL20]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general20_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL21]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general21_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL22]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general22_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL23]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general23_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL24]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general24_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL25]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general25_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL26]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general26_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL27]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general27_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general3_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general4_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general5_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general6_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general7_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general8_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.GENERAL9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general9_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative1_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative2_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative3_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative4_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative5_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative6_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative7_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.NEGATIVE8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/negative8_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.PLACEHOLDER]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/placeholder_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive1_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE10]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive10_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE11]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive11_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE12]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive12_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive13_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE2]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive2_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE3]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive3_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE4]: {
@@ -601,42 +601,42 @@ export const Photos: PhotographyMap = {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive4_portrait_large.webp'),
       [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/positive4_portrait_small.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE5]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive5_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE6]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive6_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE7]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive7_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE8]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive8_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
   [PhotographyName.POSITIVE9]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive9_portrait_large.webp'),
     },
-    appVersion: "unknown",
+    appVersion: "2.6.0",
     isBackendDependant: false,
   },
 };

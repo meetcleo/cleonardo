@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import configsRecord from '../packages/photography/config';
 import { cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
 
-const appVersion = 'unknown';
+const appVersion = '2.6.0';
 
 type ConfigMap = Record<string, PhotographyConfig>;
 const configs: ConfigMap = configsRecord;
