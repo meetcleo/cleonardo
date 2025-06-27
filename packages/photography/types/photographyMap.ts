@@ -162,10 +162,11 @@ export const photoCropAvailability = {
     PhotographyName.POSITIVE9
   ],
   [CropType.PORTRAIT_SMALL]: [
-    
+    PhotographyName.GENERAL1,
+    PhotographyName.POSITIVE4
   ],
   [CropType.LANDSCAPE_LARGE]: [
-    
+    PhotographyName.BRANDMOMENT13
   ],
 } as const;
 
@@ -211,6 +212,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.BRANDMOMENT13]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/brandMoment13_portrait_large.webp'),
+      [CropType.LANDSCAPE_LARGE]: require('./packages/photography/assets/generated/brandMoment13_landscape_large.webp'),
     },
     appVersion: "unknown",
     isBackendDependant: false,
@@ -295,6 +297,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.GENERAL1]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/general1_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/general1_portrait_small.webp'),
     },
     appVersion: "unknown",
     isBackendDependant: false,
@@ -596,6 +599,7 @@ export const Photos: PhotographyMap = {
   [PhotographyName.POSITIVE4]: {
     values: {
       [CropType.PORTRAIT_LARGE]: require('./packages/photography/assets/generated/positive4_portrait_large.webp'),
+      [CropType.PORTRAIT_SMALL]: require('./packages/photography/assets/generated/positive4_portrait_small.webp'),
     },
     appVersion: "unknown",
     isBackendDependant: false,
