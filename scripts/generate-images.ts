@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import configsRecord from '../packages/photography/config';
 import { cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
 
-const appVersion = 'unknown';
+const appVersion = '2.7.0';
 
 type ConfigMap = Record<string, PhotographyConfig>;
 const configs: ConfigMap = configsRecord;
@@ -107,7 +107,7 @@ export type PhotosWithLandscapeLargeCrop = PhotoCropAvailability[CropType.LANDSC
 
   // Generate the photos mapping
   let photoMapDefinition = 'export const Photos: PhotographyMap = {\n';
-  const pathName = './packages/photography/assets/generated';
+  const pathName = '@Assets/photography/generated';
 
   uniqueBaseNames.forEach((baseName) => {
     const enumKey = toEnumIdentifier(baseName);
