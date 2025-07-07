@@ -238,6 +238,7 @@ export const photoCropAvailability = {
     PhotographyName.GENERAL1,
     PhotographyName.GENERAL10,
     PhotographyName.GENERAL12,
+    PhotographyName.GENERAL18,
     PhotographyName.GENERAL22,
     PhotographyName.GENERAL3,
     PhotographyName.PLACEHOLDER,
@@ -497,6 +498,7 @@ export const Photos: PhotographyMap = {
     values: {
       [CropType.PORTRAIT_LARGE]: require('@Assets/photography/generated/general18_portrait_large.webp'),
       [CropType.PORTRAIT_MEDIUM]: require('@Assets/photography/generated/general18_portrait_medium.webp'),
+      [CropType.PORTRAIT_SMALL]: require('@Assets/photography/generated/general18_portrait_small.webp'),
     },
     appVersion: "2.7.0",
     isBackendDependant: false,
