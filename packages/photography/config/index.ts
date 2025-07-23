@@ -67,6 +67,9 @@ import positive6Config from './positive6';
 import positive7Config from './positive7';
 import positive8Config from './positive8';
 import positive9Config from './positive9';
+import builderConfig from './builder';
+import proConfig from './pro';
+import plusConfig from './plus';
 
 export const configs = {
   brandMoment1: brandMoment1Config,
@@ -135,6 +138,9 @@ export const configs = {
   positive7: positive7Config,
   positive8: positive8Config,
   positive9: positive9Config,
+  builder: builderConfig,
+  pro: proConfig,
+  plus: plusConfig,
 };
 
 export type ConfigKeys = keyof typeof configs;
