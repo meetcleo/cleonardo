@@ -1,7 +1,6 @@
-import { CropType, PhotographyConfig } from '../types/types';
+import { PhotographyConfig } from '../types/types';
 
 const config: PhotographyConfig = {
-  crops: [CropType.PORTRAIT_LARGE, CropType.LANDSCAPE_LARGE, CropType.PORTRAIT_MEDIUM, CropType.PORTRAIT_SMALL],
   focalPoint: {
     originalImage: {
       dimensions: {

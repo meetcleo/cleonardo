@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 import configsRecord from '../packages/photography/config';
-import { cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
+import { CROP_TYPES, cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
 
 type ConfigMap = Record<string, PhotographyConfig>;
 const configs: ConfigMap = configsRecord;
@@ -134,7 +134,12 @@ async function processCrop(
 }
 
 // Process a single image
-async function processImage(file: string, inputDir: string, outputDir: string, processedBaseNames: Map<string, CropType[]>): Promise<void> {
+async function processImage(
+  file: string,
+  inputDir: string,
+  outputDir: string,
+  processedBaseNames: Map<string, readonly CropType[]>,
+): Promise<void> {
   const inputPath = path.join(inputDir, file);
   const baseName = toCamelCase(file);
 
@@ -149,9 +154,7 @@ async function processImage(file: string, inputDir: string, outputDir: string, p
       return;
     }
 
-    // Save the allowed crop types for this image
-    const allowedCrops = config.crops || [CropType.PORTRAIT_LARGE];
-    processedBaseNames.set(baseName, allowedCrops);
+    processedBaseNames.set(baseName, CROP_TYPES);
 
     // Get image metadata once
     const imageMetadata = await sharp(inputPath).metadata();
@@ -160,7 +163,7 @@ async function processImage(file: string, inputDir: string, outputDir: string, p
 
     // Process each allowed crop type in parallel
     await Promise.all(
-      allowedCrops.map((cropType) => processCrop(inputPath, outputDir, baseName, cropType, config, originalWidth, originalHeight)),
+      CROP_TYPES.map((cropType) => processCrop(inputPath, outputDir, baseName, cropType, config, originalWidth, originalHeight)),
     );
   } catch (error) {
     console.error(`Error processing ${file}:`, error);
@@ -171,7 +174,7 @@ async function processImage(file: string, inputDir: string, outputDir: string, p
 async function processImages() {
   const inputDir = './packages/photography/assets/raw';
   const outputDir = './packages/photography/assets/generated';
-  const processedBaseNames = new Map<string, CropType[]>();
+  const processedBaseNames = new Map<string, readonly CropType[]>();
 
   // Create output directory if it doesn't exist
   await mkdir(outputDir, { recursive: true });
