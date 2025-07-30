@@ -37,6 +37,29 @@ async function ensureConfigDir(): Promise<void> {
   }
 }
 
+async function createDefaultConfig(baseName: string): Promise<void> {
+  const configPath = path.join(CONFIG_DIR, `${baseName}.ts`);
+
+  try {
+    await access(configPath);
+    console.log(`Config already exists: ${configPath}`);
+    return;
+  } catch (error) {
+    // File doesn't exist, create it
+  }
+
+  const defaultConfigContent = `import {  PhotographyConfig } from '../types/types';
+
+  const config: PhotographyConfig = {
+  };
+
+  export default config;
+`;
+
+  await writeFile(configPath, defaultConfigContent);
+  console.log(`Created default config: ${configPath}`);
+}
+
 async function generateBarrelFile(): Promise<void> {
   const configFiles = await readdir(CONFIG_DIR);
   const tsFiles = configFiles.filter((file) => file.endsWith('.ts') && file !== 'index.ts');
@@ -77,6 +100,12 @@ async function generateConfigs(): Promise<void> {
     });
 
     console.log(`Found ${imageFiles.length} images to process for configs`);
+
+    // Create default configs for each image if they don't exist
+    for (const file of imageFiles) {
+      const baseName = toCamelCase(file);
+      await createDefaultConfig(baseName);
+    }
 
     await generateBarrelFile();
 
