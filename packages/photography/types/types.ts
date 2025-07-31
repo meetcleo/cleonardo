@@ -1,16 +1,12 @@
-export enum CropType {
-  PORTRAIT_LARGE = 'PORTRAIT_LARGE',
-  PORTRAIT_MEDIUM = 'PORTRAIT_MEDIUM',
-  PORTRAIT_SMALL = 'PORTRAIT_SMALL',
-  LANDSCAPE_LARGE = 'LANDSCAPE_LARGE',
-}
+export const CROP_TYPES = ['PORTRAIT_LARGE', 'PORTRAIT_MEDIUM', 'PORTRAIT_SMALL', 'LANDSCAPE_LARGE'] as const;
+
+export type CropType = (typeof CROP_TYPES)[number];
 
 export type CropConfig = {
   [key in CropType]: string;
 };
 
 export interface PhotographyConfig {
-  crops: CropType[];
   focalPoint?: {
     originalImage: {
       dimensions: {
@@ -43,22 +39,22 @@ export interface PhotographyConfig {
 }
 
 export const cropSpecs: Record<CropType, { width: number; height: number; crop: string }> = {
-  [CropType.PORTRAIT_LARGE]: {
+  PORTRAIT_LARGE: {
     width: 375,
     height: 812,
     crop: 'cover',
   },
-  [CropType.PORTRAIT_MEDIUM]: {
+  PORTRAIT_MEDIUM: {
     width: 360,
     height: 500,
     crop: 'cover',
   },
-  [CropType.PORTRAIT_SMALL]: {
+  PORTRAIT_SMALL: {
     width: 143,
     height: 194,
     crop: 'cover',
   },
-  [CropType.LANDSCAPE_LARGE]: {
+  LANDSCAPE_LARGE: {
     width: 400,
     height: 225,
     crop: 'cover',

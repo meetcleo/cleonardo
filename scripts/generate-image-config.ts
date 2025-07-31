@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 
-import { CropType, PhotographyConfig } from '../packages/photography/types/types';
-
 // Promisify fs functions
 const readdir = promisify(fs.readdir);
 const writeFile = promisify(fs.writeFile);
@@ -13,7 +11,6 @@ const access = promisify(fs.access);
 // Paths configuration
 const RAW_IMAGES_DIR = './packages/photography/assets/raw';
 const CONFIG_DIR = './packages/photography/config';
-const DEFAULT_CROP_TYPES = [CropType.PORTRAIT_LARGE];
 
 function toCamelCase(filename: string): string {
   // Remove extension and split by common separators
@@ -51,17 +48,12 @@ async function createDefaultConfig(baseName: string): Promise<void> {
     // File doesn't exist, create it
   }
 
-  const defaultConfig: PhotographyConfig = {
-    crops: DEFAULT_CROP_TYPES,
+  const defaultConfigContent = `import {  PhotographyConfig } from '../types/types';
+
+  const config: PhotographyConfig = {
   };
 
-  const defaultConfigContent = `import { CropType, PhotographyConfig } from '../types/types';
-
-const config: PhotographyConfig = {
-  crops: [${defaultConfig.crops.map((crop) => `CropType.${crop.toUpperCase()}`).join(', ')}],
-};
-
-export default config;
+  export default config;
 `;
 
   await writeFile(configPath, defaultConfigContent);
