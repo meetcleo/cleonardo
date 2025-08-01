@@ -70,6 +70,9 @@ import positive7Config from './positive7';
 import positive8Config from './positive8';
 import positive9Config from './positive9';
 import proConfig from './pro';
+import subscription1Config from './subscription1';
+import subscription2Config from './subscription2';
+import subscription3Config from './subscription3';
 
 export const configs = {
   brandMoment1: brandMoment1Config,
@@ -141,7 +144,9 @@ export const configs = {
   positive8: positive8Config,
   positive9: positive9Config,
   pro: proConfig,
-  test: testConfig,
+  subscription1: subscription1Config,
+  subscription2: subscription2Config,
+  subscription3: subscription3Config,
 };
 
 export type ConfigKeys = keyof typeof configs;
