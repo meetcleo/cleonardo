@@ -14,7 +14,6 @@ import brandMoment6Config from './brandMoment6';
 import brandMoment7Config from './brandMoment7';
 import brandMoment8Config from './brandMoment8';
 import brandMoment9Config from './brandMoment9';
-import builderConfig from './builder';
 import cardRender1Config from './cardRender1';
 import cardRender2Config from './cardRender2';
 import cardRender3Config from './cardRender3';
@@ -55,7 +54,6 @@ import negative6Config from './negative6';
 import negative7Config from './negative7';
 import negative8Config from './negative8';
 import placeholderConfig from './placeholder';
-import plusConfig from './plus';
 import positive1Config from './positive1';
 import positive10Config from './positive10';
 import positive11Config from './positive11';
@@ -69,7 +67,6 @@ import positive6Config from './positive6';
 import positive7Config from './positive7';
 import positive8Config from './positive8';
 import positive9Config from './positive9';
-import proConfig from './pro';
 import subscription1Config from './subscription1';
 import subscription2Config from './subscription2';
 import subscription3Config from './subscription3';
@@ -88,7 +85,6 @@ export const configs = {
   brandMoment7: brandMoment7Config,
   brandMoment8: brandMoment8Config,
   brandMoment9: brandMoment9Config,
-  builder: builderConfig,
   cardRender1: cardRender1Config,
   cardRender2: cardRender2Config,
   cardRender3: cardRender3Config,
@@ -129,7 +125,6 @@ export const configs = {
   negative7: negative7Config,
   negative8: negative8Config,
   placeholder: placeholderConfig,
-  plus: plusConfig,
   positive1: positive1Config,
   positive10: positive10Config,
   positive11: positive11Config,
@@ -143,7 +138,6 @@ export const configs = {
   positive7: positive7Config,
   positive8: positive8Config,
   positive9: positive9Config,
-  pro: proConfig,
   subscription1: subscription1Config,
   subscription2: subscription2Config,
   subscription3: subscription3Config,

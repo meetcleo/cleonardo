@@ -18,7 +18,7 @@ const config: PhotographyConfig = {
       PORTRAIT_LARGE: {
         extractParams: {
           top: 690,
-          left: 1406,
+          left: 1394,
           width: 1261,
           height: 2731,
         },
@@ -43,8 +43,8 @@ const config: PhotographyConfig = {
       },
       PORTRAIT_MEDIUM: {
         extractParams: {
-          top: 773,
-          left: 1239,
+          top: 791,
+          left: 1255,
           width: 1552,
           height: 2156,
         },
@@ -56,8 +56,8 @@ const config: PhotographyConfig = {
       },
       LANDSCAPE_LARGE: {
         extractParams: {
-          top: 802,
-          left: 244,
+          top: 780,
+          left: 324,
           width: 3413,
           height: 1920,
         },
