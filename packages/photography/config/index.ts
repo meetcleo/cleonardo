@@ -17,6 +17,9 @@ import brandMoment9Config from './brandMoment9';
 import cardRender1Config from './cardRender1';
 import cardRender2Config from './cardRender2';
 import cardRender3Config from './cardRender3';
+import debt1Config from './debt1';
+import debt2Config from './debt2';
+import debt3Config from './debt3';
 import gaming1Config from './gaming1';
 import general1Config from './general1';
 import general10Config from './general10';
@@ -88,6 +91,9 @@ export const configs = {
   cardRender1: cardRender1Config,
   cardRender2: cardRender2Config,
   cardRender3: cardRender3Config,
+  debt1: debt1Config,
+  debt2: debt2Config,
+  debt3: debt3Config,
   gaming1: gaming1Config,
   general1: general1Config,
   general10: general10Config,
