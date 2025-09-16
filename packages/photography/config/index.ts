@@ -21,6 +21,7 @@ import debt1Config from './debt1';
 import debt2Config from './debt2';
 import debt3Config from './debt3';
 import gaming1Config from './gaming1';
+import gaming2Config from './gaming2';
 import general1Config from './general1';
 import general10Config from './general10';
 import general11Config from './general11';
@@ -95,6 +96,7 @@ export const configs = {
   debt2: debt2Config,
   debt3: debt3Config,
   gaming1: gaming1Config,
+  gaming2: gaming2Config,
   general1: general1Config,
   general10: general10Config,
   general11: general11Config,
