@@ -66,6 +66,7 @@ import positive12Config from './positive12';
 import positive13Config from './positive13';
 import positive2Config from './positive2';
 import positive3Config from './positive3';
+import positive3LandscapeLargeConfig from './positive3LandscapeLarge';
 import positive4Config from './positive4';
 import positive5Config from './positive5';
 import positive6Config from './positive6';
@@ -142,6 +143,7 @@ export const configs = {
   positive13: positive13Config,
   positive2: positive2Config,
   positive3: positive3Config,
+  positive3LandscapeLarge: positive3LandscapeLargeConfig,
   positive4: positive4Config,
   positive5: positive5Config,
   positive6: positive6Config,
