@@ -43,6 +43,7 @@ import general24Config from './general24';
 import general25Config from './general25';
 import general26Config from './general26';
 import general27Config from './general27';
+import general28Config from './general28';
 import general3Config from './general3';
 import general4Config from './general4';
 import general5Config from './general5';
@@ -121,6 +122,7 @@ export const configs = {
   general25: general25Config,
   general26: general26Config,
   general27: general27Config,
+  general28: general28Config,
   general3: general3Config,
   general4: general4Config,
   general5: general5Config,
