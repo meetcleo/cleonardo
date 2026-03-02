@@ -77,6 +77,7 @@ import positive9Config from './positive9';
 import subscription1Config from './subscription1';
 import subscription2Config from './subscription2';
 import subscription3Config from './subscription3';
+import subscription4Config from './subscription4';
 import womanonphonePumpkin4Config from './womanonphonePumpkin4';
 
 export const configs = {
@@ -156,6 +157,7 @@ export const configs = {
   subscription1: subscription1Config,
   subscription2: subscription2Config,
   subscription3: subscription3Config,
+  subscription4: subscription4Config,
   womanonphonePumpkin4: womanonphonePumpkin4Config,
 };
 
