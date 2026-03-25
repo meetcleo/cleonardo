@@ -17,6 +17,7 @@ import brandMoment9Config from './brandMoment9';
 import cardRender1Config from './cardRender1';
 import cardRender2Config from './cardRender2';
 import cardRender3Config from './cardRender3';
+import cleoTaalmonumentShot2Config from './cleoTaalmonumentShot2';
 import debt1Config from './debt1';
 import debt2Config from './debt2';
 import debt3Config from './debt3';
@@ -59,6 +60,7 @@ import negative5Config from './negative5';
 import negative6Config from './negative6';
 import negative7Config from './negative7';
 import negative8Config from './negative8';
+import outdoorGrocery1Config from './outdoorGrocery1';
 import placeholderConfig from './placeholder';
 import positive1Config from './positive1';
 import positive10Config from './positive10';
@@ -78,6 +80,8 @@ import subscription1Config from './subscription1';
 import subscription2Config from './subscription2';
 import subscription3Config from './subscription3';
 import subscription4Config from './subscription4';
+import womanSmilingPhone1Config from './womanSmilingPhone1';
+import womanSmilingPhone2Config from './womanSmilingPhone2';
 import womanonphonePumpkin4Config from './womanonphonePumpkin4';
 
 export const configs = {
@@ -97,6 +101,7 @@ export const configs = {
   cardRender1: cardRender1Config,
   cardRender2: cardRender2Config,
   cardRender3: cardRender3Config,
+  cleoTaalmonumentShot2: cleoTaalmonumentShot2Config,
   debt1: debt1Config,
   debt2: debt2Config,
   debt3: debt3Config,
@@ -139,6 +144,7 @@ export const configs = {
   negative6: negative6Config,
   negative7: negative7Config,
   negative8: negative8Config,
+  outdoorGrocery1: outdoorGrocery1Config,
   placeholder: placeholderConfig,
   positive1: positive1Config,
   positive10: positive10Config,
@@ -158,6 +164,8 @@ export const configs = {
   subscription2: subscription2Config,
   subscription3: subscription3Config,
   subscription4: subscription4Config,
+  womanSmilingPhone1: womanSmilingPhone1Config,
+  womanSmilingPhone2: womanSmilingPhone2Config,
   womanonphonePumpkin4: womanonphonePumpkin4Config,
 };
 
