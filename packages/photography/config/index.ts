@@ -76,6 +76,7 @@ import positive6Config from './positive6';
 import positive7Config from './positive7';
 import positive8Config from './positive8';
 import positive9Config from './positive9';
+import roastModeReceiptFallbackConfig from './roastModeReceiptFallback';
 import subscription1Config from './subscription1';
 import subscription2Config from './subscription2';
 import subscription3Config from './subscription3';
@@ -160,6 +161,7 @@ export const configs = {
   positive7: positive7Config,
   positive8: positive8Config,
   positive9: positive9Config,
+  roastModeReceiptFallback: roastModeReceiptFallbackConfig,
   subscription1: subscription1Config,
   subscription2: subscription2Config,
   subscription3: subscription3Config,
