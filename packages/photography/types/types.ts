@@ -1,4 +1,12 @@
-export const CROP_TYPES = ['PORTRAIT_LARGE', 'PORTRAIT_MEDIUM', 'PORTRAIT_SMALL', 'LANDSCAPE_LARGE', 'LANDSCAPE_RATIO_4_3'] as const;
+export const DEFAULT_CROP_TYPES = [
+  'PORTRAIT_LARGE',
+  'PORTRAIT_MEDIUM',
+  'PORTRAIT_SMALL',
+  'LANDSCAPE_LARGE',
+  'LANDSCAPE_RATIO_4_3',
+] as const;
+
+export const CROP_TYPES = [...DEFAULT_CROP_TYPES, 'SOCIAL_SHARE'] as const;
 
 export type CropType = (typeof CROP_TYPES)[number];
 
@@ -7,6 +15,7 @@ export type CropConfig = {
 };
 
 export interface PhotographyConfig {
+  cropTypes?: readonly CropType[];
   focalPoint?: {
     originalImage: {
       dimensions: {
@@ -62,6 +71,11 @@ export const cropSpecs: Record<CropType, { width: number; height: number; crop: 
   LANDSCAPE_RATIO_4_3: {
     width: 400,
     height: 300,
+    crop: 'cover',
+  },
+  SOCIAL_SHARE: {
+    width: 360,
+    height: 640,
     crop: 'cover',
   },
 };

@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 import configsRecord from '../packages/photography/config';
-import { CROP_TYPES, cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
+import { DEFAULT_CROP_TYPES, cropSpecs, CropType, PhotographyConfig } from '../packages/photography/types/types';
 
 type ConfigMap = Record<string, PhotographyConfig>;
 const configs: ConfigMap = configsRecord;
@@ -154,16 +154,16 @@ async function processImage(
       return;
     }
 
-    processedBaseNames.set(baseName, CROP_TYPES);
+    const cropTypes = config.cropTypes ?? DEFAULT_CROP_TYPES;
+    processedBaseNames.set(baseName, cropTypes);
 
     // Get image metadata once
     const imageMetadata = await sharp(inputPath).metadata();
     const originalWidth = imageMetadata.width || 0;
     const originalHeight = imageMetadata.height || 0;
 
-    // Process each allowed crop type in parallel
     await Promise.all(
-      CROP_TYPES.map((cropType) => processCrop(inputPath, outputDir, baseName, cropType, config, originalWidth, originalHeight)),
+      cropTypes.map((cropType) => processCrop(inputPath, outputDir, baseName, cropType, config, originalWidth, originalHeight)),
     );
   } catch (error) {
     console.error(`Error processing ${file}:`, error);
