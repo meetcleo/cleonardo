@@ -1,0 +1,14 @@
+{
+  "name": "@cleonardo/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Canonical source of truth for Cleo's design tokens (DTCG JSON).",
+  "type": "module",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "transform": "node scripts/transform.mjs",
+    "check": "node scripts/transform.mjs --check"
+  }
+}
