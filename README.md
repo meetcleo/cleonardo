@@ -1,6 +1,12 @@
 # Cleonardo Design System
 
-Welcome to the Cleonardo Design System repository — a centralized source of truth for our visual language and design tokens. This repo provides the foundational building blocks to ensure consistency, scalability, and efficiency across all Cleo platforms.
+Welcome to the Cleonardo Design System repository — a centralized source of truth for our visual language and design tokens (**colour only**, today). This repo provides the foundational building blocks to ensure consistency, scalability, and efficiency across all Cleo platforms.
+
+---
+
+## Design tokens
+
+`packages/tokens/tokens/color/{primitives,semantic}.json` is **the** canonical source of truth for Cleo colour, moved here from `meetcleo/design-tokens` ([COREEXP-321](https://cleo.atlassian.net/browse/COREEXP-321)). See [`packages/tokens/README.md`](./packages/tokens/README.md) for the Figma update runbook and known exceptions.
 
 ---
 
@@ -11,14 +17,15 @@ This monorepo is organized to separate concerns clearly and support long-term gr
 ```
 design-system/
 ├── packages/
-│ ├── tokens/ # Platform-agnostic design tokens (e.g., color, spacing, typography)
-│ ├── react/ # Shared React UI component library (tbc)
-│ ├── icons/ # Unified icon set used across platforms (tbc)
-│ └── figma-plugins/ # Figma integration utilities and plugin-related code (optional)
+│ ├── tokens/ # Platform-agnostic design tokens — colour is live, others planned
+│ ├── photography/ # Photography asset pipeline
+│ ├── react/ # Shared React UI component library (planned)
+│ ├── icons/ # Unified icon set used across platforms (planned)
+│ └── figma-plugins/ # Figma integration utilities and plugin-related code (planned)
 ├── apps/
-│ └── storybook/ # Component documentation and live previews (tbc)
+│ └── storybook/ # Component documentation and live previews (planned)
 ├── scripts/ # Scripts for building, testing, and deploying the system 
-├── .github/ # GitHub workflows and contribution automation
+├── .github/ # GitHub workflows and contribution automation (planned)
 ├── tsconfig.json # Shared TypeScript configuration
 ├── package.json # Root-level dependencies and workspace definitions
 └── README.md # You’re here.
