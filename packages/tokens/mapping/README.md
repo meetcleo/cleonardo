@@ -1,7 +1,7 @@
 # Colour mapping — existing consumers to canonical tokens
 
 [COREEXP-320](https://cleo.atlassian.net/browse/COREEXP-320). Blocks
-[COREEXP-264](https://cleo.atlassian.net/browse/COREEXP-264) (Ruby module API) and
+[COREEXP-264](https://cleo.atlassian.net/browse/COREEXP-264) (the token gem's Ruby API) and
 [COREEXP-265](https://cleo.atlassian.net/browse/COREEXP-265) (token generator).
 
 Before this, nothing recorded which token name replaces which existing colour, so the generator had
@@ -91,9 +91,11 @@ Worth noting the backend already ships the theme **name** to the client rather t
 ## Naming-convention delta, and what aligning would cost
 
 The AC asks not just for the delta but for what a rename sweep would look like if we aligned rather
-than preserved. **Recommendation: still preserve** — constant-path preservation is already scoped
-into COREEXP-265, and the sweep buys nothing the generator needs. But it's affordable, so here's
-the sizing rather than a shrug.
+than preserved. **Recommendation: still preserve.** Per the 2026-08-05 decision on COREEXP-264/265,
+the generated Ruby lives in the gem's own namespace (`CleoDesignTokens`) and `meetcleo` keeps
+`ColorRolesHelper` as a hand-written shim delegating to it — so the existing call sites keep working
+without any rename at all. A sweep is now an optional tidy-up rather than part of adopting tokens.
+It's affordable either way, so here's the sizing rather than a shrug.
 
 **Delta.** Tokens use PascalCase groups, numeric scales, and _spaces_ in leaves (`Credit Score`,
 `Level 0`, `Icon Foreground`). The backend uses `SCREAMING_SNAKE` in nested modules. The app uses
@@ -113,7 +115,7 @@ lists both — it _is_ the delta, in executable form.
 | App     | 77 — 31 importing `colorRoles`, 46 importing `colors` | the ~1472 files using `useGlobalTheme` are **not** touched, because they read role names through the hook rather than importing the constants |
 
 That last row is what makes the sweep cheap, and it's the fact worth keeping: the app's hook
-indirection already absorbs a rename.
+indirection already absorbs a rename, exactly as the backend's shim does.
 
 Space-bearing token leaves are a normalisation hazard for the emitters in COREEXP-265 — flagging,
 not fixing, here.
@@ -245,21 +247,48 @@ Recording these because the alternative is a mapping that _looks_ complete:
 
 ## Notes for downstream tickets
 
-**COREEXP-265 / 327, TypeScript emitter.** The drift is type-level, not only value-level.
-`colors.ts:302` — `CocoaPalette = valueof<Colors[keyof Colors]> | '#000000' | '#FFFEFB'` — hardcodes
-both literals, and `colors.black = '#000000'` against `Monotone.Black = #0E0605`. Adopting token
-values makes that union stale and shifts anything comparing against `colors.black`. Separately,
-`gray` is excluded from `CocoaColors` but included in `CocoaPalette`, so its hexes stay type-legal
-everywhere. This changes emit shape, not just hex.
+**COREEXP-265 / 327, TypeScript emitter and npm package.** The drift is type-level, not only
+value-level. `colors.ts:302` — `CocoaPalette = valueof<Colors[keyof Colors]> | '#000000' | '#FFFEFB'`
+— hardcodes both literals, and `colors.black = '#000000'` against `Monotone.Black = #0E0605`.
+Adopting token values makes that union stale and shifts anything comparing against `colors.black`.
+Separately, `gray` is excluded from `CocoaColors` but included in `CocoaPalette`, so its hexes stay
+type-legal everywhere. This changes emit shape, not just hex.
 
-**COREEXP-265, Ruby emitter.** Must emit Prawn-safe bare hex for the PDF surfaces, or they stay
-hand-maintained. Four incompatible formats exist in the backend today: `#RRGGBB`, `#RRGGBBAA`
-(`screen_theme.rb:33`), bare `RRGGBBAA` (`color_roles_helper.rb:18`), and bare `RRGGBB` for Prawn.
+The app has the same shim option the backend took: `useGlobalTheme` already stands between ~1472
+files and the constants, so the npm package can land behind it without touching call sites.
 
-**COREEXP-264, Ruby module API.** The `null` rows are the surface it must not expose yet.
-`app/models/user_prompt/component/style_props.rb` is where validation could land —
+**COREEXP-265, Ruby emitter.** The gem needs to serve Prawn-safe bare hex for the PDF surfaces, or
+they stay hand-maintained. Four incompatible formats exist in the backend today: `#RRGGBB`,
+`#RRGGBBAA` (`screen_theme.rb:33`), bare `RRGGBBAA` (`color_roles_helper.rb:18`), and bare `RRGGBB`
+for Prawn. Whether that's the emitter's job or a formatting method on the gem's API is a 264
+question, since callers are the ones who need a specific format.
+
+**COREEXP-264, the gem's Ruby API and the `ColorRolesHelper` shim.** Since the 2026-08-05 decision,
+that shim is where old constant names resolve to token names — which makes
+[`backend.json`](./backend.json) the shim's spec, row for row. Three things fall out of it:
+
+- **The 25 mapped rows are the shim's body.** `ColorRolesHelper::Background::LIGHT_ACCENT` delegates
+  to `Base.Extension.Background.AccentLight`, and so on.
+- **The 7 unmapped rows are shim decisions 264 has to make**, because there's no token to delegate
+  to. Keep the literal, raise, or drop the constant? 6 of the 7 have zero call sites, so dropping is
+  live for those; `Border::ACCENT` has one and needs an answer.
+- **The 13 zero-reference constants shouldn't reach the shim at all.** Defining them would carry
+  dead pre-rebrand values across a repo boundary into a versioned interface.
+
+Separately, `app/models/user_prompt/component/style_props.rb` is where value validation could land —
 `background_color`, `border_color` and `shadow` are `nil`-defaulted kwargs passed verbatim to the
 client with no type check, format validation, or allowlist.
+
+**COREEXP-264/265, the theme parameter is modelled on an axis the data doesn't have.** Both tickets
+describe colour "light mode" with dark mode deferred, and 264 sketches `theme: :light`. There is no
+light/dark axis in these tokens: [`../README.md`](../README.md) says the four namespaces are
+"semantic groupings, not display modes", and no leaf carries a mode. What the data actually has is
+the personality axis — and one personality is already dark: `Roast.Core.Background.Primary` is
+`#291210` with `Content.Primary` `#F8F6F2`, inverted against `Base`.
+
+So "light mode" is a mislabel for `Base`, and a `theme:` parameter shaped as `:light | :dark` won't
+have a second value to take while leaving the axis that does vary unaddressable. Worth settling
+before the gem's interface is versioned, since it's the parameter hardest to change later.
 
 **COREEXP-324, alpha and 8-digit hex.** `color_roles_helper.rb:18` and `screen_theme.rb:33` are its
 two concrete cases.
