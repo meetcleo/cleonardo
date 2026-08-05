@@ -81,6 +81,8 @@ It surfaces (as warnings, not failures):
 
 **Nothing consumes this repo yet.** The generator, Ruby module, and other consumer wiring land in follow-up tickets. Don't import these JSON files directly into product code — wait for the generated artefact.
 
+[`mapping/`](./mapping/) records which token name replaces which existing colour in `meetcleo` and `mobile-app` ([COREEXP-320](https://cleo.atlassian.net/browse/COREEXP-320)). It's the input the generator reads instead of re-deriving the mapping, and `yarn tokens:check:mapping` keeps it honest against changes here.
+
 ## Known exceptions
 
 Four semantic tokens in `semantic.json` are hardcoded rather than aliased, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:

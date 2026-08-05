@@ -1,0 +1,70 @@
+{
+  "$comment": "Hand-made decisions the name rules cannot derive. Read by scripts/mapping.mjs; never written by it. Keyed by consumer entry id. `token` overrides the derived target (null means deliberately unmapped), `status` overrides the derived status, `reason` and `recommendation` are prose for the report. check:consumers fails on any entry here that no longer matches a consumer entry, so this file cannot go quietly stale.",
+  "entries": {
+    "colorRoles.border.focused": {
+      "token": "color.semantic.Base.Core.Border.Focused",
+      "reason": "Core.Border.Focused and Extension.Border.Focused both exist; the app's border.focused is the generic one, so it takes the Core token",
+      "recommendation": "adopt the Core token"
+    },
+    "colorRoles.background.dataVisPrimary": {
+      "reason": "the app's six dataVis roles are all brown[100] in the base theme and only diverge under a feature theme; the tokens carry a real Brown ramp",
+      "recommendation": "adopt the token — the app value is a placeholder, not a considered colour"
+    },
+    "colorRoles.background.dataVisSecondary": {
+      "reason": "placeholder in the app's base theme (all six dataVis roles share one value)",
+      "recommendation": "adopt the token"
+    },
+    "colorRoles.background.dataVisTertiary": {
+      "reason": "placeholder in the app's base theme (all six dataVis roles share one value)",
+      "recommendation": "adopt the token"
+    },
+    "colorRoles.background.dataVisQuaternary": {
+      "reason": "placeholder in the app's base theme (all six dataVis roles share one value)",
+      "recommendation": "adopt the token"
+    },
+    "colorRoles.background.dataVisQuinary": {
+      "reason": "placeholder in the app's base theme (all six dataVis roles share one value)",
+      "recommendation": "adopt the token"
+    },
+    "colorRoles.background.dataVisSenary": {
+      "token": null,
+      "reason": "the token ramp stops at Quinary; the app has a sixth role whose base value is the same placeholder as the other five",
+      "recommendation": "drop the role rather than add a primitive — nothing distinguishes it today"
+    },
+    "colors.yellow.50": {
+      "reason": "#FDF0C5 vs Yellow.50 #FAEFC5 — two digits transposed, not a design difference",
+      "recommendation": "realign to the token value"
+    },
+    "colorRoles.content.warningLight": {
+      "reason": "inherits the colors.yellow.50 transposition",
+      "recommendation": "realign to the token value; fixing colors.yellow.50 fixes this row too"
+    },
+    "colorRoles.border.selected": {
+      "reason": "app uses brown[700] #5B3935, the token uses Brown.800 #47201C — one step apart, so this is a real divergence rather than a slip",
+      "recommendation": "realign to the token, but get design to confirm the darker border is intended"
+    },
+    "colorRoles.background.navbar": {
+      "token": null,
+      "reason": "no Base token names a navbar; the app's value is brown[50], identical to background.primary",
+      "recommendation": "realign to Core.Background.Primary rather than add a primitive — the role carries no distinct value"
+    },
+    "colorRoles.content.onColor": {
+      "token": null,
+      "reason": "deprecated in the app, but still live in Button/constants/colors.ts",
+      "recommendation": "drop — but migrate the four Button call sites to content.onColorLight first"
+    },
+    "ColorRolesHelper::Background::LIGHT_NEGATIVE": {
+      "recommendation": "adopt the token — the only pre-rebrand constant whose value survived the rebrand unchanged (#FFC3B6 = Red.100)"
+    },
+    "ColorRolesHelper::Border::ACCENT": {
+      "token": null,
+      "reason": "tokens split accent into AccentLight/Mid/Dark, so there is no Border.Accent to map to",
+      "recommendation": "1 live call site — pick a specific Extension.Border.Accent{Light,Mid,Dark} with design, or delete alongside the other pre-rebrand constants"
+    },
+    "ColorRolesHelper::Background::INVERSE_TRANSPARENT": {
+      "token": null,
+      "reason": "value is 'FFFFFF33' — no leading '#', 8 digits. Zero references.",
+      "recommendation": "delete. Also the concrete case COREEXP-324 (alpha / 8-digit hex) exists for."
+    }
+  }
+}

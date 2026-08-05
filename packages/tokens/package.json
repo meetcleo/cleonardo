@@ -9,6 +9,9 @@
   },
   "scripts": {
     "transform": "node scripts/transform.mjs",
-    "check": "node scripts/transform.mjs --check"
+    "check": "node scripts/transform.mjs --check",
+    "mapping": "node scripts/mapping.mjs",
+    "check:tokens": "node scripts/mapping.mjs --check-tokens",
+    "check:consumers": "node scripts/mapping.mjs --check-consumers"
   }
 }

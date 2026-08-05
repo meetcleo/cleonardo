@@ -10,7 +10,10 @@
     "generate-image-config": "tsx scripts/generate-image-config.ts",
     "generate-images": "tsx scripts/generate-images.ts",
     "tokens:transform": "node packages/tokens/scripts/transform.mjs",
-    "tokens:check": "node packages/tokens/scripts/transform.mjs --check"
+    "tokens:check": "node packages/tokens/scripts/transform.mjs --check",
+    "tokens:mapping": "node packages/tokens/scripts/mapping.mjs",
+    "tokens:check:mapping": "node packages/tokens/scripts/mapping.mjs --check-tokens",
+    "tokens:check:consumers": "node packages/tokens/scripts/mapping.mjs --check-consumers"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.36.0",
