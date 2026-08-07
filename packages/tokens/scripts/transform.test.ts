@@ -13,7 +13,7 @@ import {
   diffFlat,
   buildPrimitives,
   buildSemantic,
-  buildKeyUnion,
+  buildKeyUnions,
   renderTokenKeysFile,
 } from './transform-core.mjs';
 
@@ -239,35 +239,74 @@ describe('buildPrimitives / buildSemantic', () => {
   });
 });
 
-// ---------- key union + collision detection ----------
+// ---------- key unions + collision detection ----------
 
-describe('buildKeyUnion', () => {
-  it('unions primitive and semantic keys, sorted', () => {
-    const prim = { Brown: { '800': { $type: 'color', $value: '#47201C' } } };
-    const sem = { Base: { Primary: { $type: 'color', $value: '#47201C', $ref: 'brown.800' } } };
-    expect(buildKeyUnion(prim, sem)).toEqual(['base.primary', 'brown.800']);
+describe('buildKeyUnions', () => {
+  it('returns a sorted key list per bucket', () => {
+    const prim = {
+      Brown: { '800': { $type: 'color', $value: '#47201C' } },
+      Alpha: { Dark: { '10': { $type: 'color', $value: '#0E06051A' } } },
+    };
+    const sem = {
+      Base: { Primary: { $type: 'color', $value: '#47201C', $ref: 'brown.800' } },
+      Chat: { Primary: { $type: 'color', $value: '#47201C', $ref: 'brown.800' } },
+    };
+    expect(buildKeyUnions(prim, sem)).toEqual({
+      primitives: ['alpha.dark.10', 'brown.800'],
+      semantic: ['base.primary', 'chat.primary'],
+    });
   });
 
-  it('throws on a key that resolves from both trees', () => {
+  it('allows the same key in both buckets — they are separate lookups', () => {
     const prim = { Brown: { '800': { $type: 'color', $value: '#111111' } } };
     const sem = { Brown: { '800': { $type: 'color', $value: '#222222' } } };
-    expect(() => buildKeyUnion(prim, sem)).toThrow(/duplicate token key/);
+    expect(buildKeyUnions(prim, sem)).toEqual({
+      primitives: ['brown.800'],
+      semantic: ['brown.800'],
+    });
+  });
+
+  it('throws when two paths in the same bucket collapse to one key', () => {
+    const prim = {
+      Brown: { '800': { $type: 'color', $value: '#111111' } },
+      brown: { '800': { $type: 'color', $value: '#222222' } },
+    };
+    expect(() => buildKeyUnions(prim, {})).toThrow(/duplicate token key/);
+  });
+
+  it('throws on a same-bucket collision in the semantic tree too', () => {
+    const sem = {
+      Base: { Primary: { $type: 'color', $value: '#111111' } },
+      base: { primary: { $type: 'color', $value: '#222222' } },
+    };
+    expect(() => buildKeyUnions({}, sem)).toThrow(/duplicate token key/);
   });
 });
 
 // ---------- union rendering ----------
 
 describe('renderTokenKeysFile', () => {
-  it('renders a sorted, single-quoted TokenKey union', () => {
-    const out = renderTokenKeysFile(['b.b', 'a.a']);
-    expect(out).toContain('export type TokenKey =');
+  it('renders one sorted, single-quoted union per bucket', () => {
+    const out = renderTokenKeysFile({ primitives: ['b.b', 'a.a'], semantic: ['d.d', 'c.c'] });
+    expect(out).toContain('export type ColorPrimitiveKey =');
+    expect(out).toContain('export type ColorSemanticKey =');
     expect(out).toContain("  | 'b.b'");
+    expect(out).toContain("  | 'd.d'");
     expect(out.trimEnd().endsWith(';')).toBe(true);
   });
 
+  it('keeps each bucket to its own union', () => {
+    const out = renderTokenKeysFile({ primitives: ['brown.800'], semantic: ['base.primary'] });
+    const [, primBlock, semBlock] = out.split('export type ');
+    expect(primBlock).toContain("'brown.800'");
+    expect(primBlock).not.toContain("'base.primary'");
+    expect(semBlock).toContain("'base.primary'");
+    expect(semBlock).not.toContain("'brown.800'");
+  });
+
   it('is stable across repeat calls with the same input', () => {
-    const keys = ['a.a', 'b.b'];
-    expect(renderTokenKeysFile(keys)).toBe(renderTokenKeysFile(keys));
+    const unions = { primitives: ['a.a'], semantic: ['b.b'] };
+    expect(renderTokenKeysFile(unions)).toBe(renderTokenKeysFile(unions));
   });
 });
 

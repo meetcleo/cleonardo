@@ -191,38 +191,51 @@ function isSemanticPath(rawSem, target) {
 
 // ---------- key union + collision check ----------
 
-// Builds the sorted TokenKey union across both output trees, raising via
-// `die` (exit 2) on any key that resolves from more than one place.
-export function buildKeyUnion(primTree, semTree) {
+// Builds the sorted key union for each bucket. Uniqueness is enforced *within*
+// a bucket, not across both: each bucket is one Figma collection and one reader
+// lookup (`colors.primitives.fetch` / `colors.semantic.fetch`), so the two never
+// share a key namespace. `brown.800` existing in both is legal.
+export function buildKeyUnions(primTree, semTree) {
+  return {
+    primitives: collectKeys(primTree, ["color", "primitives"]),
+    semantic: collectKeys(semTree, ["color", "semantic"]),
+  };
+}
+
+// Two JSON paths differing only in case (`Brown.800` / `brown.800`) collapse to
+// one fetch key. `die` (exit 2) rather than let one silently win.
+function collectKeys(tree, prefix) {
   const seen = new Map(); // key -> source dtcg path
-  for (const { path } of walk(primTree)) {
-    const dtcgPath = ["color", "primitives", ...path].join(".");
-    recordKey(seen, buildKey(dtcgPath.split(".")), dtcgPath);
-  }
-  for (const { path } of walk(semTree)) {
-    const dtcgPath = ["color", "semantic", ...path].join(".");
-    recordKey(seen, buildKey(dtcgPath.split(".")), dtcgPath);
+  for (const { path } of walk(tree)) {
+    const dtcgPath = [...prefix, ...path].join(".");
+    const key = buildKey(dtcgPath.split("."));
+    if (seen.has(key)) {
+      die(`✗ duplicate token key ${JSON.stringify(key)}: defined at both ${seen.get(key)} and ${dtcgPath}`, 2);
+    }
+    seen.set(key, dtcgPath);
   }
   return [...seen.keys()].sort();
 }
 
-function recordKey(seen, key, dtcgPath) {
-  if (seen.has(key)) {
-    die(`✗ duplicate token key ${JSON.stringify(key)}: defined at both ${seen.get(key)} and ${dtcgPath}`, 2);
-  }
-  seen.set(key, dtcgPath);
-}
-
-export function renderTokenKeysFile(keys) {
+// One union per bucket, matching the reader's namespaced accessors — so a
+// primitive key can't be passed to `colors.semantic.fetch`, and autocomplete
+// offers the 106 palette keys rather than all 1986.
+export function renderTokenKeysFile({ primitives, semantic }) {
   const header = [
     "// generated — owned by COREEXP-265, do not hand-edit.",
     "//",
-    "// Sorted union of every token key derivable from",
-    "// tokens/color/{primitives,semantic}.json. Lowercased, with the",
-    "// `color.primitives` / `color.semantic` prefix stripped — the same",
-    "// rule CleoDesignTokens.fetch uses on the `{ $value, $ref }` leaves.",
-    "export type TokenKey =",
+    "// One union per bucket, keying the matching reader accessor:",
+    "//   ColorPrimitiveKey -> CleoDesignTokens.colors.primitives.fetch",
+    "//   ColorSemanticKey  -> CleoDesignTokens.colors.semantic.fetch",
+    "//",
+    "// Keys are the JSON path with the `color.primitives` / `color.semantic`",
+    "// prefix stripped, lowercased, dot-joined. The token type lives in the",
+    "// accessor path, not the key, leaving room for radii/typography/spacing.",
   ].join("\n");
+  return [header, renderUnion("ColorPrimitiveKey", primitives), renderUnion("ColorSemanticKey", semantic)].join("\n");
+}
+
+function renderUnion(name, keys) {
   const body = keys.map((k) => `  | '${k}'`).join("\n");
-  return `${header}\n${body};\n`;
+  return `export type ${name} =\n${body};\n`;
 }

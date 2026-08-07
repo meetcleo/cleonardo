@@ -14,13 +14,15 @@
 // Leaf shape: primitives are `{ $type, $value }` (a resolved hex, no self-ref).
 // Semantic entries are `{ $type, $value, $ref }` — `$value` is fully resolved
 // (consumers never follow a reference), `$ref` is the primitive it came from,
-// expressed as a valid `CleoDesignTokens.fetch` key. A semantic entry with
-// no `$ref` is a palette gap, not a bug in the transform.
+// expressed as a valid fetch key. A semantic entry with no `$ref` is a palette
+// gap, not a bug in the transform.
 //
-// NOTE: the COREEXP-264 reader PRs (#29, #30) currently key off a plain
-// `value` field, not `$value` — their `walk` skips $-prefixed keys, so as
-// committed they'll build an empty lookup against this shape. Tracked to
-// fix on those PRs, not here.
+// Fetch keys drop the two-segment bucket prefix and lowercase the rest, so
+// `color.primitives.Brown.800` keys as `brown.800`. Each bucket gets its own
+// union in tokenKeys.ts, keying its own reader accessor
+// (`CleoDesignTokens.colors.primitives.fetch` / `.colors.semantic.fetch`), so
+// key uniqueness is a per-bucket property and the token type stays out of the
+// key string.
 //
 // Policy:
 //   * Adds and value changes apply automatically.
@@ -38,7 +40,7 @@ import {
   diffFlat,
   buildPrimitives,
   buildSemantic,
-  buildKeyUnion,
+  buildKeyUnions,
   renderTokenKeysFile,
   die,
 } from "./transform-core.mjs";
@@ -98,8 +100,8 @@ function run() {
   const primTree = { color: { primitives: primOut } };
   const semTree  = { color: { semantic: semOut } };
 
-  // key union + collision check across both trees — dies (exit 2) on collision
-  const keys = buildKeyUnion(primOut, semOut);
+  // per-bucket key unions + collision check — dies (exit 2) on collision
+  const keyUnions = buildKeyUnions(primOut, semOut);
 
   // ---------- diff vs. current on-disk ----------
 
@@ -161,6 +163,6 @@ function run() {
   mkdirSync(dirname(OUT_KEYS), { recursive: true });
   writeFileSync(OUT_PRIM, JSON.stringify(primTree, null, 2) + "\n");
   writeFileSync(OUT_SEM,  JSON.stringify(semTree,  null, 2) + "\n");
-  writeFileSync(OUT_KEYS, renderTokenKeysFile(keys));
+  writeFileSync(OUT_KEYS, renderTokenKeysFile(keyUnions));
   console.error(`\n✓ wrote tokens/color/primitives.json, tokens/color/semantic.json and src/generated/tokenKeys.ts`);
 }
