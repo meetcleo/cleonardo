@@ -6,7 +6,7 @@
 
 // A leaf is `{ $type: "color", $value }` — same shape the Figma export
 // input uses and the on-disk output read back for the diff. COREEXP-265
-// adds a sibling `ref` on semantic leaves but keeps `$value` as the leaf
+// adds a sibling `$ref` on semantic leaves but keeps `$value` as the leaf
 // marker, so this predicate needn't change across the migration run.
 export const isLeaf = (n) => n && typeof n === "object" && n.$type === "color";
 
@@ -29,7 +29,7 @@ export function toHex(figmaValue) {
 
 // A source tree is rooted at one of these two prefixes; strip it, lowercase,
 // dot-join the rest. Matches CleoDesignTokens.fetch's buildKey / build_key —
-// used here for `ref`, the collision check and the key union, so all three
+// used here for `$ref`, the collision check and the key union, so all three
 // can never disagree.
 const KNOWN_PREFIXES = [
   ["color", "primitives"],
@@ -43,14 +43,14 @@ export function buildKey(path) {
   return stripped.join(".").toLowerCase();
 }
 
-// Value side of the diff compares `$value` **and** `ref`: a re-point at an
+// Value side of the diff compares `$value` **and** `$ref`: a re-point at an
 // identical hex still shows up as a real intent change. `flatten`'s map
 // *keys* stay the JSON path exactly as today (not the fetch key) — the
 // removal gate depends on that key space being stable across the migration.
 export function flatten(tree) {
   const out = new Map();
   for (const { path, node } of walk(tree)) {
-    const ref = node.ref;
+    const ref = node.$ref;
     out.set(path.join("."), ref !== undefined ? `${node.$value} {${ref}}` : String(node.$value));
   }
   return out;
@@ -170,7 +170,7 @@ export function buildSemantic(rawSem, { primIndex, hexIndex }) {
     }
 
     const leaf = { $type: "color", $value: value };
-    if (ref !== undefined) leaf.ref = ref;
+    if (ref !== undefined) leaf.$ref = ref;
     if (node.$description) leaf.$description = node.$description;
     setPath(semOut, path, leaf);
   }
@@ -220,7 +220,7 @@ export function renderTokenKeysFile(keys) {
     "// Sorted union of every token key derivable from",
     "// tokens/color/{primitives,semantic}.json. Lowercased, with the",
     "// `color.primitives` / `color.semantic` prefix stripped — the same",
-    "// rule CleoDesignTokens.fetch uses on the `{ $value, ref }` leaves.",
+    "// rule CleoDesignTokens.fetch uses on the `{ $value, $ref }` leaves.",
     "export type TokenKey =",
   ].join("\n");
   const body = keys.map((k) => `  | '${k}'`).join("\n");

@@ -10,13 +10,13 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 
 ## Format
 
-Every leaf token has `$type: "color"` and a `$value` that is always a fully-resolved hex string — consumers never follow a reference. Semantic leaves also carry a `ref`: the fetch key (see [Consumers](#consumers)) of the primitive the value came from.
+Every leaf token has `$type: "color"` and a `$value` that is always a fully-resolved hex string — consumers never follow a reference. Semantic leaves also carry a `$ref`: the fetch key (see [Consumers](#consumers)) of the primitive the value came from.
 
 ```json
-"Primary": { "$type": "color", "$value": "#47201C", "ref": "brown.800" }
+"Primary": { "$type": "color", "$value": "#47201C", "$ref": "brown.800" }
 ```
 
-Primitives carry `$value` alone — a self-ref on a primitive carries no information. A semantic entry with **no** `ref` is a palette gap, not a bug in the transform — see [Known exceptions](#known-exceptions).
+Primitives carry `$value` alone — a self-ref on a primitive carries no information. A semantic entry with **no** `$ref` is a palette gap, not a bug in the transform — see [Known exceptions](#known-exceptions).
 
 ## Layout
 
@@ -34,7 +34,7 @@ packages/tokens/
       tokenKeys.ts         # generated TokenKey union — do not hand-edit
 ```
 
-`ref` values (and `src/generated/tokenKeys.ts`) are fetch keys: the JSON path with the `color.primitives.` / `color.semantic.` prefix stripped, lowercased, dot-joined — e.g. `color.primitives.Brown.800` → `brown.800`. This is the same rule `CleoDesignTokens.fetch` uses. The `color.` prefix on the JSON paths themselves leaves room for `radius.`, `typography.`, `spacing.` etc. to slot in cleanly later.
+`$ref` values (and `src/generated/tokenKeys.ts`) are fetch keys: the JSON path with the `color.primitives.` / `color.semantic.` prefix stripped, lowercased, dot-joined — e.g. `color.primitives.Brown.800` → `brown.800`. This is the same rule `CleoDesignTokens.fetch` uses. The `color.` prefix on the JSON paths themselves leaves room for `radius.`, `typography.`, `spacing.` etc. to slot in cleanly later.
 
 Naming is preserved as authored in Figma (PascalCase groups, palette scales like `500`, `800`). Downstream consumers can normalise casing if they need to.
 
@@ -42,11 +42,11 @@ Scripts need only Node 18+ (the `>=20` pin carried over from `design-tokens` was
 
 ## Rules
 
-1. **Semantic tokens alias primitives.** Every semantic entry has a `ref`, except the known gaps — see [Known exceptions](#known-exceptions). (Every `$value` is a literal hex now, including semantic entries; `ref` is what carries the alias intent.)
+1. **Semantic tokens alias primitives.** Every semantic entry has a `$ref`, except the known gaps — see [Known exceptions](#known-exceptions). (Every `$value` is a literal hex now, including semantic entries; `$ref` is what carries the alias intent.)
 2. **All references resolve.** No dead aliases pointing at primitives that don't exist.
-3. **No key resolves from more than one place.** The fetch-key namespace (`ref` values, `tokenKeys.ts`) is shared across `primitives.json` and `semantic.json` — a collision fails the transform.
+3. **No key resolves from more than one place.** The fetch-key namespace (`$ref` values, `tokenKeys.ts`) is shared across `primitives.json` and `semantic.json` — a collision fails the transform.
 
-Checked whenever this package is updated. See [Known exceptions](#known-exceptions) below for the four semantic tokens that currently have no `ref` (real palette gaps, not authoring mistakes).
+Checked whenever this package is updated. See [Known exceptions](#known-exceptions) below for the four semantic tokens that currently have no `$ref` (real palette gaps, not authoring mistakes).
 
 ## Semantic namespaces
 
@@ -89,7 +89,7 @@ The transform also fails on:
 It surfaces (as warnings, not failures):
 
 - **Hardcoded (ref-less) semantic tokens** — see [Known exceptions](#known-exceptions).
-- **Auto-recovered aliases** — semantic tokens Figma exported as raw hex that exactly matched exactly one primitive; the transform restores the `ref`.
+- **Auto-recovered aliases** — semantic tokens Figma exported as raw hex that exactly matched exactly one primitive; the transform restores the `$ref`.
 
 ## Consumers
 
@@ -99,7 +99,7 @@ It surfaces (as warnings, not failures):
 
 ## Known exceptions
 
-Four semantic tokens in `semantic.json` have no `ref` — they're a genuine palette gap rather than an authoring mistake, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:
+Four semantic tokens in `semantic.json` have no `$ref` — they're a genuine palette gap rather than an authoring mistake, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:
 
 - `color.semantic.Base.Effects.Background.GlassMorphism`
 - `color.semantic.Chat.Effects.Background.GlassMorphism`
