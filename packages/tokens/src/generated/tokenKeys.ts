@@ -3,7 +3,7 @@
 // Sorted union of every token key derivable from
 // tokens/color/{primitives,semantic}.json. Lowercased, with the
 // `color.primitives` / `color.semantic` prefix stripped — the same
-// rule CleoDesignTokens.fetch uses on the `{ value, ref }` leaves.
+// rule CleoDesignTokens.fetch uses on the `{ $value, ref }` leaves.
 export type TokenKey =
   | 'alpha.dark.0'
   | 'alpha.dark.10'

@@ -4,12 +4,11 @@
 
 // ---------- shared helpers ----------
 
-// A leaf accepts either shape it may see: the Figma export input
-// (`$type`/`$value`) or the on-disk output read back for the diff — which
-// is `{ $type, $value }` before COREEXP-265 lands and `{ value, ref }`
-// after. Both must be recognised so the diff and removal gate keep working
-// across the migration run.
-export const isLeaf = (n) => n && typeof n === "object" && (n.$type === "color" || typeof n.value === "string");
+// A leaf is `{ $type: "color", $value }` — same shape the Figma export
+// input uses and the on-disk output read back for the diff. COREEXP-265
+// adds a sibling `ref` on semantic leaves but keeps `$value` as the leaf
+// marker, so this predicate needn't change across the migration run.
+export const isLeaf = (n) => n && typeof n === "object" && n.$type === "color";
 
 export function* walk(node, path = []) {
   if (!node || typeof node !== "object") return;
@@ -44,16 +43,15 @@ export function buildKey(path) {
   return stripped.join(".").toLowerCase();
 }
 
-// Value side of the diff compares `value` **and** `ref`: a re-point at an
+// Value side of the diff compares `$value` **and** `ref`: a re-point at an
 // identical hex still shows up as a real intent change. `flatten`'s map
 // *keys* stay the JSON path exactly as today (not the fetch key) — the
 // removal gate depends on that key space being stable across the migration.
 export function flatten(tree) {
   const out = new Map();
   for (const { path, node } of walk(tree)) {
-    const value = "value" in node ? node.value : node.$value;
     const ref = node.ref;
-    out.set(path.join("."), ref !== undefined ? `${value} {${ref}}` : String(value));
+    out.set(path.join("."), ref !== undefined ? `${node.$value} {${ref}}` : String(node.$value));
   }
   return out;
 }
@@ -98,7 +96,7 @@ export function buildPrimitives(rawPrim) {
     const hex = toHex(node.$value);
     const dtcgPath = ["color", "primitives", ...path].join(".");
     const key = buildKey(dtcgPath.split("."));
-    const leaf = { $type: "color", value: hex };
+    const leaf = { $type: "color", $value: hex };
     if (node.$description) leaf.$description = node.$description;
     setPath(primOut, path, leaf);
 
@@ -171,7 +169,7 @@ export function buildSemantic(rawSem, { primIndex, hexIndex }) {
       }
     }
 
-    const leaf = { $type: "color", value };
+    const leaf = { $type: "color", $value: value };
     if (ref !== undefined) leaf.ref = ref;
     if (node.$description) leaf.$description = node.$description;
     setPath(semOut, path, leaf);
@@ -222,7 +220,7 @@ export function renderTokenKeysFile(keys) {
     "// Sorted union of every token key derivable from",
     "// tokens/color/{primitives,semantic}.json. Lowercased, with the",
     "// `color.primitives` / `color.semantic` prefix stripped — the same",
-    "// rule CleoDesignTokens.fetch uses on the `{ value, ref }` leaves.",
+    "// rule CleoDesignTokens.fetch uses on the `{ $value, ref }` leaves.",
     "export type TokenKey =",
   ].join("\n");
   const body = keys.map((k) => `  | '${k}'`).join("\n");

@@ -11,11 +11,16 @@
 // Outputs: tokens/color/{primitives,semantic}.json    (committed)
 //          src/generated/tokenKeys.ts                 (committed; not written under --check)
 //
-// Leaf shape: primitives are `{ $type, value }` (a resolved hex, no self-ref).
-// Semantic entries are `{ $type, value, ref }` — `value` is fully resolved
+// Leaf shape: primitives are `{ $type, $value }` (a resolved hex, no self-ref).
+// Semantic entries are `{ $type, $value, ref }` — `$value` is fully resolved
 // (consumers never follow a reference), `ref` is the primitive it came from,
 // expressed as a valid `CleoDesignTokens.fetch` key. A semantic entry with
 // no `ref` is a palette gap, not a bug in the transform.
+//
+// NOTE: the COREEXP-264 reader PRs (#29, #30) currently key off a plain
+// `value` field, not `$value` — their `walk` skips $-prefixed keys, so as
+// committed they'll build an empty lookup against this shape. Tracked to
+// fix on those PRs, not here.
 //
 // Policy:
 //   * Adds and value changes apply automatically.

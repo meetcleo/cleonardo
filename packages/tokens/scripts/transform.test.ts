@@ -98,40 +98,42 @@ describe('buildKey', () => {
   });
 });
 
-// ---------- walk / isLeaf across both leaf shapes ----------
+// ---------- walk / isLeaf ----------
 
 describe('isLeaf / walk', () => {
-  it('recognises the pre-265 { $type, $value } shape', () => {
+  it('recognises a { $type, $value } leaf', () => {
     const tree = { Brown: { '800': { $type: 'color', $value: '#47201C' } } };
     expect([...walk(tree)]).toHaveLength(1);
   });
 
-  it('recognises the post-265 { value, ref } shape', () => {
-    const tree = { Brown: { '800': { value: '#47201C', ref: 'brown.800' } } };
+  it('recognises a { $type, $value, ref } leaf (COREEXP-265 semantic shape)', () => {
+    const tree = { Brown: { '800': { $type: 'color', $value: '#47201C', ref: 'brown.800' } } };
     expect([...walk(tree)]).toHaveLength(1);
   });
 
   it('skips $-prefixed keys', () => {
-    const tree = { $description: 'ignore me', Brown: { '800': { value: '#47201C' } } };
+    const tree = { $description: 'ignore me', Brown: { '800': { $type: 'color', $value: '#47201C' } } };
     expect([...walk(tree)]).toHaveLength(1);
   });
 });
 
-// ---------- flatten reads both leaf shapes ----------
+// ---------- flatten ----------
 
 describe('flatten', () => {
-  it('reads the old { $type, $value } shape', () => {
+  it('reads the { $type, $value } shape', () => {
     const tree = { color: { primitives: { Brown: { '800': { $type: 'color', $value: '#47201C' } } } } };
     expect(flatten(tree).get('color.primitives.Brown.800')).toBe('#47201C');
   });
 
-  it('reads the new { value, ref } shape and folds ref into the comparison value', () => {
-    const tree = { color: { semantic: { Base: { Primary: { value: '#47201C', ref: 'brown.800' } } } } };
+  it('folds ref into the comparison value when present', () => {
+    const tree = {
+      color: { semantic: { Base: { Primary: { $type: 'color', $value: '#47201C', ref: 'brown.800' } } } },
+    };
     expect(flatten(tree).get('color.semantic.Base.Primary')).toBe('#47201C {brown.800}');
   });
 
   it('keeps map keys as the JSON path, not the fetch key', () => {
-    const tree = { color: { primitives: { Brown: { '800': { value: '#47201C' } } } } };
+    const tree = { color: { primitives: { Brown: { '800': { $type: 'color', $value: '#47201C' } } } } };
     expect([...flatten(tree).keys()]).toEqual(['color.primitives.Brown.800']);
   });
 });
@@ -173,32 +175,32 @@ describe('buildPrimitives / buildSemantic', () => {
     };
   }
 
-  it('resolves an alias hit to { value, ref }', () => {
+  it('resolves an alias hit to { $value, ref }', () => {
     const { prim, sem } = raw('valid');
     const { primIndex, hexIndex } = buildPrimitives(prim);
     const { semOut } = buildSemantic(sem, { primIndex, hexIndex });
-    expect(semOut.Base.Content.Primary).toEqual({ $type: 'color', value: '#47201C', ref: 'brown.800' });
+    expect(semOut.Base.Content.Primary).toEqual({ $type: 'color', $value: '#47201C', ref: 'brown.800' });
   });
 
   it('resolves an exact hex match with no alias via hex-recovery', () => {
     const { prim, sem } = raw('valid');
     const { primIndex, hexIndex } = buildPrimitives(prim);
     const { semOut, audit } = buildSemantic(sem, { primIndex, hexIndex });
-    expect(semOut.Base.Content.Secondary).toEqual({ $type: 'color', value: '#AC9B98', ref: 'brown.400' });
+    expect(semOut.Base.Content.Secondary).toEqual({ $type: 'color', $value: '#AC9B98', ref: 'brown.400' });
     expect(audit.recoveredByHex).toHaveLength(1);
   });
 
-  it('leaves a palette gap as { value } with no ref', () => {
+  it('leaves a palette gap as { $value } with no ref', () => {
     const { prim, sem } = raw('valid');
     const { primIndex, hexIndex } = buildPrimitives(prim);
     const { semOut } = buildSemantic(sem, { primIndex, hexIndex });
-    expect(semOut.Base.Content.GlassMorphism).toEqual({ $type: 'color', value: '#00000033' });
+    expect(semOut.Base.Content.GlassMorphism).toEqual({ $type: 'color', $value: '#00000033' });
   });
 
-  it('gives primitives value only, no self-ref', () => {
+  it('gives primitives $value only, no self-ref', () => {
     const { prim } = raw('valid');
     const { primOut } = buildPrimitives(prim);
-    expect(primOut.Brown['800']).toEqual({ $type: 'color', value: '#47201C' });
+    expect(primOut.Brown['800']).toEqual({ $type: 'color', $value: '#47201C' });
   });
 
   it('flags a dead reference (alias target not a primitive)', () => {
@@ -241,14 +243,14 @@ describe('buildPrimitives / buildSemantic', () => {
 
 describe('buildKeyUnion', () => {
   it('unions primitive and semantic keys, sorted', () => {
-    const prim = { Brown: { '800': { value: '#47201C' } } };
-    const sem = { Base: { Primary: { value: '#47201C', ref: 'brown.800' } } };
+    const prim = { Brown: { '800': { $type: 'color', $value: '#47201C' } } };
+    const sem = { Base: { Primary: { $type: 'color', $value: '#47201C', ref: 'brown.800' } } };
     expect(buildKeyUnion(prim, sem)).toEqual(['base.primary', 'brown.800']);
   });
 
   it('throws on a key that resolves from both trees', () => {
-    const prim = { Brown: { '800': { value: '#111111' } } };
-    const sem = { Brown: { '800': { value: '#222222' } } };
+    const prim = { Brown: { '800': { $type: 'color', $value: '#111111' } } };
+    const sem = { Brown: { '800': { $type: 'color', $value: '#222222' } } };
     expect(() => buildKeyUnion(prim, sem)).toThrow(/duplicate token key/);
   });
 });

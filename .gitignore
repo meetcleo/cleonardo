@@ -16,3 +16,6 @@ storybook-static
 
 # Lint results
 results.csv
+
+# JetBrains IDE
+.idea/
