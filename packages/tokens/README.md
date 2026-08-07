@@ -10,7 +10,13 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 
 ## Format
 
-[DTCG JSON](https://www.designtokens.org/tr/drafts/format/) (Design Tokens Community Group format). Every leaf token has `$type: "color"` and a `$value` that is either a hex string (primitives) or a `{…}` reference (semantic).
+Every leaf token has `$type: "color"` and a `value` that is always a fully-resolved hex string — consumers never follow a reference. Semantic leaves also carry a `ref`: the fetch key (see [Consumers](#consumers)) of the primitive the value came from.
+
+```json
+"Primary": { "$type": "color", "value": "#47201C", "ref": "brown.800" }
+```
+
+Primitives carry `value` alone — a self-ref on a primitive carries no information. A semantic entry with **no** `ref` is a palette gap, not a bug in the transform — see [Known exceptions](#known-exceptions).
 
 ## Layout
 
@@ -18,13 +24,17 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 packages/tokens/
   tokens/
     color/
-      primitives.json   # Base Palette — hex values
-      semantic.json      # Semantic layer — aliases into primitives
+      primitives.json   # Base Palette — resolved hex values
+      semantic.json      # Semantic layer — resolved hex + ref back to the primitive
   scripts/
-    transform.mjs         # Figma-export -> committed-JSON transform
+    transform.mjs         # Figma-export -> committed-JSON transform (CLI driver)
+    transform-core.mjs    # pure transform logic, imported by transform.mjs and its tests
+  src/
+    generated/
+      tokenKeys.ts         # generated TokenKey union — do not hand-edit
 ```
 
-Reference paths mirror the JSON structure, e.g. `{color.primitives.Brown.800}`. The `color.` prefix leaves room for `radius.`, `typography.`, `spacing.` etc. to slot in cleanly later.
+`ref` values (and `src/generated/tokenKeys.ts`) are fetch keys: the JSON path with the `color.primitives.` / `color.semantic.` prefix stripped, lowercased, dot-joined — e.g. `color.primitives.Brown.800` → `brown.800`. This is the same rule `CleoDesignTokens.fetch` uses. The `color.` prefix on the JSON paths themselves leaves room for `radius.`, `typography.`, `spacing.` etc. to slot in cleanly later.
 
 Naming is preserved as authored in Figma (PascalCase groups, palette scales like `500`, `800`). Downstream consumers can normalise casing if they need to.
 
@@ -32,10 +42,11 @@ Scripts need only Node 18+ (the `>=20` pin carried over from `design-tokens` was
 
 ## Rules
 
-1. **Semantic tokens alias primitives.** No hardcoded hex in `semantic.json` — every `$value` is a `{…}` reference to a primitive.
+1. **Semantic tokens alias primitives.** Every semantic entry has a `ref`, except the known gaps — see [Known exceptions](#known-exceptions). (Every `value` is a literal hex now, including semantic entries; `ref` is what carries the alias intent.)
 2. **All references resolve.** No dead aliases pointing at primitives that don't exist.
+3. **No key resolves from more than one place.** The fetch-key namespace (`ref` values, `tokenKeys.ts`) is shared across `primitives.json` and `semantic.json` — a collision fails the transform.
 
-Both are checked whenever this package is updated. See [Known exceptions](#known-exceptions) below for the four semantic tokens that currently violate rule 1 (real palette gaps, not authoring mistakes).
+Checked whenever this package is updated. See [Known exceptions](#known-exceptions) below for the four semantic tokens that currently have no `ref` (real palette gaps, not authoring mistakes).
 
 ## Semantic namespaces
 
@@ -70,20 +81,23 @@ This guards against accidental Figma export mistakes silently deleting tokens th
 The transform also fails on:
 
 - **Dead references** — a semantic token aliasing a primitive that no longer exists. Fix the Figma export and re-run.
+- **Semantic→semantic aliases** — resolution is single-hop only; an alias must point at a primitive, not another semantic token.
+- **Key collisions** — the same fetch key (see [Consumers](#consumers)) resolving from both `primitives.json` and `semantic.json`.
+- **Ambiguous hex recovery** — a semantic token has a raw hex with no alias, and 2+ primitives share that exact hex. A ref-less entry must never mean "the transform couldn't decide" — a genuine palette gap only exists when *no* primitive matches.
 - **Missing input files** — `figma-exports/{primitives,semantic}.json` must both exist.
 
 It surfaces (as warnings, not failures):
 
-- **Hardcoded semantic tokens** — see [Known exceptions](#known-exceptions).
-- **Auto-recovered aliases** — semantic tokens Figma exported as raw hex that exactly matched a primitive; the transform restores the alias.
+- **Hardcoded (ref-less) semantic tokens** — see [Known exceptions](#known-exceptions).
+- **Auto-recovered aliases** — semantic tokens Figma exported as raw hex that exactly matched exactly one primitive; the transform restores the `ref`.
 
 ## Consumers
 
-**Nothing consumes this repo yet.** The generator, Ruby module, and other consumer wiring land in follow-up tickets. Don't import these JSON files directly into product code — wait for the generated artefact.
+`CleoDesignTokens.fetch(key)` (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) is the canonical way to read a token's resolved value — never import `tokens/color/*.json` directly. `key` is the fetch key described above, e.g. `CleoDesignTokens.fetch("base.core.content.primary")` or `CleoDesignTokens.fetch("brown.800")`. `src/generated/tokenKeys.ts`'s `TokenKey` union type-checks the key argument on the TypeScript side; it's generated by this package's transform, never hand-edited.
 
 ## Known exceptions
 
-Four semantic tokens in `semantic.json` are hardcoded rather than aliased, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:
+Four semantic tokens in `semantic.json` have no `ref` — they're a genuine palette gap rather than an authoring mistake, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:
 
 - `color.semantic.Base.Effects.Background.GlassMorphism`
 - `color.semantic.Chat.Effects.Background.GlassMorphism`
