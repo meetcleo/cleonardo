@@ -2,12 +2,12 @@ name: figma-sync
 
 # Second half of the Figma → cleonardo pipeline (COREEXP-323).
 #
-# The Cleo Token Sync Figma plugin pushes raw Variable exports to a throwaway
-# `figma-sync/raw-<n>` branch under `.figma-sync/`. This workflow runs the transform
-# against `main` and opens a review PR containing only the committed token files.
+# The Cleo Token Sync Figma plugin pushes a verbatim Figma variable dump to a throwaway
+# `figma-sync/raw-<n>` branch under `.figma-sync/`. This workflow runs the transform against
+# `main` and opens a review PR containing only the generated outputs.
 #
-# The raw exports are copied into `packages/tokens/figma-exports/`, which is gitignored,
-# so they can never reach the PR — only `packages/tokens/tokens/color/**` does.
+# The dump is copied into `packages/tokens/figma-exports/`, which is gitignored, so it can
+# never reach the PR — only `tokens/color/**` and `src/generated/**` do.
 
 on:
   push:
@@ -37,16 +37,15 @@ jobs:
         with:
           node-version: '18.18.0'
 
-      - name: Copy the raw export into the gitignored input directory
+      - name: Copy the Figma dump into the gitignored input directory
         run: |
           set -euo pipefail
           # Explicit refspec: `git fetch origin <branch>` only reliably updates FETCH_HEAD,
           # and the copy below reads origin/<branch>.
           git fetch origin "+refs/heads/$RAW_BRANCH:refs/remotes/origin/$RAW_BRANCH"
           mkdir -p packages/tokens/figma-exports
-          for file in primitives.json semantic.json index.json; do
-            git show "origin/$RAW_BRANCH:.figma-sync/$file" > "packages/tokens/figma-exports/$file"
-          done
+          git show "origin/$RAW_BRANCH:.figma-sync/figma-dump.json" \
+            > packages/tokens/figma-exports/figma-dump.json
 
       - name: Run the transform
         id: transform
@@ -58,7 +57,10 @@ jobs:
       - name: Open a token PR
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain packages/tokens/tokens/color)" ]; then
+          # tokenKeys.ts is generated alongside the tokens; both have to move together or the
+          # key unions drift from the values they describe.
+          outputs="packages/tokens/tokens/color packages/tokens/src/generated"
+          if [ -z "$(git status --porcelain $outputs)" ]; then
             echo "No token changes — Figma matches canonical. No PR opened."
             exit 0
           fi
@@ -67,7 +69,7 @@ jobs:
           git config user.name 'cleo-token-sync[bot]'
           git config user.email 'engineering@meetcleo.com'
           git checkout -b "$branch"
-          git add packages/tokens/tokens/color
+          git add $outputs
           git commit -m "Sync colour tokens from Figma (run ${{ github.run_number }})"
           git push origin "$branch"
 

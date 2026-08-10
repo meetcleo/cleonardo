@@ -69,25 +69,21 @@
   <div id="problems" class="hidden"></div>
 
   <section>
-    <h2>Collections</h2>
+    <h2>Collections in the dump</h2>
     <div id="collections"></div>
-    <div class="muted">Semantic values: <span id="aliases"></span></div>
-  </section>
-
-  <section>
-    <h2>Linked libraries</h2>
-    <div id="remote"></div>
+    <div class="muted" id="aliases"></div>
   </section>
 
   <section>
     <h2>GitHub token</h2>
     <div class="muted">
-      Fine-grained PAT for meetcleo/cleonardo with Contents: write. Stored only in this Figma client.
+      Write access to meetcleo/cleonardo — fine-grained with Contents: read and write, or classic
+      with <code>repo</code>. Stored only in this Figma client.
     </div>
-    <input id="pat" type="password" placeholder="github_pat_…" autocomplete="off" />
+    <input id="pat" type="password" placeholder="github_pat_… or ghp_…" autocomplete="off" />
     <div class="actions">
       <button id="sync">Sync to GitHub</button>
-      <button id="copy" class="secondary">Print inventory</button>
+      <button id="copy" class="secondary">Print summary</button>
       <button id="forget" class="secondary">Forget token</button>
     </div>
   </section>
