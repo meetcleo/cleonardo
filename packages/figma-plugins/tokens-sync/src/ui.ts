@@ -16,9 +16,11 @@ type Loaded = {
       modeStrategy: string;
       variableCount: number;
       typeCounts: Record<string, number>;
+      skippedTypes: Record<string, number>;
       promotedTo: string | null;
       topLevelKeys: string[];
     }>;
+    remoteCollections: Record<string, { referencedBy: number; sample: string[] }>;
     aliasStats: { aliased: number; literal: number };
     problems: string[];
   };
@@ -49,14 +51,29 @@ function render(loaded: Loaded): void {
         .map((t) => `${t.toLowerCase()} ${c.typeCounts[t]}`)
         .join(', ');
       const status = c.promotedTo ? `<span class="ok">→ ${c.promotedTo}</span>` : '<span class="muted">inventory only</span>';
+      const skipped = Object.keys(c.skippedTypes)
+        .map((t) => `${t.toLowerCase()} ${c.skippedTypes[t]}`)
+        .join(', ');
       return `<div class="row">
         <div class="row-head"><strong>${c.name}</strong> ${status}</div>
         <div class="muted">${c.variableCount} variables (${types || 'none'})</div>
         <div class="muted">modes: ${c.modes.join(', ') || 'none'} — ${c.modeStrategy}</div>
         ${c.topLevelKeys.length ? `<div class="muted">top level: ${c.topLevelKeys.join(', ')}</div>` : ''}
+        ${skipped ? `<div class="muted">not exported: ${skipped}</div>` : ''}
       </div>`;
     })
     .join('');
+
+  const remote = Object.keys(inventory.remoteCollections);
+  el('remote').innerHTML = remote.length
+    ? remote
+        .map((name) => {
+          const r = inventory.remoteCollections[name];
+          return `<div class="row"><div><strong>${name}</strong> <span class="muted">library</span></div>
+            <div class="muted">${r.referencedBy} aliases point here, e.g. ${r.sample.join(', ')}</div></div>`;
+        })
+        .join('')
+    : '<div class="muted">none — every alias resolves inside this file</div>';
 
   el('aliases').textContent = `${inventory.aliasStats.aliased} aliased, ${inventory.aliasStats.literal} literal`;
 

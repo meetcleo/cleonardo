@@ -1,7 +1,7 @@
 // Sandbox half of the plugin: reads Figma Variables, builds the export, hands it to the UI.
 // The UI half does the GitHub calls, because network access needs the iframe.
 
-import { PROMOTED, PromotedCollection } from './config';
+import { PROMOTED, Promotion } from './config';
 
 const PAT_KEY = 'github-pat';
 
@@ -20,10 +20,12 @@ type CollectionReport = {
   name: string;
   id: string;
   modes: string[];
-  /** How the tree was built: 'single' = variable names only, 'mode-prefixed' = mode name is the top level. */
+  /** 'single' = variable names only. 'mode-prefixed' = mode name becomes the top-level group. */
   modeStrategy: 'single' | 'mode-prefixed';
   variableCount: number;
   typeCounts: { [type: string]: number };
+  /** Types present but not exported — the adoption backlog for other token types. */
+  skippedTypes: { [type: string]: number };
   promotedTo: string | null;
   /** Top-level groups in the resulting tree, so a mode/group mix-up is visible at a glance. */
   topLevelKeys: string[];
@@ -33,17 +35,24 @@ type Inventory = {
   fileName: string;
   generatedBy: string;
   collections: CollectionReport[];
+  /** Libraries this file's aliases point into. Their variables are not local, so they can't be
+   *  exported from here — they need a run in the file that authors them. */
+  remoteCollections: { [name: string]: { referencedBy: number; sample: string[] } };
   aliasStats: { aliased: number; literal: number };
   problems: string[];
 };
 
-const collectionCache = new Map<string, VariableCollection>();
+const collectionCache = new Map<string, VariableCollection | null>();
 
-async function collectionOf(variable: Variable): Promise<VariableCollection | null> {
-  const cached = collectionCache.get(variable.variableCollectionId);
-  if (cached) return cached;
-  const found = await figma.variables.getVariableCollectionByIdAsync(variable.variableCollectionId);
-  if (found) collectionCache.set(found.id, found);
+async function collectionById(id: string): Promise<VariableCollection | null> {
+  if (collectionCache.has(id)) return collectionCache.get(id) as VariableCollection | null;
+  let found: VariableCollection | null = null;
+  try {
+    found = await figma.variables.getVariableCollectionByIdAsync(id);
+  } catch {
+    found = null; // remote collections aren't always reachable by id
+  }
+  collectionCache.set(id, found);
   return found;
 }
 
@@ -60,11 +69,11 @@ function toHex(colour: RGB | RGBA): Hex {
   return { hex: `#${channel(colour.r)}${channel(colour.g)}${channel(colour.b)}`, alpha };
 }
 
-/** Pick the value for `modeId`, falling back to the variable's own default mode when the
- *  alias crossed into a collection that doesn't share that mode id. */
+/** Pick the value for `modeId`, falling back to the variable's own default mode when the alias
+ *  crossed into a collection that doesn't share that mode id. */
 async function valueFor(variable: Variable, modeId: string): Promise<VariableValue | undefined> {
   if (modeId in variable.valuesByMode) return variable.valuesByMode[modeId];
-  const collection = await collectionOf(variable);
+  const collection = await collectionById(variable.variableCollectionId);
   return collection ? variable.valuesByMode[collection.defaultModeId] : undefined;
 }
 
@@ -98,7 +107,25 @@ function place(tree: ExportTree, path: string[], leaf: ExportLeaf): void {
   cursor[path[path.length - 1]] = leaf;
 }
 
-async function buildTree(collection: VariableCollection, promoted: PromotedCollection, inventory: Inventory): Promise<ExportTree> {
+async function noteRemote(inventory: Inventory, target: Variable): Promise<void> {
+  const collection = await collectionById(target.variableCollectionId);
+  const name = collection ? collection.name : 'unknown library collection';
+  if (!inventory.remoteCollections[name]) {
+    inventory.remoteCollections[name] = { referencedBy: 0, sample: [] };
+  }
+  const entry = inventory.remoteCollections[name];
+  entry.referencedBy++;
+  if (entry.sample.length < 5 && entry.sample.indexOf(target.name) === -1) {
+    entry.sample.push(target.name);
+  }
+}
+
+async function buildTree(
+  collection: VariableCollection,
+  promoted: Promotion,
+  report: CollectionReport,
+  inventory: Inventory,
+): Promise<ExportTree> {
   const tree: ExportTree = {};
   const prefixWithMode = collection.modes.length > 1;
 
@@ -107,8 +134,10 @@ async function buildTree(collection: VariableCollection, promoted: PromotedColle
       const variable = await figma.variables.getVariableByIdAsync(variableId);
       if (!variable) continue;
 
-      if (variable.resolvedType !== promoted.expectedType) {
-        inventory.problems.push(`${collection.name}/${variable.name} is ${variable.resolvedType}, expected ${promoted.expectedType}`);
+      if (promoted.types.indexOf(variable.resolvedType) === -1) {
+        if (mode === collection.modes[0]) {
+          report.skippedTypes[variable.resolvedType] = (report.skippedTypes[variable.resolvedType] || 0) + 1;
+        }
         continue;
       }
 
@@ -122,11 +151,7 @@ async function buildTree(collection: VariableCollection, promoted: PromotedColle
       if (raw !== undefined && isAlias(raw)) {
         const target = await figma.variables.getVariableByIdAsync(raw.id);
         if (target) {
-          if (target.remote) {
-            inventory.problems.push(
-              `${variable.name} aliases ${target.name} from another file — the transform only resolves local primitives`,
-            );
-          }
+          if (target.remote) await noteRemote(inventory, target);
           leaf.$extensions = { 'com.figma.aliasData': { targetVariableName: target.name } };
           inventory.aliasStats.aliased++;
         }
@@ -150,6 +175,7 @@ async function run(): Promise<void> {
     fileName: figma.root.name,
     generatedBy: 'packages/figma-plugins/tokens-sync',
     collections: [],
+    remoteCollections: {},
     aliasStats: { aliased: 0, literal: 0 },
     problems: [],
   };
@@ -158,27 +184,32 @@ async function run(): Promise<void> {
 
   for (const collection of collections) {
     const promoted = PROMOTED.filter((p) => p.figmaName === collection.name)[0];
-    const typeCounts: { [type: string]: number } = {};
 
-    for (const variableId of collection.variableIds) {
-      const variable = await figma.variables.getVariableByIdAsync(variableId);
-      if (!variable) continue;
-      typeCounts[variable.resolvedType] = (typeCounts[variable.resolvedType] || 0) + 1;
-    }
-
-    const tree = promoted ? await buildTree(collection, promoted, inventory) : null;
-    if (promoted && tree) files[promoted.file] = tree;
-
-    inventory.collections.push({
+    const report: CollectionReport = {
       name: collection.name,
       id: collection.id,
       modes: collection.modes.map((m) => m.name),
       modeStrategy: collection.modes.length > 1 ? 'mode-prefixed' : 'single',
       variableCount: collection.variableIds.length,
-      typeCounts,
+      typeCounts: {},
+      skippedTypes: {},
       promotedTo: promoted ? promoted.file : null,
-      topLevelKeys: tree ? Object.keys(tree) : [],
-    });
+      topLevelKeys: [],
+    };
+
+    for (const variableId of collection.variableIds) {
+      const variable = await figma.variables.getVariableByIdAsync(variableId);
+      if (!variable) continue;
+      report.typeCounts[variable.resolvedType] = (report.typeCounts[variable.resolvedType] || 0) + 1;
+    }
+
+    if (promoted) {
+      const tree = await buildTree(collection, promoted, report, inventory);
+      files[promoted.file] = tree;
+      report.topLevelKeys = Object.keys(tree);
+    }
+
+    inventory.collections.push(report);
   }
 
   if (!collections.length) {
@@ -193,10 +224,21 @@ async function run(): Promise<void> {
   for (const promoted of PROMOTED) {
     if (!files[promoted.file]) {
       inventory.problems.push(
-        `No collection named "${promoted.figmaName}". This file has: ${found}. ` +
-          `Sync is blocked until PROMOTED in src/config.ts matches Figma.`,
+        `No collection named "${promoted.figmaName}". This file has: ${found}. Either PROMOTED in ` +
+          `src/config.ts is wrong, or that collection is a linked library — check remoteCollections ` +
+          `in the inventory and run the plugin in the file that authors it.`,
       );
     }
+  }
+
+  const remote = Object.keys(inventory.remoteCollections);
+  const unexported = remote.filter((name) => !PROMOTED.some((p) => p.figmaName === name));
+  if (unexported.length) {
+    inventory.problems.push(
+      `Aliases point into ${unexported.length} library collection(s) not exported from this file: ` +
+        `${unexported.join(', ')}. Their values resolve here, but the collection itself has to be ` +
+        `exported from its own file.`,
+    );
   }
 
   const pat = (await figma.clientStorage.getAsync(PAT_KEY)) as string | undefined;

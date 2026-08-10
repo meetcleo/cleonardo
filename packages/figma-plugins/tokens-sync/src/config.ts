@@ -1,11 +1,11 @@
 // Which Figma variable collections get promoted to token files, and where they land.
 //
-// Everything the plugin finds is reported in index.json. Only collections listed
-// here are written as token files, at the paths `packages/tokens/scripts/transform.mjs`
-// already reads. Adding radii/typography/spacing later is an entry here, not a rewrite.
+// Everything the plugin finds is reported in index.json. Only collections listed here are
+// written as token files, at the paths `packages/tokens/scripts/transform.mjs` already reads.
+// Adding radii/typography/spacing later is an entry here, not a rewrite.
 //
-// Collection names must match Figma exactly. If one is missing the plugin refuses to
-// sync and shows the inventory so the name can be corrected.
+// Collection names must match Figma exactly. If one is missing the plugin refuses to sync and
+// names the collections the file does have.
 
 export const REPO = { owner: 'meetcleo', name: 'cleonardo' } as const;
 
@@ -16,16 +16,24 @@ export const BRANCH_PREFIX = 'figma-sync/raw-';
  *  which is the gitignored local input directory the workflow copies into. */
 export const RAW_DIR = '.figma-sync';
 
-export type PromotedCollection = {
+export type Promotion = {
   /** Figma collection name, exactly as authored. */
   figmaName: string;
   /** Output file name inside RAW_DIR, and the name transform.mjs expects. */
   file: string;
-  /** Variable types allowed in this collection. Anything else fails the run. */
-  expectedType: VariableResolvedDataType;
+  /** Variable types to export. Collections mix types — anything not listed is counted in the
+   *  inventory as skipped, not treated as an error. */
+  types: VariableResolvedDataType[];
 };
 
-export const PROMOTED: PromotedCollection[] = [
-  { figmaName: 'Primitives', file: 'primitives.json', expectedType: 'COLOR' },
-  { figmaName: 'Semantic', file: 'semantic.json', expectedType: 'COLOR' },
+// `Themes` (1880 colour variables, one mode) is the semantic layer: its top-level groups are
+// Base / Chat / Roast / Hype. The `Primitives` palette is a linked library rather than local to
+// that file, so it needs its own run — see `remoteCollections` in index.json for which library.
+//
+// The `Modes` collection carries the same role set as four Figma modes instead of four name
+// prefixes. It's the direction in COREEXP-14's design proposal, not what consumers read today,
+// so it stays inventory-only until that migration is a decision.
+export const PROMOTED: Promotion[] = [
+  { figmaName: 'Primitives', file: 'primitives.json', types: ['COLOR'] },
+  { figmaName: 'Themes', file: 'semantic.json', types: ['COLOR'] },
 ];
