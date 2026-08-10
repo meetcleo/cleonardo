@@ -120,22 +120,83 @@ async function noteRemote(inventory: Inventory, target: Variable): Promise<void>
   }
 }
 
-async function buildTree(
-  collection: VariableCollection,
-  promoted: Promotion,
-  report: CollectionReport,
-  inventory: Inventory,
-): Promise<ExportTree> {
+/** A local collection and an enabled library collection are read through different APIs but
+ *  export identically, so both are normalised to this before the tree is built. */
+type Readable = {
+  name: string;
+  modes: { modeId: string; name: string }[];
+  variables: Variable[];
+};
+
+async function readLocal(collection: VariableCollection): Promise<Readable> {
+  const variables: Variable[] = [];
+  for (const id of collection.variableIds) {
+    const variable = await figma.variables.getVariableByIdAsync(id);
+    if (variable) variables.push(variable);
+  }
+  return { name: collection.name, modes: collection.modes.slice(), variables };
+}
+
+/** Read a collection that lives in an enabled library. Its variables aren't local, so they have
+ *  to be imported one at a time; the library descriptor doesn't expose mode names, so a
+ *  multi-mode library collection can't be named reliably and is refused rather than guessed. */
+async function readLibrary(promoted: Promotion, problems: string[]): Promise<Readable | null> {
+  let collections: LibraryVariableCollection[];
+  try {
+    collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+  } catch (error) {
+    problems.push(
+      `Could not list enabled libraries (${(error as Error).message}). A library has to be enabled ` +
+        `in this file through Figma's UI — the plugin API can't enable one.`,
+    );
+    return null;
+  }
+
+  const match = collections.filter((c) => c.name === promoted.figmaName)[0];
+  if (!match) {
+    const names = collections.map((c) => `"${c.name}" (${c.libraryName})`).join(', ') || 'none';
+    problems.push(
+      `"${promoted.figmaName}" is not a local collection and no enabled library provides it. ` + `Enabled library collections: ${names}.`,
+    );
+    return null;
+  }
+
+  const descriptors = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(match.key);
+  const variables: Variable[] = [];
+  for (const descriptor of descriptors) {
+    const variable = await figma.variables.importVariableByKeyAsync(descriptor.key);
+    if (variable) variables.push(variable);
+  }
+
+  const modeIds = new Set<string>();
+  for (const variable of variables) {
+    for (const modeId of Object.keys(variable.valuesByMode)) modeIds.add(modeId);
+  }
+  if (modeIds.size > 1) {
+    problems.push(
+      `Library collection "${match.name}" has ${modeIds.size} modes. Mode names aren't exposed for ` +
+        `library collections, so they can't be exported from a consuming file — run the plugin in ` +
+        `${match.libraryName} instead.`,
+    );
+    return null;
+  }
+
+  const modeId = [...modeIds][0];
+  return {
+    name: `${match.name} (library: ${match.libraryName})`,
+    modes: modeId ? [{ modeId, name: match.name }] : [],
+    variables,
+  };
+}
+
+async function buildTree(source: Readable, promoted: Promotion, report: CollectionReport, inventory: Inventory): Promise<ExportTree> {
   const tree: ExportTree = {};
-  const prefixWithMode = collection.modes.length > 1;
+  const prefixWithMode = source.modes.length > 1;
 
-  for (const mode of collection.modes) {
-    for (const variableId of collection.variableIds) {
-      const variable = await figma.variables.getVariableByIdAsync(variableId);
-      if (!variable) continue;
-
+  for (const mode of source.modes) {
+    for (const variable of source.variables) {
       if (promoted.types.indexOf(variable.resolvedType) === -1) {
-        if (mode === collection.modes[0]) {
+        if (mode === source.modes[0]) {
           report.skippedTypes[variable.resolvedType] = (report.skippedTypes[variable.resolvedType] || 0) + 1;
         }
         continue;
@@ -197,18 +258,45 @@ async function run(): Promise<void> {
       topLevelKeys: [],
     };
 
-    for (const variableId of collection.variableIds) {
-      const variable = await figma.variables.getVariableByIdAsync(variableId);
-      if (!variable) continue;
+    const source = await readLocal(collection);
+    for (const variable of source.variables) {
       report.typeCounts[variable.resolvedType] = (report.typeCounts[variable.resolvedType] || 0) + 1;
     }
 
     if (promoted) {
-      const tree = await buildTree(collection, promoted, report, inventory);
+      const tree = await buildTree(source, promoted, report, inventory);
       files[promoted.file] = tree;
       report.topLevelKeys = Object.keys(tree);
     }
 
+    inventory.collections.push(report);
+  }
+
+  // Anything not local may still be reachable as an enabled library — the colour palette is.
+  for (const promoted of PROMOTED) {
+    if (files[promoted.file]) continue;
+
+    const source = await readLibrary(promoted, inventory.problems);
+    if (!source) continue;
+
+    const report: CollectionReport = {
+      name: source.name,
+      id: 'library',
+      modes: source.modes.map((m) => m.name),
+      modeStrategy: source.modes.length > 1 ? 'mode-prefixed' : 'single',
+      variableCount: source.variables.length,
+      typeCounts: {},
+      skippedTypes: {},
+      promotedTo: promoted.file,
+      topLevelKeys: [],
+    };
+    for (const variable of source.variables) {
+      report.typeCounts[variable.resolvedType] = (report.typeCounts[variable.resolvedType] || 0) + 1;
+    }
+
+    const tree = await buildTree(source, promoted, report, inventory);
+    files[promoted.file] = tree;
+    report.topLevelKeys = Object.keys(tree);
     inventory.collections.push(report);
   }
 
@@ -218,17 +306,6 @@ async function run(): Promise<void> {
         'local to the files that consume them — open the file that authors them, and check you are ' +
         'on the branch that holds them.',
     );
-  }
-
-  const found = collections.map((c) => `"${c.name}"`).join(', ') || 'none';
-  for (const promoted of PROMOTED) {
-    if (!files[promoted.file]) {
-      inventory.problems.push(
-        `No collection named "${promoted.figmaName}". This file has: ${found}. Either PROMOTED in ` +
-          `src/config.ts is wrong, or that collection is a linked library — check remoteCollections ` +
-          `in the inventory and run the plugin in the file that authors it.`,
-      );
-    }
   }
 
   const remote = Object.keys(inventory.remoteCollections);
