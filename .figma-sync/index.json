@@ -1,0 +1,91 @@
+{
+  "fileName": "Colour Modes and Themes",
+  "generatedBy": "packages/figma-plugins/tokens-sync",
+  "collections": [
+    {
+      "name": "Themes",
+      "id": "VariableCollectionId:1:3",
+      "modes": [
+        "Light"
+      ],
+      "modeStrategy": "single",
+      "variableCount": 1898,
+      "typeCounts": {
+        "COLOR": 1880,
+        "FLOAT": 18
+      },
+      "skippedTypes": {
+        "FLOAT": 18
+      },
+      "promotedTo": "semantic.json",
+      "topLevelKeys": [
+        "Base",
+        "Chat",
+        "Roast",
+        "Hype"
+      ]
+    },
+    {
+      "name": "Modes",
+      "id": "VariableCollectionId:1:949",
+      "modes": [
+        "Base",
+        "Chat",
+        "Roast",
+        "Hype"
+      ],
+      "modeStrategy": "mode-prefixed",
+      "variableCount": 474,
+      "typeCounts": {
+        "COLOR": 468,
+        "FLOAT": 6
+      },
+      "skippedTypes": {},
+      "promotedTo": null,
+      "topLevelKeys": []
+    },
+    {
+      "name": "Base Colors (library: Base Color Palette 🔒)",
+      "id": "library",
+      "modes": [
+        "Base Colors"
+      ],
+      "modeStrategy": "single",
+      "variableCount": 106,
+      "typeCounts": {
+        "COLOR": 106
+      },
+      "skippedTypes": {},
+      "promotedTo": "primitives.json",
+      "topLevelKeys": [
+        "Purple",
+        "Brown",
+        "Alpha",
+        "Yellow",
+        "Orange",
+        "Green",
+        "Teal",
+        "Blue",
+        "Red",
+        "Monotone"
+      ]
+    }
+  ],
+  "remoteCollections": {
+    "Base Colors": {
+      "referencedBy": 1875,
+      "sample": [
+        "Brown/800",
+        "Monotone/White",
+        "Brown/700",
+        "Brown/200",
+        "Brown/600"
+      ]
+    }
+  },
+  "aliasStats": {
+    "aliased": 1875,
+    "literal": 111
+  },
+  "problems": []
+}
