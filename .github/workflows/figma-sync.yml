@@ -40,7 +40,9 @@ jobs:
       - name: Copy the raw export into the gitignored input directory
         run: |
           set -euo pipefail
-          git fetch origin "$RAW_BRANCH"
+          # Explicit refspec: `git fetch origin <branch>` only reliably updates FETCH_HEAD,
+          # and the copy below reads origin/<branch>.
+          git fetch origin "+refs/heads/$RAW_BRANCH:refs/remotes/origin/$RAW_BRANCH"
           mkdir -p packages/tokens/figma-exports
           for file in primitives.json semantic.json index.json; do
             git show "origin/$RAW_BRANCH:.figma-sync/$file" > "packages/tokens/figma-exports/$file"
