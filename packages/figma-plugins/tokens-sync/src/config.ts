@@ -27,13 +27,18 @@ export type Promotion = {
 };
 
 // `Themes` (1880 colour variables, one mode) is the semantic layer: its top-level groups are
-// Base / Chat / Roast / Hype. The `Primitives` palette is a linked library rather than local to
-// that file, so it needs its own run — see `remoteCollections` in index.json for which library.
+// Base / Chat / Roast / Hype, and 1875 of them alias into the palette.
 //
-// The `Modes` collection carries the same role set as four Figma modes instead of four name
-// prefixes. It's the direction in COREEXP-14's design proposal, not what consumers read today,
-// so it stays inventory-only until that migration is a decision.
+// `Base Colors` is that palette, published from the `Base Color Palette 🔒` library rather than
+// local to the semantic file — so it's read through the teamLibrary API. The library has to be
+// enabled in the file, which it is.
+//
+// Inventory-only for now, with the collection and library each is published from:
+//   Modes (Colour Modes and Themes) — the same role set as four Figma modes rather than four name
+//     prefixes. The direction in COREEXP-14's design proposal, not what consumers read today.
+//   Spacing, Radius, Type, Border, Surface Level, Image Crops (Component Library) — the other
+//     token types, each needing its own naming and adapter decision before it's promoted.
 export const PROMOTED: Promotion[] = [
-  { figmaName: 'Primitives', file: 'primitives.json', types: ['COLOR'] },
+  { figmaName: 'Base Colors', file: 'primitives.json', types: ['COLOR'] },
   { figmaName: 'Themes', file: 'semantic.json', types: ['COLOR'] },
 ];
