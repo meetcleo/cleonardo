@@ -1,0 +1,15 @@
+{
+  "name": "@cleonardo/figma-plugin-tokens-sync",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Figma plugin that exports Cleo's colour Variables and opens a token PR in cleonardo.",
+  "type": "module",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit"
+  }
+}

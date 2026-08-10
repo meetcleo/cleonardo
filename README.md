@@ -21,11 +21,11 @@ design-system/
 │ ├── photography/ # Photography asset pipeline
 │ ├── react/ # Shared React UI component library (planned)
 │ ├── icons/ # Unified icon set used across platforms (planned)
-│ └── figma-plugins/ # Figma integration utilities and plugin-related code (planned)
+│ └── figma-plugins/ # Figma integration — tokens-sync is live, others planned
 ├── apps/
 │ └── storybook/ # Component documentation and live previews (planned)
 ├── scripts/ # Scripts for building, testing, and deploying the system 
-├── .github/ # GitHub workflows and contribution automation (planned)
+├── .github/ # GitHub workflows — figma-sync is live
 ├── tsconfig.json # Shared TypeScript configuration
 ├── package.json # Root-level dependencies and workspace definitions
 └── README.md # You’re here.
