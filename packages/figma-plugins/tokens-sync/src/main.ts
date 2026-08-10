@@ -213,6 +213,20 @@ async function buildTree(source: Readable, promoted: Promotion, report: Collecti
         const target = await figma.variables.getVariableByIdAsync(raw.id);
         if (target) {
           if (target.remote) await noteRemote(inventory, target);
+
+          // aliasData records the first hop only, and transform.mjs resolves it against the
+          // primitives. A chain through another semantic token would emit a name it can't find
+          // and fail as a dead reference, blaming the wrong thing — so say it here instead.
+          const onward = await valueFor(target, mode.modeId);
+          if (onward !== undefined && isAlias(onward)) {
+            const next = await figma.variables.getVariableByIdAsync(onward.id);
+            inventory.problems.push(
+              `${variable.name} aliases ${target.name}, which is itself an alias` +
+                `${next ? ` (to ${next.name})` : ''}. Resolution is single-hop: a semantic token has ` +
+                `to point straight at a primitive.`,
+            );
+          }
+
           leaf.$extensions = { 'com.figma.aliasData': { targetVariableName: target.name } };
           inventory.aliasStats.aliased++;
         }
