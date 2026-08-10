@@ -181,10 +181,20 @@ async function run(): Promise<void> {
     });
   }
 
+  if (!collections.length) {
+    inventory.problems.push(
+      'This file has no local variable collections. Variables published from a library are not ' +
+        'local to the files that consume them — open the file that authors them, and check you are ' +
+        'on the branch that holds them.',
+    );
+  }
+
+  const found = collections.map((c) => `"${c.name}"`).join(', ') || 'none';
   for (const promoted of PROMOTED) {
     if (!files[promoted.file]) {
       inventory.problems.push(
-        `No collection named "${promoted.figmaName}" in this file — sync is blocked until the name in config.ts matches Figma`,
+        `No collection named "${promoted.figmaName}". This file has: ${found}. ` +
+          `Sync is blocked until PROMOTED in src/config.ts matches Figma.`,
       );
     }
   }
