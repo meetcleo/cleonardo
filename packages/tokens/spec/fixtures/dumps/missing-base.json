@@ -1,0 +1,91 @@
+{
+  "$schema": "cleo-figma-dump/1",
+  "file": {
+    "name": "Colour Modes and Themes"
+  },
+  "collections": [
+    {
+      "id": "VariableCollectionId:1:3",
+      "name": "Themes",
+      "source": "local",
+      "defaultModeId": "1:0",
+      "modes": [
+        {
+          "modeId": "1:0",
+          "name": "Light"
+        }
+      ]
+    },
+    {
+      "id": "VariableCollectionId:9:1",
+      "name": "Base Colors",
+      "source": "library",
+      "libraryName": "Base Color Palette 🔒",
+      "defaultModeId": "9:0",
+      "modes": [
+        {
+          "modeId": "9:0",
+          "name": "Base Colors"
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "VariableID:9:5",
+      "name": "Brown/800",
+      "collectionId": "VariableCollectionId:9:1",
+      "resolvedType": "COLOR",
+      "description": "",
+      "valuesByMode": {
+        "9:0": {
+          "r": 0.2784313725490196,
+          "g": 0.12549019607843137,
+          "b": 0.10980392156862745,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:9:6",
+      "name": "Brown/50",
+      "collectionId": "VariableCollectionId:9:1",
+      "resolvedType": "COLOR",
+      "description": "",
+      "valuesByMode": {
+        "9:0": {
+          "r": 0.9725490196078431,
+          "g": 0.9647058823529412,
+          "b": 0.9490196078431372,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:1:5",
+      "name": "Base/Core/Content/Primary",
+      "collectionId": "VariableCollectionId:1:3",
+      "resolvedType": "COLOR",
+      "description": "",
+      "valuesByMode": {
+        "1:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:9:5"
+        }
+      }
+    },
+    {
+      "id": "VariableID:1:6",
+      "name": "Chat/Core/Border/Level 0",
+      "collectionId": "VariableCollectionId:1:3",
+      "resolvedType": "COLOR",
+      "description": "",
+      "valuesByMode": {
+        "1:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:9:6"
+        }
+      }
+    }
+  ]
+}
