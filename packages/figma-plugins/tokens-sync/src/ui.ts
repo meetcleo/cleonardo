@@ -106,9 +106,26 @@ async function gh<T = unknown>(path: string, init?: RequestInit): Promise<T> {
         `GitHub rejected the token (401). Create a new fine-grained PAT for ${REPO.owner}/${REPO.name} with Contents: write, then paste it above.${detail}`,
       );
     }
-    if (response.status === 403 || response.status === 404) {
+    if (response.status === 404) {
+      // GitHub returns 404, not 403, for a private repo the token can't see. Probing /user
+      // separates "token is bad" from "token is fine but has no access to this repo".
+      const probe = await fetch(`${API}/user`, {
+        headers: { Authorization: `Bearer ${patInput().value.trim()}` },
+      });
+      if (probe.ok) {
+        throw new Error(
+          `The token works, but can't see ${REPO.owner}/${REPO.name} (private). Check, in order: ` +
+            `the token's Resource owner is "${REPO.owner}" and not your personal account; ` +
+            `${REPO.name} is in its selected repositories; and it isn't still awaiting org approval ` +
+            `(github.com/settings/personal-access-tokens shows "Pending" until an owner approves it).`,
+        );
+      }
+      throw new Error(`GitHub rejected the token and returned 404 for ${path}.${detail}`);
+    }
+    if (response.status === 403) {
       throw new Error(
-        `GitHub returned ${response.status} for ${path}. Check the token has Contents: write on ${REPO.owner}/${REPO.name}.${detail}`,
+        `GitHub returned 403 for ${path}. The token is visible to the repo but lacks a permission — ` +
+          `it needs Contents: read and write.${detail}`,
       );
     }
     throw new Error(`GitHub ${response.status} for ${path}${detail}`);
