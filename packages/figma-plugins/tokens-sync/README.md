@@ -17,14 +17,22 @@ can't be triggered automatically: a plugin only runs when a human opens it, and 
 
 ## What it does
 
-1. Walks every local variable collection and mode and builds an inventory — names, modes, variable
-   types, counts. This goes to `.figma-sync/index.json` and is shown in the plugin UI.
-2. Writes token files for the collections listed in [`src/config.ts`](./src/config.ts), in exactly
-   the shape `packages/tokens/scripts/transform.mjs` parses. Everything else is inventory only.
-3. Creates one commit on top of `main` and pushes it as `figma-sync/raw-<n>`, which triggers
+1. Dumps every variable it can reach to `.figma-sync/figma-dump.json` — a flat list of collections
+   and variables with `valuesByMode` exactly as the Figma API returns it.
+2. Creates one commit on top of `main` and pushes it as `figma-sync/raw-<n>`, which triggers
    [`.github/workflows/figma-sync.yml`](../../../.github/workflows/figma-sync.yml).
 
-One commit, then one ref — so the workflow fires once rather than once per file.
+One commit, then one ref — so the workflow fires once.
+
+**It interprets nothing.** No nesting, no hex conversion, no alias following, no type filtering, no
+decision about which collections matter. `packages/tokens/scripts/transform.mjs` owns all of that,
+so alias handling and colour maths exist in exactly one place. The dump format is specified in
+[`packages/tokens/README.md`](../../tokens/README.md) — that's the contract between the two.
+
+The one job beyond copying is **completeness**. Aliases reference variables by id, so the dump has
+to contain every collection an alias reaches into, including library-published ones that aren't
+local to the file (Cleo's palette is one). It follows references to a fixed point rather than a
+single pass, because a library collection can alias another.
 
 ## Setup
 
@@ -63,18 +71,21 @@ publish from a team-owned account rather than a personal one.
 
 ## Adding a token type
 
-Add an entry to `PROMOTED` in [`src/config.ts`](./src/config.ts). Until then a collection shows up
-in the inventory and is not written — `index.json` is the adoption backlog for radii, typography,
-spacing and motion. Motion tokens live in a different Figma file, so they need their own run.
+Nothing changes here — the dump already carries every collection in the file. Adoption is a config
+entry in `packages/tokens`, which decides what becomes a token file. Motion tokens live in a
+different Figma file, so those need their own run of this plugin.
 
 ## Failure modes
 
-The plugin refuses to sync and shows what it found when:
+The plugin only refuses to sync over **completeness** — the dump has to be usable:
 
-- a collection named in `config.ts` doesn't exist in the file
-- a variable in a promoted collection isn't the expected type
-- an alias points at a variable in another file (the transform only resolves local primitives)
-- an alias chain loops
+- the file has no local variable collections (you're probably in a file that *consumes* the library
+  rather than the one that authors it)
+- an alias reaches into a library collection that isn't enabled in this file (the plugin API can't
+  enable one — that's a Figma UI action)
+- two enabled libraries provide a collection with the same name, so the right one can't be chosen
+- an alias target can't be read at all
 
-The transform itself catches the rest: dead references fail (exit 2) and removals refuse to apply
-without `--allow-removals` (exit 1), so a bad export gives a red workflow, never a silent deletion.
+Everything about the *content* is the transform's job, and it reports against the dump rather than
+guessing: dead references and dangling ids exit 2, removals refuse to apply without
+`--allow-removals` (exit 1). A bad dump gives a red workflow, never a silent deletion.
