@@ -37,14 +37,21 @@ yarn plugin:build
 Then in Figma: **Plugins → Development → Import plugin from manifest…** and pick
 `packages/figma-plugins/tokens-sync/manifest.json`. `yarn plugin:watch` rebuilds on save.
 
-You need a GitHub **fine-grained PAT**:
+You need a GitHub token with write access to this repo. Either kind works:
 
-- Repository access: only `meetcleo/cleonardo`
-- Permissions: **Contents: read and write**
+| | Settings | Extra step |
+|---|---|---|
+| **Fine-grained** (preferred) | Resource owner `meetcleo`, repository access limited to `cleonardo`, **Contents: read and write** | An org owner has to approve it — it shows "Pending" until then |
+| **Classic** | Scope **`repo`**, nothing else | If SAML SSO is enforced, use **Configure SSO** on the token to authorise `meetcleo` |
+
+Prefer fine-grained: `repo` on a classic token grants read/write to *every* repository you can
+reach, not just this one. Don't tick `workflow` on a classic token — the plugin only writes
+`.figma-sync/*.json`, so leaving it off means the token cannot modify CI.
 
 Paste it into the plugin once. It's kept in `figma.clientStorage`, which is local to your Figma
 client — it is never committed and never leaves your machine except as an `Authorization` header to
-`api.github.com`. The token can only push a `figma-sync/raw-*` branch; `main` is PR-gated.
+`api.github.com`. Whichever kind you use, the plugin only ever pushes a `figma-sync/raw-*` branch;
+`main` is PR-gated.
 
 "Forget token" clears it.
 

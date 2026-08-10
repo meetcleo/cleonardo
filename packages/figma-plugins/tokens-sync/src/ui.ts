@@ -103,7 +103,9 @@ async function gh<T = unknown>(path: string, init?: RequestInit): Promise<T> {
     const detail = body ? ` — ${body.slice(0, 300)}` : '';
     if (response.status === 401) {
       throw new Error(
-        `GitHub rejected the token (401). Create a new fine-grained PAT for ${REPO.owner}/${REPO.name} with Contents: write, then paste it above.${detail}`,
+        `GitHub rejected the token (401). It needs write access to ${REPO.owner}/${REPO.name}: ` +
+          `a fine-grained token with Contents: read and write, or a classic token with the ` +
+          `\`repo\` scope.${detail}`,
       );
     }
     if (response.status === 404) {
@@ -114,10 +116,12 @@ async function gh<T = unknown>(path: string, init?: RequestInit): Promise<T> {
       });
       if (probe.ok) {
         throw new Error(
-          `The token works, but can't see ${REPO.owner}/${REPO.name} (private). Check, in order: ` +
-            `the token's Resource owner is "${REPO.owner}" and not your personal account; ` +
-            `${REPO.name} is in its selected repositories; and it isn't still awaiting org approval ` +
-            `(github.com/settings/personal-access-tokens shows "Pending" until an owner approves it).`,
+          `The token works, but can't see ${REPO.owner}/${REPO.name} (private). ` +
+            `Fine-grained token: check its Resource owner is "${REPO.owner}" and not your personal ` +
+            `account, that ${REPO.name} is in its selected repositories, and that it isn't still ` +
+            `showing "Pending" while an org owner approves it. ` +
+            `Classic token: check it has the \`repo\` scope, and use "Configure SSO" on the token ` +
+            `to authorise it for ${REPO.owner} — without that, access is refused the same way.`,
         );
       }
       throw new Error(`GitHub rejected the token and returned 404 for ${path}.${detail}`);
