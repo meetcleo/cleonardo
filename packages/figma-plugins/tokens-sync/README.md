@@ -65,9 +65,41 @@ client — it is never committed and never leaves your machine except as an `Aut
 
 ## Publishing to the org
 
-Private plugins are an Organization-plan feature and skip Figma's review process. Publish with
-**Publish to → Organization**. Only the publishing account can change a plugin's access later, so
-publish from a team-owned account rather than a personal one.
+Private plugins are an Organization-plan feature and skip Figma's review process, so a publish is
+live immediately.
+
+Before publishing:
+
+- **`.github/workflows/figma-sync.yml` has to be on `main`.** The plugin bases its throwaway branch
+  there, and a push event runs the workflow as it exists on the pushed branch. Publish before that
+  lands and designers push branches that do nothing.
+- **An icon**, 128×128 (Figma's recommended size). A 1920×1080 cover image is offered too; nobody
+  browses a private plugin, so it's optional.
+- **Pick the account.** Only the original publisher can change a plugin's access later, and if they
+  leave the org it takes Figma Support to transfer ownership. Prefer a team-owned account.
+
+Then:
+
+```bash
+yarn plugin:build
+```
+
+In the Figma **desktop app** — publishing isn't available in the browser: **Plugins → Manage
+plugins**, select the plugin, **Publish**, fill in the details and icon, set **Publish to →
+Organization**, and publish. The network-access screen will show `api.github.com` and the reasoning
+from [`manifest.json`](./manifest.json).
+
+Designers then install it from the file browser: **All teams** (or All workspaces) → **Plugins** →
+**↓ Save**. Guests can't see or run private plugins. Each designer needs their own GitHub token —
+see [Setup](#setup).
+
+Two things to expect:
+
+- **Figma assigns a real plugin id on first publish** and rewrites `manifest.json`, which currently
+  holds the placeholder `cleo-token-sync`. Commit that change, or the next person importing from the
+  manifest ends up with a different plugin.
+- **Publishing uploads your local build**, and `dist/` is gitignored. Always `yarn plugin:build`
+  from an up-to-date checkout first, or you ship whatever was last built on that machine.
 
 ## Adding a token type
 
