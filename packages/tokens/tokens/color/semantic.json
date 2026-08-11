@@ -526,13 +526,41 @@
       },
       "categoryPrimary": {
         "$type": "color",
-        "$value": "#5A4C84",
-        "$ref": "purple.600"
+        "$value": "#4B3A6F",
+        "$ref": "purple.700",
+        "$themes": {
+          "chat": {
+            "$value": "#5A4C84",
+            "$ref": "purple.600"
+          },
+          "roast": {
+            "$value": "#5A4C84",
+            "$ref": "purple.600"
+          },
+          "hype": {
+            "$value": "#5A4C84",
+            "$ref": "purple.600"
+          }
+        }
       },
       "categorySecondary": {
         "$type": "color",
-        "$value": "#51623A",
-        "$ref": "green.700"
+        "$value": "#905013",
+        "$ref": "orange.700",
+        "$themes": {
+          "chat": {
+            "$value": "#51623A",
+            "$ref": "green.700"
+          },
+          "roast": {
+            "$value": "#51623A",
+            "$ref": "green.700"
+          },
+          "hype": {
+            "$value": "#51623A",
+            "$ref": "green.700"
+          }
+        }
       },
       "categoryTertiary": {
         "$type": "color",
@@ -541,8 +569,22 @@
       },
       "categoryQuaternary": {
         "$type": "color",
-        "$value": "#6F514E",
-        "$ref": "brown.600"
+        "$value": "#42657C",
+        "$ref": "blue.700",
+        "$themes": {
+          "chat": {
+            "$value": "#6F514E",
+            "$ref": "brown.600"
+          },
+          "roast": {
+            "$value": "#6F514E",
+            "$ref": "brown.600"
+          },
+          "hype": {
+            "$value": "#6F514E",
+            "$ref": "brown.600"
+          }
+        }
       },
       "onColorLight": {
         "$type": "color",
@@ -676,8 +718,22 @@
       },
       "categorySecondary": {
         "$type": "color",
-        "$value": "#D7ECA7",
-        "$ref": "green.100"
+        "$value": "#FFC8A2",
+        "$ref": "orange.100",
+        "$themes": {
+          "chat": {
+            "$value": "#D7ECA7",
+            "$ref": "green.100"
+          },
+          "roast": {
+            "$value": "#D7ECA7",
+            "$ref": "green.100"
+          },
+          "hype": {
+            "$value": "#D7ECA7",
+            "$ref": "green.100"
+          }
+        }
       },
       "categoryTertiary": {
         "$type": "color",
@@ -686,8 +742,22 @@
       },
       "categoryQuaternary": {
         "$type": "color",
-        "$value": "#F0EDEA",
-        "$ref": "brown.100"
+        "$value": "#C3EAFB",
+        "$ref": "blue.100",
+        "$themes": {
+          "chat": {
+            "$value": "#F0EDEA",
+            "$ref": "brown.100"
+          },
+          "roast": {
+            "$value": "#F0EDEA",
+            "$ref": "brown.100"
+          },
+          "hype": {
+            "$value": "#F0EDEA",
+            "$ref": "brown.100"
+          }
+        }
       },
       "accentLight": {
         "$type": "color",
