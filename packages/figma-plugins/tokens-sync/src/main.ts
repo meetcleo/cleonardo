@@ -249,7 +249,7 @@ async function run(): Promise<void> {
   figma.ui.postMessage({ type: 'loaded', dump, summary, pat: pat || '' });
 }
 
-figma.showUI(__html__, { width: 460, height: 620, themeColors: true });
+figma.showUI(__html__, { width: 460, height: 860, themeColors: true });
 
 figma.ui.onmessage = async (message: { type: string; pat?: string; text?: string }) => {
   if (message.type === 'save-pat') {

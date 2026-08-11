@@ -27,6 +27,7 @@ let state: Loaded | null = null;
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const patInput = () => el('pat') as unknown as HTMLInputElement;
+const config = () => el('config') as unknown as HTMLDetailsElement;
 
 function log(line: string): void {
   const box = el('log');
@@ -62,7 +63,10 @@ function render(loaded: Loaded): void {
     (el('sync') as unknown as HTMLButtonElement).disabled = true;
   }
 
+  // The token is the only thing under Config, so it stays collapsed once one is stored and opens
+  // on the first run, when there's nothing saved yet.
   if (loaded.pat) patInput().value = loaded.pat;
+  config().open = !loaded.pat;
 }
 
 async function gh<T = unknown>(path: string, init?: RequestInit): Promise<T> {
@@ -174,6 +178,9 @@ async function sync(): Promise<void> {
     parent.postMessage({ pluginMessage: { type: 'notify', text: 'Figma dump pushed' } }, '*');
   } catch (error) {
     log(`✗ ${(error as Error).message}`);
+    // Every way this fails is something to fix under Config, so surface it rather than making
+    // the reader go looking.
+    config().open = true;
     button.disabled = false;
   }
 }
