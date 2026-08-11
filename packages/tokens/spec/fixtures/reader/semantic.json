@@ -1,0 +1,22 @@
+{
+  "core": {
+    "content": {
+      "primary": {
+        "$type": "color",
+        "$value": "#47201C",
+        "$ref": "brown.800",
+        "$themes": {
+          "roast": { "$value": "#F8F6F2", "$ref": "brown.50" }
+        }
+      }
+    },
+    "border": {
+      "level0": {
+        "$type": "color",
+        "$themes": {
+          "chat": { "$value": "#F8F6F2", "$ref": "brown.50" }
+        }
+      }
+    }
+  }
+}

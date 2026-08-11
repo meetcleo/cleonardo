@@ -12,6 +12,8 @@
     "tokens:transform": "node packages/tokens/scripts/transform.mjs",
     "tokens:check": "node packages/tokens/scripts/transform.mjs --check",
     "tokens:test": "vitest run --root packages/tokens",
+    "tokens:typecheck": "tsc -p packages/tokens/tsconfig.json",
+    "tokens:build": "tsc -p packages/tokens/tsconfig.build.json",
     "plugin:build": "node packages/figma-plugins/tokens-sync/scripts/build.mjs",
     "plugin:watch": "node packages/figma-plugins/tokens-sync/scripts/build.mjs --watch",
     "plugin:typecheck": "tsc --noEmit --project packages/figma-plugins/tokens-sync"

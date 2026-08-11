@@ -1,0 +1,8 @@
+{
+  "brown": {
+    "800": { "$type": "color", "$value": "#47201C" }
+  },
+  "monotone": {
+    "white": { "$type": "color", "$value": "#FFFEFB" }
+  }
+}

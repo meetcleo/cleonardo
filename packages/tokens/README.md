@@ -52,7 +52,9 @@ packages/tokens/
   spec/
     synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
     fixtures/              # committed dumps + the value-equivalence expectations
+    fixtures/reader/       # small hand-written fixtures for the reader's own tests
   src/
+    CleoDesignTokens.ts    # TypeScript reader
     generated/
       tokenKeys.ts         # generated key unions — do not hand-edit
 ```
@@ -171,6 +173,24 @@ Reach for `colors.semantic` by default. A `colors.primitives` call is reaching p
 - `ColorPrimitiveKey` — 106 members
 - `ColorSemanticKey` — 473 members
 - `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
+
+### TypeScript — `@meetcleo/design-tokens`
+
+```ts
+import CleoDesignTokens from "@meetcleo/design-tokens";
+
+CleoDesignTokens.colors.semantic.fetch("core.content.primary"); // => "#47201C"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "#F8F6F2"
+CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
+```
+
+Theme is a plain second positional argument here, not the `theme:` keyword the Ruby reader uses — TypeScript has no equivalent that's as cheap as a positional param, and an options object (`fetch(key, { theme })`) would buy nothing. Imported as the `CleoDesignTokens` namespace, not a bare `fetch` — `import { fetch } from "@meetcleo/design-tokens"` would shadow the global `fetch` in that file.
+
+### Versioning
+
+`package.json`'s `version` is the source of truth. Starts at `0.1.0`.
+
+Publishing this package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here.
 
 ## Known exceptions
 
