@@ -53,7 +53,15 @@ packages/tokens/
     synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
     fixtures/              # committed dumps + the value-equivalence expectations
     fixtures/reader/       # small hand-written fixtures for the reader's own tests
-  lib/cleo_design_tokens.rb # Ruby reader
+  lib/
+    cleo_design_tokens.rb            # Ruby reader — requires the below, wires up `colors`
+    cleo_design_tokens/
+      tree_walker.rb                 # walks a token tree, yielding each leaf
+      lookup_builder.rb              # flattens a tree into a frozen key -> value/SemanticEntry lookup
+      semantic_entry.rb              # one role's Base value + theme overrides
+      bucket.rb                      # colors.primitives — one lookup, one `fetch`
+      semantic_bucket.rb             # colors.semantic — adds the `theme:` axis
+      errors.rb                      # UnknownTokenError, UnknownThemeError, DuplicateTokenError
   src/
     CleoDesignTokens.ts    # TypeScript reader
     generated/

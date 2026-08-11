@@ -5,8 +5,8 @@ RSpec.describe CleoDesignTokens do
     JSON.parse(File.read(File.join(__dir__, "fixtures", "reader", "#{name}.json")))
   end
 
-  let(:primitives_bucket) { described_class::Bucket.new(described_class.build_lookup(load_fixture("primitives"))) }
-  let(:semantic_bucket) { described_class::SemanticBucket.new(described_class.build_semantic_lookup(load_fixture("semantic"))) }
+  let(:primitives_bucket) { described_class::Bucket.new(described_class::LookupBuilder.build_lookup(load_fixture("primitives"))) }
+  let(:semantic_bucket) { described_class::SemanticBucket.new(described_class::LookupBuilder.build_semantic_lookup(load_fixture("semantic"))) }
 
   describe "colors.primitives.fetch" do
     it "resolves a known primitive key" do
@@ -68,9 +68,9 @@ RSpec.describe CleoDesignTokens do
     end
   end
 
-  describe ".build_lookup" do
+  describe "LookupBuilder.build_lookup" do
     it "fails loudly on a collision, within one tree" do
-      expect { described_class.build_lookup(load_fixture("collision")) }
+      expect { described_class::LookupBuilder.build_lookup(load_fixture("collision")) }
         .to raise_error(CleoDesignTokens::DuplicateTokenError, /brown\.800/)
     end
   end
