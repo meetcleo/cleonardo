@@ -11,10 +11,15 @@
     "generate-images": "tsx scripts/generate-images.ts",
     "tokens:transform": "node packages/tokens/scripts/transform.mjs",
     "tokens:check": "node packages/tokens/scripts/transform.mjs --check",
-    "tokens:test": "vitest run --root packages/tokens"
+    "tokens:test": "vitest run --root packages/tokens",
+    "plugin:build": "node packages/figma-plugins/tokens-sync/scripts/build.mjs",
+    "plugin:watch": "node packages/figma-plugins/tokens-sync/scripts/build.mjs --watch",
+    "plugin:typecheck": "tsc --noEmit --project packages/figma-plugins/tokens-sync"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.36.0",
+    "@figma/plugin-typings": "^1.109.0",
+    "esbuild": "^0.25.0",
     "typescript-eslint": "^8.35.0",
     "dotenv": "^8.0.0",
     "eslint": "^9.29.0",

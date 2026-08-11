@@ -1,0 +1,14 @@
+{
+  "name": "Cleo Token Sync",
+  "id": "cleo-token-sync",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "main": "dist/main.js",
+  "ui": "dist/ui.html",
+  "documentAccess": "dynamic-page",
+  "permissions": ["teamlibrary"],
+  "networkAccess": {
+    "allowedDomains": ["https://api.github.com"],
+    "reasoning": "Pushes the token export to a branch in meetcleo/cleonardo, which opens a review PR."
+  }
+}

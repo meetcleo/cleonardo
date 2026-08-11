@@ -1,0 +1,209 @@
+// UI half of the plugin. Network requests have to live here: plugin requests run with a
+// `null` origin, so only APIs sending `Access-Control-Allow-Origin: *` are reachable, and
+// `api.github.com` is one of them.
+
+import { BASE_BRANCH, BRANCH_PREFIX, DUMP_FILE, RAW_DIR, REPO } from './config';
+
+const API = 'https://api.github.com';
+
+type Loaded = {
+  type: 'loaded';
+  dump: { file: { name: string }; collections: unknown[]; variables: unknown[] };
+  summary: {
+    collections: Array<{
+      name: string;
+      source: string;
+      modes: string[];
+      variableCount: number;
+      typeCounts: Record<string, number>;
+    }>;
+    aliasStats: { aliased: number; literal: number };
+    problems: string[];
+  };
+  pat: string;
+};
+
+let state: Loaded | null = null;
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const patInput = () => el('pat') as unknown as HTMLInputElement;
+const config = () => el('config') as unknown as HTMLDetailsElement;
+
+function log(line: string): void {
+  const box = el('log');
+  box.textContent = `${box.textContent}${box.textContent ? '\n' : ''}${line}`;
+  box.scrollTop = box.scrollHeight;
+}
+
+function render(loaded: Loaded): void {
+  const { summary, dump } = loaded;
+
+  el('file').textContent = `${dump.file.name} — ${dump.variables.length} variables in ${dump.collections.length} collections`;
+
+  el('collections').innerHTML = summary.collections
+    .map((c) => {
+      const types = Object.keys(c.typeCounts)
+        .map((t) => `${t.toLowerCase()} ${c.typeCounts[t]}`)
+        .join(', ');
+      return `<div class="row">
+        <div class="row-head"><strong>${c.name}</strong> <span class="muted">${c.source}</span></div>
+        <div class="muted">${c.variableCount} variables (${types || 'none'})</div>
+        <div class="muted">modes: ${c.modes.join(', ') || 'none'}</div>
+      </div>`;
+    })
+    .join('');
+
+  el('aliases').textContent = `${summary.aliasStats.aliased} alias values, ${summary.aliasStats.literal} literal`;
+
+  if (summary.problems.length) {
+    el('problems').innerHTML =
+      `<strong>${summary.problems.length} problem(s) — sync blocked</strong><ul>` +
+      `${summary.problems.map((p) => `<li>${p}</li>`).join('')}</ul>`;
+    el('problems').classList.remove('hidden');
+    (el('sync') as unknown as HTMLButtonElement).disabled = true;
+  }
+
+  // The token is the only thing under Config, so it stays collapsed once one is stored and opens
+  // on the first run, when there's nothing saved yet.
+  if (loaded.pat) patInput().value = loaded.pat;
+  config().open = !loaded.pat;
+}
+
+async function gh<T = unknown>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API}${path}`, {
+    ...init,
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${patInput().value.trim()}`,
+      'Content-Type': 'application/json',
+      ...(init?.headers || {}),
+    },
+  });
+  const body = await response.text();
+  if (!response.ok) {
+    const detail = body ? ` — ${body.slice(0, 300)}` : '';
+    if (response.status === 401) {
+      throw new Error(
+        `GitHub rejected the token (401). It needs write access to ${REPO.owner}/${REPO.name}: ` +
+          `a fine-grained token with Contents: read and write, or a classic token with the ` +
+          `\`repo\` scope.${detail}`,
+      );
+    }
+    if (response.status === 404) {
+      // GitHub returns 404, not 403, for a private repo the token can't see. Probing /user
+      // separates "token is bad" from "token is fine but has no access to this repo".
+      const probe = await fetch(`${API}/user`, {
+        headers: { Authorization: `Bearer ${patInput().value.trim()}` },
+      });
+      if (probe.ok) {
+        throw new Error(
+          `The token works, but can't see ${REPO.owner}/${REPO.name} (private). ` +
+            `Fine-grained token: check its Resource owner is "${REPO.owner}" and not your personal ` +
+            `account, that ${REPO.name} is in its selected repositories, and that it isn't still ` +
+            `showing "Pending" while an org owner approves it. ` +
+            `Classic token: check it has the \`repo\` scope, and use "Configure SSO" on the token ` +
+            `to authorise it for ${REPO.owner} — without that, access is refused the same way.`,
+        );
+      }
+      throw new Error(`GitHub rejected the token and returned 404 for ${path}.${detail}`);
+    }
+    if (response.status === 403) {
+      throw new Error(
+        `GitHub returned 403 for ${path}. The token is visible to the repo but lacks a permission — ` +
+          `it needs Contents: read and write.${detail}`,
+      );
+    }
+    throw new Error(`GitHub ${response.status} for ${path}${detail}`);
+  }
+  return (body ? JSON.parse(body) : null) as T;
+}
+
+type Sha = { sha: string };
+type Ref = { object: Sha };
+type Commit = { sha: string; tree: Sha };
+
+async function nextBranch(): Promise<string> {
+  const refs = await gh<Array<{ ref: string }>>(`/repos/${REPO.owner}/${REPO.name}/git/matching-refs/heads/${BRANCH_PREFIX}`);
+  const used = refs.map((r) => parseInt(r.ref.replace(`refs/heads/${BRANCH_PREFIX}`, ''), 10)).filter((n) => !isNaN(n));
+  const next = used.length ? Math.max(...used) + 1 : 1;
+  return `${BRANCH_PREFIX}${next}`;
+}
+
+async function sync(): Promise<void> {
+  if (!state) return;
+  const button = el('sync') as unknown as HTMLButtonElement;
+  button.disabled = true;
+
+  try {
+    parent.postMessage({ pluginMessage: { type: 'save-pat', pat: patInput().value.trim() } }, '*');
+
+    const content = `${JSON.stringify(state.dump, null, 2)}\n`;
+
+    log(`Reading ${BASE_BRANCH}…`);
+    const baseRef = await gh<Ref>(`/repos/${REPO.owner}/${REPO.name}/git/ref/heads/${BASE_BRANCH}`);
+    const baseCommit = await gh<Commit>(`/repos/${REPO.owner}/${REPO.name}/git/commits/${baseRef.object.sha}`);
+
+    log(`Uploading ${DUMP_FILE} (${Math.round(content.length / 1024)} KB)…`);
+    const blob = await gh<Sha>(`/repos/${REPO.owner}/${REPO.name}/git/blobs`, {
+      method: 'POST',
+      body: JSON.stringify({ content, encoding: 'utf-8' }),
+    });
+
+    // One commit, then one ref — so the workflow fires once.
+    const newTree = await gh<Sha>(`/repos/${REPO.owner}/${REPO.name}/git/trees`, {
+      method: 'POST',
+      body: JSON.stringify({
+        base_tree: baseCommit.tree.sha,
+        tree: [{ path: `${RAW_DIR}/${DUMP_FILE}`, mode: '100644', type: 'blob', sha: blob.sha }],
+      }),
+    });
+    const commit = await gh<Sha>(`/repos/${REPO.owner}/${REPO.name}/git/commits`, {
+      method: 'POST',
+      body: JSON.stringify({
+        message: `Figma variable dump from ${state.dump.file.name}`,
+        tree: newTree.sha,
+        parents: [baseRef.object.sha],
+      }),
+    });
+
+    const branch = await nextBranch();
+    log(`Pushing ${branch}…`);
+    await gh(`/repos/${REPO.owner}/${REPO.name}/git/refs`, {
+      method: 'POST',
+      body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: commit.sha }),
+    });
+
+    log('Done. A figma-sync PR will appear once the workflow finishes.');
+    log(`https://github.com/${REPO.owner}/${REPO.name}/pulls?q=is%3Apr+is%3Aopen+label%3Afigma-sync`);
+    parent.postMessage({ pluginMessage: { type: 'notify', text: 'Figma dump pushed' } }, '*');
+  } catch (error) {
+    log(`✗ ${(error as Error).message}`);
+    // Every way this fails is something to fix under Config, so surface it rather than making
+    // the reader go looking.
+    config().open = true;
+    button.disabled = false;
+  }
+}
+
+el('sync').onclick = () => void sync();
+el('forget').onclick = () => {
+  patInput().value = '';
+  parent.postMessage({ pluginMessage: { type: 'forget-pat' } }, '*');
+  log('Token cleared from this Figma client.');
+};
+el('copy').onclick = () => {
+  if (state) log(JSON.stringify(state.summary, null, 2));
+};
+
+onmessage = (event: MessageEvent) => {
+  const message = event.data.pluginMessage;
+  if (!message) return;
+  if (message.type === 'loaded') {
+    state = message as Loaded;
+    render(state);
+    el('loading').classList.add('hidden');
+    el('content').classList.remove('hidden');
+  } else if (message.type === 'fatal') {
+    el('loading').textContent = `Failed to read variables: ${message.message}`;
+  }
+};

@@ -1,5 +1,234 @@
 {
   "core": {
+    "background": {
+      "baseDark": {
+        "$type": "color",
+        "$value": "#0E0605",
+        "$ref": "monotone.black"
+      },
+      "baseLight": {
+        "$type": "color",
+        "$value": "#FFFEFB",
+        "$ref": "monotone.white",
+        "$themes": {
+          "roast": {
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          }
+        }
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "#F8F6F2",
+        "$ref": "brown.50",
+        "$themes": {
+          "roast": {
+            "$value": "#291210",
+            "$ref": "brown.900"
+          }
+        }
+      },
+      "primaryInverse": {
+        "$type": "color",
+        "$value": "#47201C",
+        "$ref": "brown.800",
+        "$themes": {
+          "hype": {
+            "$value": "#354F4B",
+            "$ref": "teal.800"
+          }
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "#F0EDEA",
+        "$ref": "brown.100",
+        "$themes": {
+          "chat": {
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "roast": {
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "hype": {
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        }
+      },
+      "secondaryInverse": {
+        "$type": "color",
+        "$value": "#291210",
+        "$ref": "brown.900",
+        "$themes": {
+          "hype": {
+            "$value": "#041F1A",
+            "$ref": "teal.1000"
+          }
+        }
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "#DED9D4",
+        "$ref": "brown.200",
+        "$themes": {
+          "chat": {
+            "$value": "#F0EDEA",
+            "$ref": "brown.100"
+          },
+          "roast": {
+            "$value": "#5B3935",
+            "$ref": "brown.700"
+          },
+          "hype": {
+            "$value": "#F0EDEA",
+            "$ref": "brown.100"
+          }
+        }
+      },
+      "tertiaryInverse": {
+        "$type": "color",
+        "$value": "#1B0C0B",
+        "$ref": "brown.1000",
+        "$themes": {
+          "hype": {
+            "$value": "#041F1A",
+            "$ref": "teal.1000"
+          }
+        }
+      },
+      "transparent": {
+        "$type": "color",
+        "$value": "#FFFEFB00",
+        "$ref": "alpha.light.0"
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "#F0EDEA",
+        "$ref": "brown.100",
+        "$themes": {
+          "chat": {
+            "$value": "#846A67",
+            "$ref": "brown.500"
+          },
+          "roast": {
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
+          "hype": {
+            "$value": "#698C84",
+            "$ref": "teal.500"
+          }
+        }
+      },
+      "focused": {
+        "$type": "color",
+        "$value": "#846A67",
+        "$ref": "brown.500",
+        "$themes": {
+          "hype": {
+            "$value": "#587871",
+            "$ref": "teal.600"
+          }
+        }
+      },
+      "level0": {
+        "$type": "color",
+        "$themes": {
+          "chat": {
+            "$value": "#F8F6F2",
+            "$ref": "brown.50"
+          }
+        }
+      },
+      "level3": {
+        "$type": "color",
+        "$themes": {
+          "chat": {
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        }
+      },
+      "level4": {
+        "$type": "color",
+        "$themes": {
+          "chat": {
+            "$value": "#F8F6F2",
+            "$ref": "brown.50"
+          }
+        }
+      },
+      "opaque": {
+        "$type": "color",
+        "$value": "#0E060540",
+        "$ref": "alpha.dark.25",
+        "$themes": {
+          "roast": {
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          }
+        }
+      },
+      "opaqueInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB40",
+        "$ref": "alpha.light.25",
+        "$themes": {
+          "roast": {
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          }
+        }
+      },
+      "opaqueInverseLight": {
+        "$type": "color",
+        "$value": "#FFFEFB1A",
+        "$ref": "alpha.light.10",
+        "$themes": {
+          "roast": {
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          }
+        }
+      },
+      "opaqueLight": {
+        "$type": "color",
+        "$value": "#0E06051A",
+        "$ref": "alpha.dark.10",
+        "$themes": {
+          "roast": {
+            "$value": "#FFFEFB1A",
+            "$ref": "alpha.light.10"
+          }
+        }
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "#47201C",
+        "$ref": "brown.800",
+        "$themes": {
+          "hype": {
+            "$value": "#354F4B",
+            "$ref": "teal.800"
+          }
+        }
+      },
+      "selectedInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB",
+        "$ref": "monotone.white"
+      },
+      "transparent": {
+        "$type": "color",
+        "$value": "#FFFEFB00",
+        "$ref": "alpha.light.0"
+      }
+    },
     "content": {
       "primary": {
         "$type": "color",
@@ -91,235 +320,6 @@
           }
         }
       }
-    },
-    "border": {
-      "default": {
-        "$type": "color",
-        "$value": "#F0EDEA",
-        "$ref": "brown.100",
-        "$themes": {
-          "chat": {
-            "$value": "#846A67",
-            "$ref": "brown.500"
-          },
-          "roast": {
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
-          },
-          "hype": {
-            "$value": "#698C84",
-            "$ref": "teal.500"
-          }
-        }
-      },
-      "focused": {
-        "$type": "color",
-        "$value": "#846A67",
-        "$ref": "brown.500",
-        "$themes": {
-          "hype": {
-            "$value": "#587871",
-            "$ref": "teal.600"
-          }
-        }
-      },
-      "selected": {
-        "$type": "color",
-        "$value": "#47201C",
-        "$ref": "brown.800",
-        "$themes": {
-          "hype": {
-            "$value": "#354F4B",
-            "$ref": "teal.800"
-          }
-        }
-      },
-      "selectedInverse": {
-        "$type": "color",
-        "$value": "#FFFEFB",
-        "$ref": "monotone.white"
-      },
-      "transparent": {
-        "$type": "color",
-        "$value": "#FFFEFB00",
-        "$ref": "alpha.light.0"
-      },
-      "opaque": {
-        "$type": "color",
-        "$value": "#0E060540",
-        "$ref": "alpha.dark.25",
-        "$themes": {
-          "roast": {
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          }
-        }
-      },
-      "opaqueLight": {
-        "$type": "color",
-        "$value": "#0E06051A",
-        "$ref": "alpha.dark.10",
-        "$themes": {
-          "roast": {
-            "$value": "#FFFEFB1A",
-            "$ref": "alpha.light.10"
-          }
-        }
-      },
-      "opaqueInverse": {
-        "$type": "color",
-        "$value": "#FFFEFB40",
-        "$ref": "alpha.light.25",
-        "$themes": {
-          "roast": {
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          }
-        }
-      },
-      "opaqueInverseLight": {
-        "$type": "color",
-        "$value": "#FFFEFB1A",
-        "$ref": "alpha.light.10",
-        "$themes": {
-          "roast": {
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          }
-        }
-      },
-      "level0": {
-        "$type": "color",
-        "$themes": {
-          "chat": {
-            "$value": "#F8F6F2",
-            "$ref": "brown.50"
-          }
-        }
-      },
-      "level3": {
-        "$type": "color",
-        "$themes": {
-          "chat": {
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          }
-        }
-      },
-      "level4": {
-        "$type": "color",
-        "$themes": {
-          "chat": {
-            "$value": "#F8F6F2",
-            "$ref": "brown.50"
-          }
-        }
-      }
-    },
-    "background": {
-      "primary": {
-        "$type": "color",
-        "$value": "#F8F6F2",
-        "$ref": "brown.50",
-        "$themes": {
-          "roast": {
-            "$value": "#291210",
-            "$ref": "brown.900"
-          }
-        }
-      },
-      "primaryInverse": {
-        "$type": "color",
-        "$value": "#47201C",
-        "$ref": "brown.800",
-        "$themes": {
-          "hype": {
-            "$value": "#354F4B",
-            "$ref": "teal.800"
-          }
-        }
-      },
-      "secondary": {
-        "$type": "color",
-        "$value": "#F0EDEA",
-        "$ref": "brown.100",
-        "$themes": {
-          "chat": {
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "roast": {
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "hype": {
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          }
-        }
-      },
-      "secondaryInverse": {
-        "$type": "color",
-        "$value": "#291210",
-        "$ref": "brown.900",
-        "$themes": {
-          "hype": {
-            "$value": "#041F1A",
-            "$ref": "teal.1000"
-          }
-        }
-      },
-      "tertiary": {
-        "$type": "color",
-        "$value": "#DED9D4",
-        "$ref": "brown.200",
-        "$themes": {
-          "chat": {
-            "$value": "#F0EDEA",
-            "$ref": "brown.100"
-          },
-          "roast": {
-            "$value": "#5B3935",
-            "$ref": "brown.700"
-          },
-          "hype": {
-            "$value": "#F0EDEA",
-            "$ref": "brown.100"
-          }
-        }
-      },
-      "tertiaryInverse": {
-        "$type": "color",
-        "$value": "#1B0C0B",
-        "$ref": "brown.1000",
-        "$themes": {
-          "hype": {
-            "$value": "#041F1A",
-            "$ref": "teal.1000"
-          }
-        }
-      },
-      "transparent": {
-        "$type": "color",
-        "$value": "#FFFEFB00",
-        "$ref": "alpha.light.0"
-      },
-      "baseLight": {
-        "$type": "color",
-        "$value": "#FFFEFB",
-        "$ref": "monotone.white",
-        "$themes": {
-          "roast": {
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          }
-        }
-      },
-      "baseDark": {
-        "$type": "color",
-        "$value": "#0E0605",
-        "$ref": "monotone.black"
-      }
     }
   },
   "effects": {
@@ -345,24 +345,10 @@
       }
     },
     "border": {
-      "shimmerStart": {
+      "shimmerAlpha2": {
         "$type": "color",
-        "$value": "#47201C",
-        "$ref": "brown.800",
-        "$themes": {
-          "chat": {
-            "$value": "#FFAD73",
-            "$ref": "orange.200"
-          },
-          "roast": {
-            "$value": "#A52D1A",
-            "$ref": "red.800"
-          },
-          "hype": {
-            "$value": "#C8E585",
-            "$ref": "green.200"
-          }
-        }
+        "$value": "#FFFEFB00",
+        "$ref": "alpha.light.0"
       },
       "shimmerEnd": {
         "$type": "color",
@@ -388,306 +374,47 @@
         "$value": "#FFFEFB00",
         "$ref": "alpha.light.0"
       },
-      "shimmerAlpha2": {
-        "$type": "color",
-        "$value": "#FFFEFB00",
-        "$ref": "alpha.light.0"
-      }
-    }
-  },
-  "extension": {
-    "content": {
-      "accentLight": {
-        "$type": "color",
-        "$value": "#DED9D4",
-        "$ref": "brown.200",
-        "$themes": {
-          "chat": {
-            "$value": "#F8F6F2",
-            "$ref": "brown.50"
-          },
-          "roast": {
-            "$value": "#F8F6F2",
-            "$ref": "brown.50"
-          },
-          "hype": {
-            "$value": "#F8F6F2",
-            "$ref": "brown.50"
-          }
-        }
-      },
-      "accentMid": {
-        "$type": "color",
-        "$value": "#846A67",
-        "$ref": "brown.500",
-        "$themes": {
-          "chat": {
-            "$value": "#FFAD73",
-            "$ref": "orange.200"
-          },
-          "roast": {
-            "$value": "#FFAD73",
-            "$ref": "orange.200"
-          },
-          "hype": {
-            "$value": "#98B167",
-            "$ref": "green.400"
-          }
-        }
-      },
-      "accentDark": {
-        "$type": "color",
-        "$value": "#1B0C0B",
-        "$ref": "brown.1000",
-        "$themes": {
-          "roast": {
-            "$value": "#DED9D4",
-            "$ref": "brown.200"
-          }
-        }
-      },
-      "waitingLight": {
-        "$type": "color",
-        "$value": "#E8E8FF",
-        "$ref": "purple.50"
-      },
-      "waitingMid": {
-        "$type": "color",
-        "$value": "#695F9A",
-        "$ref": "purple.500"
-      },
-      "waitingDark": {
-        "$type": "color",
-        "$value": "#3C2859",
-        "$ref": "purple.800"
-      },
-      "positiveLight": {
-        "$type": "color",
-        "$value": "#E6F2C9",
-        "$ref": "green.50",
-        "$themes": {
-          "roast": {
-            "$value": "#101F02",
-            "$ref": "green.1000"
-          }
-        }
-      },
-      "positiveMid": {
-        "$type": "color",
-        "$value": "#51623A",
-        "$ref": "green.700",
-        "$themes": {
-          "roast": {
-            "$value": "#C8E585",
-            "$ref": "green.200"
-          }
-        }
-      },
-      "positiveDark": {
-        "$type": "color",
-        "$value": "#101F02",
-        "$ref": "green.1000",
-        "$themes": {
-          "roast": {
-            "$value": "#E6F2C9",
-            "$ref": "green.50"
-          }
-        }
-      },
-      "warningLight": {
-        "$type": "color",
-        "$value": "#FAEFC5",
-        "$ref": "yellow.50"
-      },
-      "warningMid": {
-        "$type": "color",
-        "$value": "#866512",
-        "$ref": "yellow.700"
-      },
-      "warningDark": {
-        "$type": "color",
-        "$value": "#1F1700",
-        "$ref": "yellow.1000"
-      },
-      "negativeLight": {
-        "$type": "color",
-        "$value": "#FFC3B6",
-        "$ref": "red.100"
-      },
-      "negativeMid": {
-        "$type": "color",
-        "$value": "#B4422F",
-        "$ref": "red.700"
-      },
-      "negativeDark": {
-        "$type": "color",
-        "$value": "#3C0800",
-        "$ref": "red.1000"
-      },
-      "categoryPrimary": {
-        "$type": "color",
-        "$value": "#5A4C84",
-        "$ref": "purple.600"
-      },
-      "categorySecondary": {
-        "$type": "color",
-        "$value": "#51623A",
-        "$ref": "green.700"
-      },
-      "categoryTertiary": {
-        "$type": "color",
-        "$value": "#46635E",
-        "$ref": "teal.700"
-      },
-      "categoryQuaternary": {
-        "$type": "color",
-        "$value": "#6F514E",
-        "$ref": "brown.600"
-      },
-      "onColorLight": {
-        "$type": "color",
-        "$value": "#FFFEFB",
-        "$ref": "monotone.white"
-      },
-      "onColorMid": {
-        "$type": "color",
-        "$value": "#DED9D4",
-        "$ref": "brown.200"
-      },
-      "onColorDark": {
-        "$type": "color",
-        "$value": "#C9BEBA",
-        "$ref": "brown.300"
-      },
-      "disabled": {
-        "$type": "color",
-        "$value": "#846A67",
-        "$ref": "brown.500"
-      },
-      "userInput": {
+      "shimmerStart": {
         "$type": "color",
         "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
+          "chat": {
+            "$value": "#FFAD73",
+            "$ref": "orange.200"
+          },
+          "roast": {
+            "$value": "#A52D1A",
+            "$ref": "red.800"
+          },
           "hype": {
-            "$value": "#354F4B",
-            "$ref": "teal.800"
+            "$value": "#C8E585",
+            "$ref": "green.200"
           }
         }
       }
-    },
-    "border": {
-      "accentLight": {
-        "$type": "color",
-        "$value": "#F0EDEA",
-        "$ref": "brown.100"
-      },
-      "accentMid": {
-        "$type": "color",
-        "$value": "#AC9B98",
-        "$ref": "brown.400"
-      },
+    }
+  },
+  "extension": {
+    "background": {
       "accentDark": {
         "$type": "color",
-        "$value": "#291210",
-        "$ref": "brown.900"
-      },
-      "waitingLight": {
-        "$type": "color",
-        "$value": "#BFBFED",
-        "$ref": "purple.100"
-      },
-      "waitingMid": {
-        "$type": "color",
-        "$value": "#7771B0",
-        "$ref": "purple.400"
-      },
-      "waitingDark": {
-        "$type": "color",
-        "$value": "#301F47",
-        "$ref": "purple.900"
-      },
-      "positiveLight": {
-        "$type": "color",
-        "$value": "#D7ECA7",
-        "$ref": "green.100"
-      },
-      "positiveMid": {
-        "$type": "color",
-        "$value": "#98B167",
-        "$ref": "green.400"
-      },
-      "positiveDark": {
-        "$type": "color",
-        "$value": "#28371A",
-        "$ref": "green.900"
-      },
-      "warningLight": {
-        "$type": "color",
-        "$value": "#FBDE8B",
-        "$ref": "yellow.100"
-      },
-      "warningMid": {
-        "$type": "color",
-        "$value": "#CCA338",
-        "$ref": "yellow.400"
-      },
-      "warningDark": {
-        "$type": "color",
-        "$value": "#422E00",
-        "$ref": "yellow.900"
-      },
-      "negativeLight": {
-        "$type": "color",
-        "$value": "#FFC3B6",
-        "$ref": "red.100"
-      },
-      "negativeMid": {
-        "$type": "color",
-        "$value": "#E1816D",
-        "$ref": "red.400"
-      },
-      "negativeDark": {
-        "$type": "color",
-        "$value": "#6D1709",
-        "$ref": "red.900"
-      },
-      "focused": {
-        "$type": "color",
-        "$value": "#C9BEBA",
-        "$ref": "brown.300"
-      },
-      "disabledOnLight": {
-        "$type": "color",
-        "$value": "#DED9D4",
-        "$ref": "brown.200"
-      },
-      "disabledOnDark": {
-        "$type": "color",
-        "$value": "#6F514E",
-        "$ref": "brown.600"
-      }
-    },
-    "background": {
-      "categoryPrimary": {
-        "$type": "color",
-        "$value": "#BFBFED",
-        "$ref": "purple.100"
-      },
-      "categorySecondary": {
-        "$type": "color",
-        "$value": "#D7ECA7",
-        "$ref": "green.100"
-      },
-      "categoryTertiary": {
-        "$type": "color",
-        "$value": "#BCDDD1",
-        "$ref": "teal.100"
-      },
-      "categoryQuaternary": {
-        "$type": "color",
-        "$value": "#F0EDEA",
-        "$ref": "brown.100"
+        "$value": "#47201C",
+        "$ref": "brown.800",
+        "$themes": {
+          "chat": {
+            "$value": "#1B0C0B",
+            "$ref": "brown.1000"
+          },
+          "roast": {
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          },
+          "hype": {
+            "$value": "#041F1A",
+            "$ref": "teal.1000"
+          }
+        }
       },
       "accentLight": {
         "$type": "color",
@@ -727,14 +454,264 @@
           }
         }
       },
-      "accentDark": {
+      "categoryPrimary": {
+        "$type": "color",
+        "$value": "#BFBFED",
+        "$ref": "purple.100"
+      },
+      "categoryQuaternary": {
+        "$type": "color",
+        "$value": "#F0EDEA",
+        "$ref": "brown.100"
+      },
+      "categorySecondary": {
+        "$type": "color",
+        "$value": "#D7ECA7",
+        "$ref": "green.100"
+      },
+      "categoryTertiary": {
+        "$type": "color",
+        "$value": "#BCDDD1",
+        "$ref": "teal.100"
+      },
+      "dataVisPrimary": {
+        "$type": "color",
+        "$value": "#1B0C0B",
+        "$ref": "brown.1000"
+      },
+      "dataVisQuaternary": {
+        "$type": "color",
+        "$value": "#AC9B98",
+        "$ref": "brown.400"
+      },
+      "dataVisQuinary": {
+        "$type": "color",
+        "$value": "#C9BEBA",
+        "$ref": "brown.300"
+      },
+      "dataVisSecondary": {
         "$type": "color",
         "$value": "#47201C",
-        "$ref": "brown.800",
+        "$ref": "brown.800"
+      },
+      "dataVisTertiary": {
+        "$type": "color",
+        "$value": "#6F514E",
+        "$ref": "brown.600"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "#F8F6F2",
+        "$ref": "brown.50"
+      },
+      "disabledControls": {
+        "$type": "color",
+        "$value": "#DED9D4",
+        "$ref": "brown.200"
+      },
+      "disabledInverse": {
+        "$type": "color",
+        "$value": "#291210",
+        "$ref": "brown.900"
+      },
+      "negativeDark": {
+        "$type": "color",
+        "$value": "#3C0800",
+        "$ref": "red.1000"
+      },
+      "negativeLight": {
+        "$type": "color",
+        "$value": "#FFC3B6",
+        "$ref": "red.100"
+      },
+      "negativeMid": {
+        "$type": "color",
+        "$value": "#B4422F",
+        "$ref": "red.700"
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": "#0E060580",
+        "$ref": "alpha.dark.50",
         "$themes": {
           "chat": {
-            "$value": "#1B0C0B",
-            "$ref": "brown.1000"
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "roast": {
+            "$value": "#0E06050D",
+            "$ref": "alpha.dark.5"
+          },
+          "hype": {
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          }
+        }
+      },
+      "overlayInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB40",
+        "$ref": "alpha.light.25",
+        "$themes": {
+          "chat": {
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          },
+          "hype": {
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          }
+        }
+      },
+      "overlayLight": {
+        "$type": "color",
+        "$value": "#0E06051A",
+        "$ref": "alpha.dark.10",
+        "$themes": {
+          "chat": {
+            "$value": "#FFFEFB80",
+            "$ref": "alpha.light.50"
+          },
+          "roast": {
+            "$value": "#FFFEFB0D",
+            "$ref": "alpha.light.5"
+          },
+          "hype": {
+            "$value": "#FFFEFB80",
+            "$ref": "alpha.light.50"
+          }
+        }
+      },
+      "overlayLightInverse": {
+        "$type": "color",
+        "$value": "#FFFEFBBF",
+        "$ref": "alpha.light.75",
+        "$themes": {
+          "chat": {
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
+          "roast": {
+            "$value": "#FFFEFB80",
+            "$ref": "alpha.light.50"
+          },
+          "hype": {
+            "$value": "#0E060533",
+            "$ref": "alpha.dark.20"
+          }
+        }
+      },
+      "positiveDark": {
+        "$type": "color",
+        "$value": "#101F02",
+        "$ref": "green.1000",
+        "$themes": {
+          "hype": {
+            "$value": "#E6F2C9",
+            "$ref": "green.50"
+          }
+        }
+      },
+      "positiveLight": {
+        "$type": "color",
+        "$value": "#D7ECA7",
+        "$ref": "green.100",
+        "$themes": {
+          "chat": {
+            "$value": "#E6F2C9",
+            "$ref": "green.50"
+          },
+          "hype": {
+            "$value": "#101F02",
+            "$ref": "green.1000"
+          }
+        }
+      },
+      "positiveMid": {
+        "$type": "color",
+        "$value": "#51623A",
+        "$ref": "green.700",
+        "$themes": {
+          "hype": {
+            "$value": "#C8E585",
+            "$ref": "green.200"
+          }
+        }
+      },
+      "skeletonDark": {
+        "$type": "color",
+        "$value": "#0E060526",
+        "$ref": "alpha.dark.15",
+        "$themes": {
+          "roast": {
+            "$value": "#FFFEFB33",
+            "$ref": "alpha.light.20"
+          }
+        }
+      },
+      "skeletonDarkInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB26",
+        "$ref": "alpha.light.15",
+        "$themes": {
+          "roast": {
+            "$value": "#0E060533",
+            "$ref": "alpha.dark.20"
+          }
+        }
+      },
+      "skeletonLight": {
+        "$type": "color",
+        "$value": "#0E06050D",
+        "$ref": "alpha.dark.5",
+        "$themes": {
+          "roast": {
+            "$value": "#FFFEFB1A",
+            "$ref": "alpha.light.10"
+          }
+        }
+      },
+      "skeletonLightInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB0D",
+        "$ref": "alpha.light.5",
+        "$themes": {
+          "roast": {
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          }
+        }
+      },
+      "skeletonMid": {
+        "$type": "color",
+        "$value": "#0E06051A",
+        "$ref": "alpha.dark.10",
+        "$themes": {
+          "roast": {
+            "$value": "#FFFEFB26",
+            "$ref": "alpha.light.15"
+          }
+        }
+      },
+      "skeletonMidInverse": {
+        "$type": "color",
+        "$value": "#FFFEFB1A",
+        "$ref": "alpha.light.10",
+        "$themes": {
+          "roast": {
+            "$value": "#0E060526",
+            "$ref": "alpha.dark.15"
+          }
+        }
+      },
+      "waitingDark": {
+        "$type": "color",
+        "$value": "#210B3E",
+        "$ref": "purple.1000",
+        "$themes": {
+          "chat": {
+            "$value": "#271300",
+            "$ref": "orange.1000"
           },
           "roast": {
             "$value": "#3C0800",
@@ -784,61 +761,10 @@
           }
         }
       },
-      "waitingDark": {
+      "warningDark": {
         "$type": "color",
-        "$value": "#210B3E",
-        "$ref": "purple.1000",
-        "$themes": {
-          "chat": {
-            "$value": "#271300",
-            "$ref": "orange.1000"
-          },
-          "roast": {
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "hype": {
-            "$value": "#041F1A",
-            "$ref": "teal.1000"
-          }
-        }
-      },
-      "positiveLight": {
-        "$type": "color",
-        "$value": "#D7ECA7",
-        "$ref": "green.100",
-        "$themes": {
-          "chat": {
-            "$value": "#E6F2C9",
-            "$ref": "green.50"
-          },
-          "hype": {
-            "$value": "#101F02",
-            "$ref": "green.1000"
-          }
-        }
-      },
-      "positiveMid": {
-        "$type": "color",
-        "$value": "#51623A",
-        "$ref": "green.700",
-        "$themes": {
-          "hype": {
-            "$value": "#C8E585",
-            "$ref": "green.200"
-          }
-        }
-      },
-      "positiveDark": {
-        "$type": "color",
-        "$value": "#101F02",
-        "$ref": "green.1000",
-        "$themes": {
-          "hype": {
-            "$value": "#E6F2C9",
-            "$ref": "green.50"
-          }
-        }
+        "$value": "#1F1700",
+        "$ref": "yellow.1000"
       },
       "warningLight": {
         "$type": "color",
@@ -849,11 +775,179 @@
         "$type": "color",
         "$value": "#866512",
         "$ref": "yellow.700"
+      }
+    },
+    "border": {
+      "accentDark": {
+        "$type": "color",
+        "$value": "#291210",
+        "$ref": "brown.900"
+      },
+      "accentLight": {
+        "$type": "color",
+        "$value": "#F0EDEA",
+        "$ref": "brown.100"
+      },
+      "accentMid": {
+        "$type": "color",
+        "$value": "#AC9B98",
+        "$ref": "brown.400"
+      },
+      "disabledOnDark": {
+        "$type": "color",
+        "$value": "#6F514E",
+        "$ref": "brown.600"
+      },
+      "disabledOnLight": {
+        "$type": "color",
+        "$value": "#DED9D4",
+        "$ref": "brown.200"
+      },
+      "focused": {
+        "$type": "color",
+        "$value": "#C9BEBA",
+        "$ref": "brown.300"
+      },
+      "negativeDark": {
+        "$type": "color",
+        "$value": "#6D1709",
+        "$ref": "red.900"
+      },
+      "negativeLight": {
+        "$type": "color",
+        "$value": "#FFC3B6",
+        "$ref": "red.100"
+      },
+      "negativeMid": {
+        "$type": "color",
+        "$value": "#E1816D",
+        "$ref": "red.400"
+      },
+      "positiveDark": {
+        "$type": "color",
+        "$value": "#28371A",
+        "$ref": "green.900"
+      },
+      "positiveLight": {
+        "$type": "color",
+        "$value": "#D7ECA7",
+        "$ref": "green.100"
+      },
+      "positiveMid": {
+        "$type": "color",
+        "$value": "#98B167",
+        "$ref": "green.400"
+      },
+      "waitingDark": {
+        "$type": "color",
+        "$value": "#301F47",
+        "$ref": "purple.900"
+      },
+      "waitingLight": {
+        "$type": "color",
+        "$value": "#BFBFED",
+        "$ref": "purple.100"
+      },
+      "waitingMid": {
+        "$type": "color",
+        "$value": "#7771B0",
+        "$ref": "purple.400"
       },
       "warningDark": {
         "$type": "color",
-        "$value": "#1F1700",
-        "$ref": "yellow.1000"
+        "$value": "#422E00",
+        "$ref": "yellow.900"
+      },
+      "warningLight": {
+        "$type": "color",
+        "$value": "#FBDE8B",
+        "$ref": "yellow.100"
+      },
+      "warningMid": {
+        "$type": "color",
+        "$value": "#CCA338",
+        "$ref": "yellow.400"
+      }
+    },
+    "content": {
+      "accentDark": {
+        "$type": "color",
+        "$value": "#1B0C0B",
+        "$ref": "brown.1000",
+        "$themes": {
+          "roast": {
+            "$value": "#DED9D4",
+            "$ref": "brown.200"
+          }
+        }
+      },
+      "accentLight": {
+        "$type": "color",
+        "$value": "#DED9D4",
+        "$ref": "brown.200",
+        "$themes": {
+          "chat": {
+            "$value": "#F8F6F2",
+            "$ref": "brown.50"
+          },
+          "roast": {
+            "$value": "#F8F6F2",
+            "$ref": "brown.50"
+          },
+          "hype": {
+            "$value": "#F8F6F2",
+            "$ref": "brown.50"
+          }
+        }
+      },
+      "accentMid": {
+        "$type": "color",
+        "$value": "#846A67",
+        "$ref": "brown.500",
+        "$themes": {
+          "chat": {
+            "$value": "#FFAD73",
+            "$ref": "orange.200"
+          },
+          "roast": {
+            "$value": "#FFAD73",
+            "$ref": "orange.200"
+          },
+          "hype": {
+            "$value": "#98B167",
+            "$ref": "green.400"
+          }
+        }
+      },
+      "categoryPrimary": {
+        "$type": "color",
+        "$value": "#5A4C84",
+        "$ref": "purple.600"
+      },
+      "categoryQuaternary": {
+        "$type": "color",
+        "$value": "#6F514E",
+        "$ref": "brown.600"
+      },
+      "categorySecondary": {
+        "$type": "color",
+        "$value": "#51623A",
+        "$ref": "green.700"
+      },
+      "categoryTertiary": {
+        "$type": "color",
+        "$value": "#46635E",
+        "$ref": "teal.700"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "#846A67",
+        "$ref": "brown.500"
+      },
+      "negativeDark": {
+        "$type": "color",
+        "$value": "#3C0800",
+        "$ref": "red.1000"
       },
       "negativeLight": {
         "$type": "color",
@@ -865,228 +959,110 @@
         "$value": "#B4422F",
         "$ref": "red.700"
       },
-      "negativeDark": {
-        "$type": "color",
-        "$value": "#3C0800",
-        "$ref": "red.1000"
-      },
-      "disabled": {
-        "$type": "color",
-        "$value": "#F8F6F2",
-        "$ref": "brown.50"
-      },
-      "disabledControls": {
-        "$type": "color",
-        "$value": "#DED9D4",
-        "$ref": "brown.200"
-      },
-      "disabledInverse": {
-        "$type": "color",
-        "$value": "#291210",
-        "$ref": "brown.900"
-      },
-      "dataVisPrimary": {
-        "$type": "color",
-        "$value": "#1B0C0B",
-        "$ref": "brown.1000"
-      },
-      "dataVisSecondary": {
-        "$type": "color",
-        "$value": "#47201C",
-        "$ref": "brown.800"
-      },
-      "dataVisTertiary": {
-        "$type": "color",
-        "$value": "#6F514E",
-        "$ref": "brown.600"
-      },
-      "dataVisQuaternary": {
-        "$type": "color",
-        "$value": "#AC9B98",
-        "$ref": "brown.400"
-      },
-      "dataVisQuinary": {
+      "onColorDark": {
         "$type": "color",
         "$value": "#C9BEBA",
         "$ref": "brown.300"
       },
-      "skeletonLight": {
+      "onColorLight": {
         "$type": "color",
-        "$value": "#0E06050D",
-        "$ref": "alpha.dark.5",
+        "$value": "#FFFEFB",
+        "$ref": "monotone.white"
+      },
+      "onColorMid": {
+        "$type": "color",
+        "$value": "#DED9D4",
+        "$ref": "brown.200"
+      },
+      "positiveDark": {
+        "$type": "color",
+        "$value": "#101F02",
+        "$ref": "green.1000",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB1A",
-            "$ref": "alpha.light.10"
+            "$value": "#E6F2C9",
+            "$ref": "green.50"
           }
         }
       },
-      "skeletonMid": {
+      "positiveLight": {
         "$type": "color",
-        "$value": "#0E06051A",
-        "$ref": "alpha.dark.10",
+        "$value": "#E6F2C9",
+        "$ref": "green.50",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB26",
-            "$ref": "alpha.light.15"
+            "$value": "#101F02",
+            "$ref": "green.1000"
           }
         }
       },
-      "skeletonDark": {
+      "positiveMid": {
         "$type": "color",
-        "$value": "#0E060526",
-        "$ref": "alpha.dark.15",
+        "$value": "#51623A",
+        "$ref": "green.700",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB33",
-            "$ref": "alpha.light.20"
+            "$value": "#C8E585",
+            "$ref": "green.200"
           }
         }
       },
-      "skeletonLightInverse": {
+      "userInput": {
         "$type": "color",
-        "$value": "#FFFEFB0D",
-        "$ref": "alpha.light.5",
+        "$value": "#47201C",
+        "$ref": "brown.800",
         "$themes": {
-          "roast": {
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          }
-        }
-      },
-      "skeletonMidInverse": {
-        "$type": "color",
-        "$value": "#FFFEFB1A",
-        "$ref": "alpha.light.10",
-        "$themes": {
-          "roast": {
-            "$value": "#0E060526",
-            "$ref": "alpha.dark.15"
-          }
-        }
-      },
-      "skeletonDarkInverse": {
-        "$type": "color",
-        "$value": "#FFFEFB26",
-        "$ref": "alpha.light.15",
-        "$themes": {
-          "roast": {
-            "$value": "#0E060533",
-            "$ref": "alpha.dark.20"
-          }
-        }
-      },
-      "overlay": {
-        "$type": "color",
-        "$value": "#0E060580",
-        "$ref": "alpha.dark.50",
-        "$themes": {
-          "chat": {
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "roast": {
-            "$value": "#0E06050D",
-            "$ref": "alpha.dark.5"
-          },
           "hype": {
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
+            "$value": "#354F4B",
+            "$ref": "teal.800"
           }
         }
       },
-      "overlayLight": {
+      "waitingDark": {
         "$type": "color",
-        "$value": "#0E06051A",
-        "$ref": "alpha.dark.10",
-        "$themes": {
-          "chat": {
-            "$value": "#FFFEFB80",
-            "$ref": "alpha.light.50"
-          },
-          "roast": {
-            "$value": "#FFFEFB0D",
-            "$ref": "alpha.light.5"
-          },
-          "hype": {
-            "$value": "#FFFEFB80",
-            "$ref": "alpha.light.50"
-          }
-        }
+        "$value": "#3C2859",
+        "$ref": "purple.800"
       },
-      "overlayInverse": {
+      "waitingLight": {
         "$type": "color",
-        "$value": "#FFFEFB40",
-        "$ref": "alpha.light.25",
-        "$themes": {
-          "chat": {
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          },
-          "hype": {
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          }
-        }
+        "$value": "#E8E8FF",
+        "$ref": "purple.50"
       },
-      "overlayLightInverse": {
+      "waitingMid": {
         "$type": "color",
-        "$value": "#FFFEFBBF",
-        "$ref": "alpha.light.75",
-        "$themes": {
-          "chat": {
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "roast": {
-            "$value": "#FFFEFB80",
-            "$ref": "alpha.light.50"
-          },
-          "hype": {
-            "$value": "#0E060533",
-            "$ref": "alpha.dark.20"
-          }
-        }
+        "$value": "#695F9A",
+        "$ref": "purple.500"
+      },
+      "warningDark": {
+        "$type": "color",
+        "$value": "#1F1700",
+        "$ref": "yellow.1000"
+      },
+      "warningLight": {
+        "$type": "color",
+        "$value": "#FAEFC5",
+        "$ref": "yellow.50"
+      },
+      "warningMid": {
+        "$type": "color",
+        "$value": "#866512",
+        "$ref": "yellow.700"
       }
     }
   },
   "feature": {
     "budget": {
-      "content": {
-        "primary": {
+      "background": {
+        "dataVisPrimary": {
           "$type": "color",
           "$value": "#041F1A",
           "$ref": "teal.1000"
         },
-        "primaryInverse": {
+        "dataVisSecondary": {
           "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
+          "$value": "#8CB5AA",
+          "$ref": "teal.300"
         },
-        "secondary": {
-          "$type": "color",
-          "$value": "#354F4B",
-          "$ref": "teal.800"
-        }
-      },
-      "border": {
-        "default": {
-          "$type": "color",
-          "$value": "#7AA097",
-          "$ref": "teal.400"
-        },
-        "selected": {
-          "$type": "color",
-          "$value": "#7AA097",
-          "$ref": "teal.400"
-        },
-        "selectedInverse": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
-        }
-      },
-      "background": {
         "primary": {
           "$type": "color",
           "$value": "#9DC9BD",
@@ -1106,26 +1082,31 @@
           "$type": "color",
           "$value": "#041F1A",
           "$ref": "teal.1000"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#7AA097",
+          "$ref": "teal.400"
         },
-        "dataVisPrimary": {
+        "selected": {
+          "$type": "color",
+          "$value": "#7AA097",
+          "$ref": "teal.400"
+        },
+        "selectedInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        }
+      },
+      "content": {
+        "primary": {
           "$type": "color",
           "$value": "#041F1A",
           "$ref": "teal.1000"
         },
-        "dataVisSecondary": {
-          "$type": "color",
-          "$value": "#8CB5AA",
-          "$ref": "teal.300"
-        }
-      }
-    },
-    "save": {
-      "content": {
-        "primary": {
-          "$type": "color",
-          "$value": "#271300",
-          "$ref": "orange.1000"
-        },
         "primaryInverse": {
           "$type": "color",
           "$value": "#FFFEFB",
@@ -1133,96 +1114,28 @@
         },
         "secondary": {
           "$type": "color",
-          "$value": "#7A3D00",
-          "$ref": "orange.800"
-        }
-      },
-      "border": {
-        "default": {
-          "$type": "color",
-          "$value": "#D3884D",
-          "$ref": "orange.400"
-        },
-        "buttonSecondary": {
-          "$type": "color",
-          "$value": "#D3884D",
-          "$ref": "orange.400"
-        },
-        "selectedInverse": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
-        }
-      },
-      "background": {
-        "primary": {
-          "$type": "color",
-          "$value": "#FFAD73",
-          "$ref": "orange.200"
-        },
-        "primaryInverse": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
-        },
-        "secondary": {
-          "$type": "color",
-          "$value": "#FFE3D1",
-          "$ref": "orange.50"
-        },
-        "tertiary": {
-          "$type": "color",
-          "$value": "#271300",
-          "$ref": "orange.1000"
-        },
-        "dataVisPrimary": {
-          "$type": "color",
-          "$value": "#271300",
-          "$ref": "orange.1000"
-        },
-        "dataVisSecondary": {
-          "$type": "color",
-          "$value": "#BD753A",
-          "$ref": "orange.500"
+          "$value": "#354F4B",
+          "$ref": "teal.800"
         }
       }
     },
     "challenges": {
-      "content": {
-        "primary": {
+      "background": {
+        "dataVisPrimary": {
           "$type": "color",
           "$value": "#1F1700",
           "$ref": "yellow.1000"
         },
-        "primaryInverse": {
+        "dataVisSecondary": {
           "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
+          "$value": "#B48F2B",
+          "$ref": "yellow.500"
         },
-        "secondary": {
+        "dataVisTertiary": {
           "$type": "color",
-          "$value": "#6E5005",
-          "$ref": "yellow.800"
-        }
-      },
-      "border": {
-        "default": {
-          "$type": "color",
-          "$value": "#CCA338",
-          "$ref": "yellow.400"
+          "$value": "#E3B844",
+          "$ref": "yellow.300"
         },
-        "selected": {
-          "$type": "color",
-          "$value": "#CCA338",
-          "$ref": "yellow.400"
-        },
-        "selectedInverse": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
-        }
-      },
-      "background": {
         "primary": {
           "$type": "color",
           "$value": "#FBCD51",
@@ -1242,57 +1155,18 @@
           "$type": "color",
           "$value": "#1F1700",
           "$ref": "yellow.1000"
-        },
-        "dataVisPrimary": {
-          "$type": "color",
-          "$value": "#1F1700",
-          "$ref": "yellow.1000"
-        },
-        "dataVisSecondary": {
-          "$type": "color",
-          "$value": "#B48F2B",
-          "$ref": "yellow.500"
-        },
-        "dataVisTertiary": {
-          "$type": "color",
-          "$value": "#E3B844",
-          "$ref": "yellow.300"
-        }
-      }
-    },
-    "ewa": {
-      "content": {
-        "primary": {
-          "$type": "color",
-          "$value": "#061A2E",
-          "$ref": "blue.1000"
-        },
-        "primaryInverse": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
-        },
-        "secondary": {
-          "$type": "color",
-          "$value": "#2E4C62",
-          "$ref": "blue.800"
-        },
-        "tertiary": {
-          "$type": "color",
-          "$value": "#42657C",
-          "$ref": "blue.700"
         }
       },
       "border": {
         "default": {
           "$type": "color",
-          "$value": "#7DAFCB",
-          "$ref": "blue.400"
+          "$value": "#CCA338",
+          "$ref": "yellow.400"
         },
         "selected": {
           "$type": "color",
-          "$value": "#7DAFCB",
-          "$ref": "blue.400"
+          "$value": "#CCA338",
+          "$ref": "yellow.400"
         },
         "selectedInverse": {
           "$type": "color",
@@ -1300,11 +1174,11 @@
           "$ref": "monotone.white"
         }
       },
-      "background": {
+      "content": {
         "primary": {
           "$type": "color",
-          "$value": "#9ED9F7",
-          "$ref": "blue.200"
+          "$value": "#1F1700",
+          "$ref": "yellow.1000"
         },
         "primaryInverse": {
           "$type": "color",
@@ -1313,37 +1187,76 @@
         },
         "secondary": {
           "$type": "color",
-          "$value": "#E8FAFF",
-          "$ref": "blue.50"
-        },
-        "tertiary": {
-          "$type": "color",
-          "$value": "#061A2E",
-          "$ref": "blue.1000"
-        },
-        "dataVisPrimary": {
-          "$type": "color",
-          "$value": "#061A2E",
-          "$ref": "blue.1000"
-        },
-        "dataVisSecondary": {
-          "$type": "color",
-          "$value": "#567D96",
-          "$ref": "blue.600"
-        },
-        "dataVisTertiary": {
-          "$type": "color",
-          "$value": "#C3EAFB",
-          "$ref": "blue.100"
-        },
-        "dataVisQuaternary": {
-          "$type": "color",
-          "$value": "#FFFEFB",
-          "$ref": "monotone.white"
+          "$value": "#6E5005",
+          "$ref": "yellow.800"
         }
       }
     },
     "creditScore": {
+      "background": {
+        "dataVisPrimary": {
+          "$type": "color",
+          "$value": "#210B3E",
+          "$ref": "purple.1000"
+        },
+        "dataVisQuaternary": {
+          "$type": "color",
+          "$value": "#7771B0",
+          "$ref": "purple.400"
+        },
+        "dataVisQuinary": {
+          "$type": "color",
+          "$value": "#8683C5",
+          "$ref": "purple.300"
+        },
+        "dataVisSecondary": {
+          "$type": "color",
+          "$value": "#3C2859",
+          "$ref": "purple.800"
+        },
+        "dataVisTertiary": {
+          "$type": "color",
+          "$value": "#5A4C84",
+          "$ref": "purple.600"
+        },
+        "primary": {
+          "$type": "color",
+          "$value": "#9595DB",
+          "$ref": "purple.200"
+        },
+        "primaryInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "#E8E8FF",
+          "$ref": "purple.50"
+        },
+        "tertiary": {
+          "$type": "color",
+          "$value": "#210B3E",
+          "$ref": "purple.1000"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#7771B0",
+          "$ref": "purple.400"
+        },
+        "selected": {
+          "$type": "color",
+          "$value": "#7771B0",
+          "$ref": "purple.400"
+        },
+        "selectedInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        }
+      },
       "content": {
         "primary": {
           "$type": "color",
@@ -1365,29 +1278,34 @@
           "$value": "#4B3A6F",
           "$ref": "purple.700"
         }
-      },
-      "border": {
-        "default": {
+      }
+    },
+    "ewa": {
+      "background": {
+        "dataVisPrimary": {
           "$type": "color",
-          "$value": "#7771B0",
-          "$ref": "purple.400"
+          "$value": "#061A2E",
+          "$ref": "blue.1000"
         },
-        "selected": {
-          "$type": "color",
-          "$value": "#7771B0",
-          "$ref": "purple.400"
-        },
-        "selectedInverse": {
+        "dataVisQuaternary": {
           "$type": "color",
           "$value": "#FFFEFB",
           "$ref": "monotone.white"
-        }
-      },
-      "background": {
+        },
+        "dataVisSecondary": {
+          "$type": "color",
+          "$value": "#567D96",
+          "$ref": "blue.600"
+        },
+        "dataVisTertiary": {
+          "$type": "color",
+          "$value": "#C3EAFB",
+          "$ref": "blue.100"
+        },
         "primary": {
           "$type": "color",
-          "$value": "#9595DB",
-          "$ref": "purple.200"
+          "$value": "#9ED9F7",
+          "$ref": "blue.200"
         },
         "primaryInverse": {
           "$type": "color",
@@ -1396,38 +1314,120 @@
         },
         "secondary": {
           "$type": "color",
-          "$value": "#E8E8FF",
-          "$ref": "purple.50"
+          "$value": "#E8FAFF",
+          "$ref": "blue.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#210B3E",
-          "$ref": "purple.1000"
+          "$value": "#061A2E",
+          "$ref": "blue.1000"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#7DAFCB",
+          "$ref": "blue.400"
         },
+        "selected": {
+          "$type": "color",
+          "$value": "#7DAFCB",
+          "$ref": "blue.400"
+        },
+        "selectedInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        }
+      },
+      "content": {
+        "primary": {
+          "$type": "color",
+          "$value": "#061A2E",
+          "$ref": "blue.1000"
+        },
+        "primaryInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "#2E4C62",
+          "$ref": "blue.800"
+        },
+        "tertiary": {
+          "$type": "color",
+          "$value": "#42657C",
+          "$ref": "blue.700"
+        }
+      }
+    },
+    "save": {
+      "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#210B3E",
-          "$ref": "purple.1000"
+          "$value": "#271300",
+          "$ref": "orange.1000"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#3C2859",
-          "$ref": "purple.800"
+          "$value": "#BD753A",
+          "$ref": "orange.500"
         },
-        "dataVisTertiary": {
+        "primary": {
           "$type": "color",
-          "$value": "#5A4C84",
-          "$ref": "purple.600"
+          "$value": "#FFAD73",
+          "$ref": "orange.200"
         },
-        "dataVisQuaternary": {
+        "primaryInverse": {
           "$type": "color",
-          "$value": "#7771B0",
-          "$ref": "purple.400"
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
         },
-        "dataVisQuinary": {
+        "secondary": {
           "$type": "color",
-          "$value": "#8683C5",
-          "$ref": "purple.300"
+          "$value": "#FFE3D1",
+          "$ref": "orange.50"
+        },
+        "tertiary": {
+          "$type": "color",
+          "$value": "#271300",
+          "$ref": "orange.1000"
+        }
+      },
+      "border": {
+        "buttonSecondary": {
+          "$type": "color",
+          "$value": "#D3884D",
+          "$ref": "orange.400"
+        },
+        "default": {
+          "$type": "color",
+          "$value": "#D3884D",
+          "$ref": "orange.400"
+        },
+        "selectedInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        }
+      },
+      "content": {
+        "primary": {
+          "$type": "color",
+          "$value": "#271300",
+          "$ref": "orange.1000"
+        },
+        "primaryInverse": {
+          "$type": "color",
+          "$value": "#FFFEFB",
+          "$ref": "monotone.white"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "#7A3D00",
+          "$ref": "orange.800"
         }
       }
     }
@@ -1568,23 +1568,72 @@
   },
   "ui": {
     "buttons": {
-      "primary": {
-        "content": {
+      "destructive": {
+        "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#B4422F",
+            "$ref": "red.700"
+          },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#B4422F",
+            "$ref": "red.700"
           },
-          "onPress": {
+          "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#FFDBD6",
+            "$ref": "red.50",
+            "$themes": {
+              "roast": {
+                "$value": "#B4422F",
+                "$ref": "red.700"
+              },
+              "hype": {
+                "$value": "#B4422F",
+                "$ref": "red.700"
+              }
+            }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#B4422F",
+            "$ref": "red.700"
           },
+          "onPress": {
+            "$type": "color",
+            "$value": "#A52D1A",
+            "$ref": "red.800"
+          }
+        },
+        "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          }
+        },
+        "content": {
           "complete": {
             "$type": "color",
             "$value": "#47201C",
@@ -1595,6 +1644,317 @@
                 "$ref": "red.200"
               },
               "hype": {
+                "$value": "#A52D1A",
+                "$ref": "red.800"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#C35743",
+            "$ref": "red.600",
+            "$themes": {
+              "roast": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              },
+              "hype": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800",
+            "$themes": {
+              "roast": {
+                "$value": "#FFAB96",
+                "$ref": "red.200"
+              },
+              "hype": {
+                "$value": "#A52D1A",
+                "$ref": "red.800"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#C35743",
+            "$ref": "red.600",
+            "$themes": {
+              "roast": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              },
+              "hype": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        }
+      },
+      "destructiveDark": {
+        "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFC3B6",
+            "$ref": "red.100",
+            "$themes": {
+              "chat": {
+                "$value": "#FFFEFB00",
+                "$ref": "alpha.light.0"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFC3B6",
+            "$ref": "red.100"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#FFDBD6",
+            "$ref": "red.50"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFC3B6",
+            "$ref": "red.100"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#F09681",
+            "$ref": "red.300"
+          }
+        },
+        "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFAB96",
+            "$ref": "red.200",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              },
+              "hype": {
+                "$value": "#FFC3B6",
+                "$ref": "red.100"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#D26C58",
+            "$ref": "red.500",
+            "$themes": {
+              "roast": {
+                "$value": "#6D1709",
+                "$ref": "red.900"
+              },
+              "hype": {
+                "$value": "#6D1709",
+                "$ref": "red.900"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFAB96",
+            "$ref": "red.200",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              },
+              "hype": {
+                "$value": "#FFC3B6",
+                "$ref": "red.100"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#D26C58",
+            "$ref": "red.500",
+            "$themes": {
+              "roast": {
+                "$value": "#6D1709",
+                "$ref": "red.900"
+              },
+              "hype": {
+                "$value": "#6D1709",
+                "$ref": "red.900"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#3C0800",
+            "$ref": "red.1000"
+          }
+        }
+      },
+      "primary": {
+        "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800",
+            "$themes": {
+              "roast": {
+                "$value": "#A52D1A",
+                "$ref": "red.800"
+              },
+              "hype": {
                 "$value": "#354F4B",
                 "$ref": "teal.800"
               }
@@ -1602,22 +1962,20 @@
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
+            "$value": "#F8F6F2",
+            "$ref": "brown.50",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
               },
               "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
+                "$value": "#DAF0E5",
+                "$ref": "teal.50"
               }
             }
-          }
-        },
-        "background": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
             "$value": "#47201C",
             "$ref": "brown.800",
@@ -1646,60 +2004,15 @@
                 "$ref": "teal.900"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#A52D1A",
-                "$ref": "red.800"
-              },
-              "hype": {
-                "$value": "#354F4B",
-                "$ref": "teal.800"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#F8F6F2",
-            "$ref": "brown.50",
-            "$themes": {
-              "roast": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              },
-              "hype": {
-                "$value": "#DAF0E5",
-                "$ref": "teal.50"
-              }
-            }
           }
         },
         "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
           "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -1718,24 +2031,19 @@
                 "$ref": "teal.200"
               }
             }
-          }
-        },
-        "iconForeground": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          }
+        },
+        "content": {
           "complete": {
             "$type": "color",
             "$value": "#47201C",
@@ -1751,6 +2059,11 @@
               }
             }
           },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
           "disabled": {
             "$type": "color",
             "$value": "#846A67",
@@ -1765,25 +2078,25 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
           },
           "loading": {
             "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
-          "complete": {
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
@@ -1792,34 +2105,27 @@
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
-          }
-        }
-      },
-      "primaryDark": {
-        "content": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFC3B6",
-                "$ref": "red.100"
+                "$value": "#FFAB96",
+                "$ref": "red.200"
               },
               "hype": {
                 "$value": "#354F4B",
@@ -1827,22 +2133,46 @@
               }
             }
           },
-          "loading": {
+          "default": {
             "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
+                "$value": "#D26C58",
+                "$ref": "red.500"
               },
               "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
+                "$value": "#698C84",
+                "$ref": "teal.500"
               }
             }
           },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          }
+        }
+      },
+      "primaryDark": {
+        "background": {
           "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white",
@@ -1855,22 +2185,10 @@
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white",
@@ -1895,46 +2213,15 @@
                 "$ref": "teal.200"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
           "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -1953,10 +2240,61 @@
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           }
         },
-        "iconForeground": {
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              }
+            }
+          },
           "default": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              },
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
+          },
+          "loading": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -1985,6 +2323,106 @@
                 "$ref": "teal.800"
               }
             }
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFDBD6",
+                "$ref": "red.50"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              },
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
           },
           "loading": {
             "$type": "color",
@@ -2001,171 +2439,41 @@
               }
             }
           },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          }
-        }
-      },
-      "secondary": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
           "onPress": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#E1816D",
-                "$ref": "red.400"
+                "$value": "#FFC3B6",
+                "$ref": "red.100"
               },
               "hype": {
                 "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
+          }
+        }
+      },
+      "secondary": {
+        "background": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -2180,24 +2488,14 @@
                 "$ref": "alpha.light.5"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
+          },
           "default": {
             "$type": "color",
             "$value": "#47201C",
@@ -2213,20 +2511,62 @@
               }
             }
           },
-          "onPress": {
+          "disabled": {
             "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              },
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
           },
           "loading": {
             "$type": "color",
             "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
-          "complete": {
+          "onPress": {
             "$type": "color",
             "$value": "#0E060540",
             "$ref": "alpha.dark.25"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800",
+            "$themes": {
+              "roast": {
+                "$value": "#FFAB96",
+                "$ref": "red.200"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFAB96",
+                "$ref": "red.200"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
           },
           "disabled": {
             "$type": "color",
@@ -2242,10 +2582,8 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "iconForeground": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -2274,6 +2612,110 @@
                 "$ref": "teal.800"
               }
             }
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800",
+            "$themes": {
+              "roast": {
+                "$value": "#FFAB96",
+                "$ref": "red.200"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFAB96",
+                "$ref": "red.200"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              },
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
           },
           "loading": {
             "$type": "color",
@@ -2290,159 +2732,41 @@
               }
             }
           },
-          "complete": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
+                "$value": "#E1816D",
+                "$ref": "red.400"
+              },
+              "hype": {
+                "$value": "#354F4B",
+                "$ref": "teal.800"
               }
             }
           }
         }
       },
       "secondaryDark": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
-          },
+        "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -2451,43 +2775,18 @@
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
           "default": {
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
           },
           "disabled": {
             "$type": "color",
@@ -2503,33 +2802,21 @@
                 "$ref": "teal.600"
               }
             }
-          }
-        },
-        "iconForeground": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              }
-            }
           },
           "loading": {
             "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
@@ -2539,7 +2826,7 @@
               }
             }
           },
-          "complete": {
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white",
@@ -2564,32 +2851,32 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "iconBackground": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
-                "$ref": "alpha.dark.10"
+                "$value": "#3C0800",
+                "$ref": "red.1000"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
-                "$ref": "alpha.dark.10"
+                "$value": "#6D1709",
+                "$ref": "red.900"
               }
             }
-          },
-          "loading": {
+          }
+        },
+        "iconBackground": {
+          "complete": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
@@ -2600,7 +2887,7 @@
               }
             }
           },
-          "complete": {
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
@@ -2621,64 +2908,50 @@
                 "$ref": "alpha.dark.10"
               }
             }
-          }
-        }
-      },
-      "tertiary": {
-        "content": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25",
             "$themes": {
-              "hype": {
-                "$value": "#587871",
-                "$ref": "teal.600"
+              "roast": {
+                "$value": "#0E06051A",
+                "$ref": "alpha.dark.10"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#587871",
-                "$ref": "teal.600"
+                "$value": "#0E06051A",
+                "$ref": "alpha.dark.10"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600",
-            "$themes": {
-              "roast": {
-                "$value": "#846A67",
-                "$ref": "brown.500"
-              },
-              "hype": {
-                "$value": "#587871",
-                "$ref": "teal.600"
-              }
-            }
-          },
+          }
+        },
+        "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#DED9D4",
-                "$ref": "brown.200"
-              },
-              "hype": {
-                "$value": "#587871",
-                "$ref": "teal.600"
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
               }
             }
           },
@@ -2687,14 +2960,57 @@
             "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              },
               "hype": {
                 "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#3C0800",
+                "$ref": "red.1000"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#6D1709",
+                "$ref": "red.900"
+              }
+            }
           }
-        },
+        }
+      },
+      "tertiary": {
         "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#F0EDEA",
+            "$ref": "brown.100",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB00",
+                "$ref": "alpha.light.0"
+              },
+              "hype": {
+                "$value": "#BCDDD1",
+                "$ref": "teal.100"
+              }
+            }
+          },
           "default": {
             "$type": "color",
             "$value": "#F0EDEA",
@@ -2704,6 +3020,28 @@
                 "$value": "#DED9D4",
                 "$ref": "brown.200"
               },
+              "hype": {
+                "$value": "#BCDDD1",
+                "$ref": "teal.100"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#F8F6F2",
+            "$ref": "brown.50",
+            "$themes": {
+              "hype": {
+                "$value": "#DAF0E5",
+                "$ref": "teal.50"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#F0EDEA",
+            "$ref": "brown.100",
+            "$themes": {
               "hype": {
                 "$value": "#BCDDD1",
                 "$ref": "teal.100"
@@ -2728,65 +3066,18 @@
                 "$ref": "teal.200"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#F0EDEA",
-            "$ref": "brown.100",
-            "$themes": {
-              "hype": {
-                "$value": "#BCDDD1",
-                "$ref": "teal.100"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#F0EDEA",
-            "$ref": "brown.100",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB00",
-                "$ref": "alpha.light.0"
-              },
-              "hype": {
-                "$value": "#BCDDD1",
-                "$ref": "teal.100"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#F8F6F2",
-            "$ref": "brown.50",
-            "$themes": {
-              "hype": {
-                "$value": "#DAF0E5",
-                "$ref": "teal.50"
-              }
-            }
           }
         },
         "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E060500",
+            "$ref": "alpha.dark.0"
+          },
           "default": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#0E060500",
-            "$ref": "alpha.dark.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#0E060500",
-            "$ref": "alpha.dark.0"
           },
           "disabled": {
             "$type": "color",
@@ -2798,10 +3089,57 @@
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#0E060500",
+            "$ref": "alpha.dark.0"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E060540",
+            "$ref": "alpha.dark.25"
           }
         },
-        "iconForeground": {
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#6F514E",
+            "$ref": "brown.600",
+            "$themes": {
+              "roast": {
+                "$value": "#DED9D4",
+                "$ref": "brown.200"
+              },
+              "hype": {
+                "$value": "#587871",
+                "$ref": "teal.600"
+              }
+            }
+          },
           "default": {
+            "$type": "color",
+            "$value": "#6F514E",
+            "$ref": "brown.600",
+            "$themes": {
+              "hype": {
+                "$value": "#587871",
+                "$ref": "teal.600"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
+          },
+          "loading": {
             "$type": "color",
             "$value": "#6F514E",
             "$ref": "brown.600",
@@ -2830,22 +3168,36 @@
                 "$ref": "teal.600"
               }
             }
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
           },
           "loading": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600",
-            "$themes": {
-              "roast": {
-                "$value": "#846A67",
-                "$ref": "brown.500"
-              },
-              "hype": {
-                "$value": "#587871",
-                "$ref": "teal.600"
-              }
-            }
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
           },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
+          }
+        },
+        "iconForeground": {
           "complete": {
             "$type": "color",
             "$value": "#6F514E",
@@ -2861,6 +3213,21 @@
               }
             }
           },
+          "default": {
+            "$type": "color",
+            "$value": "#6F514E",
+            "$ref": "brown.600",
+            "$themes": {
+              "roast": {
+                "$value": "#846A67",
+                "$ref": "brown.500"
+              },
+              "hype": {
+                "$value": "#587871",
+                "$ref": "teal.600"
+              }
+            }
+          },
           "disabled": {
             "$type": "color",
             "$value": "#846A67",
@@ -2871,111 +3238,53 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
+            "$value": "#6F514E",
+            "$ref": "brown.600",
+            "$themes": {
+              "roast": {
+                "$value": "#846A67",
+                "$ref": "brown.500"
+              },
+              "hype": {
+                "$value": "#587871",
+                "$ref": "teal.600"
+              }
+            }
           },
-          "complete": {
+          "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
+            "$value": "#6F514E",
+            "$ref": "brown.600",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#587871",
+                "$ref": "teal.600"
+              }
+            }
           }
         }
       },
       "tertiaryDark": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#6F514E",
-                "$ref": "brown.600"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#DED9D4",
-            "$ref": "brown.200",
-            "$themes": {
-              "hype": {
-                "$value": "#DAF0E5",
-                "$ref": "teal.50"
-              }
-            }
-          }
-        },
         "background": {
-          "default": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#354F4B",
-                "$ref": "teal.800"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
           "complete": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "default": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -2996,25 +3305,37 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
           },
           "loading": {
             "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#354F4B",
+                "$ref": "teal.800"
+              }
+            }
+          }
+        },
+        "border": {
+          "complete": {
+            "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
-          "complete": {
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -3023,24 +3344,19 @@
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
-          }
-        },
-        "iconForeground": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          }
+        },
+        "content": {
           "complete": {
             "$type": "color",
             "$value": "#FFFEFB",
@@ -3052,6 +3368,11 @@
               }
             }
           },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
           "disabled": {
             "$type": "color",
             "$value": "#DED9D4",
@@ -3062,15 +3383,30 @@
                 "$ref": "teal.50"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
           }
         },
         "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB40",
+            "$ref": "alpha.light.25"
+          },
           "default": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
-          "onPress": {
+          "disabled": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
@@ -3080,132 +3416,41 @@
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
-          "complete": {
+          "onPress": {
             "$type": "color",
             "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          }
-        }
-      },
-      "destructive": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#A52D1A",
-                "$ref": "red.800"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#C35743",
-            "$ref": "red.600",
-            "$themes": {
-              "roast": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              },
-              "hype": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
-            "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#A52D1A",
-            "$ref": "red.800"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFDBD6",
-            "$ref": "red.50",
-            "$themes": {
-              "roast": {
-                "$value": "#B4422F",
-                "$ref": "red.700"
-              },
-              "hype": {
-                "$value": "#B4422F",
-                "$ref": "red.700"
-              }
-            }
-          }
-        },
-        "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#6F514E",
+                "$ref": "brown.600"
+              }
+            }
+          },
           "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#DED9D4",
+            "$ref": "brown.200",
+            "$themes": {
+              "hype": {
+                "$value": "#DAF0E5",
+                "$ref": "teal.50"
+              }
+            }
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white"
@@ -3214,334 +3459,27 @@
             "$type": "color",
             "$value": "#FFFEFB",
             "$ref": "monotone.white"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#FFAB96",
-                "$ref": "red.200"
-              },
-              "hype": {
-                "$value": "#A52D1A",
-                "$ref": "red.800"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#C35743",
-            "$ref": "red.600",
-            "$themes": {
-              "roast": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              },
-              "hype": {
-                "$value": "#FFDBD6",
-                "$ref": "red.50"
-              }
-            }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB40",
-            "$ref": "alpha.light.25"
-          }
-        }
-      },
-      "destructiveDark": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFAB96",
-            "$ref": "red.200",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              },
-              "hype": {
-                "$value": "#FFC3B6",
-                "$ref": "red.100"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#D26C58",
-            "$ref": "red.500",
-            "$themes": {
-              "roast": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              },
-              "hype": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFC3B6",
-            "$ref": "red.100"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#F09681",
-            "$ref": "red.300"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFC3B6",
-            "$ref": "red.100"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFC3B6",
-            "$ref": "red.100",
-            "$themes": {
-              "chat": {
-                "$value": "#FFFEFB00",
-                "$ref": "alpha.light.0"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFDBD6",
-            "$ref": "red.50"
-          }
-        },
-        "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          }
-        },
-        "iconForeground": {
-          "default": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#3C0800",
-            "$ref": "red.1000"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFAB96",
-            "$ref": "red.200",
-            "$themes": {
-              "roast": {
-                "$value": "#3C0800",
-                "$ref": "red.1000"
-              },
-              "hype": {
-                "$value": "#FFC3B6",
-                "$ref": "red.100"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#D26C58",
-            "$ref": "red.500",
-            "$themes": {
-              "roast": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              },
-              "hype": {
-                "$value": "#6D1709",
-                "$ref": "red.900"
-              }
-            }
-          }
-        },
-        "iconBackground": {
-          "default": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#0E060540",
-            "$ref": "alpha.dark.25"
           }
         }
       },
       "textButton": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB",
-                "$ref": "monotone.white"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#C9BEBA",
-                "$ref": "brown.300"
-              },
-              "hype": {
-                "$value": "#354F4B",
-                "$ref": "teal.800"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB",
-                "$ref": "monotone.white"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
+        "background": {
           "complete": {
             "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB",
-                "$ref": "monotone.white"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
-            "$themes": {
-              "roast": {
-                "$value": "#C9BEBA",
-                "$ref": "brown.300"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -3550,58 +3488,21 @@
             "$type": "color",
             "$value": "#0E060500",
             "$ref": "alpha.dark.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#354F4B",
-                "$ref": "teal.800"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#5B3935",
-            "$ref": "brown.700",
-            "$themes": {
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
           "complete": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "default": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -3622,10 +3523,77 @@
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "hype": {
+                "$value": "#354F4B",
+                "$ref": "teal.800"
+              }
+            }
           }
         },
-        "iconForeground": {
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB",
+                "$ref": "monotone.white"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
           "default": {
+            "$type": "color",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB",
+                "$ref": "monotone.white"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#C9BEBA",
+                "$ref": "brown.300"
+              },
+              "hype": {
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
+          },
+          "loading": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -3654,8 +3622,67 @@
                 "$ref": "teal.800"
               }
             }
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
           },
           "loading": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10",
+            "$themes": {
+              "roast": {
+                "$value": "#FFFEFB33",
+                "$ref": "alpha.light.20"
+              }
+            }
+          }
+        },
+        "iconForeground": {
+          "complete": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -3670,7 +3697,7 @@
               }
             }
           },
-          "complete": {
+          "default": {
             "$type": "color",
             "$value": "#5B3935",
             "$ref": "brown.700",
@@ -3699,142 +3726,57 @@
                 "$ref": "teal.500"
               }
             }
-          }
-        },
-        "iconBackground": {
-          "default": {
+          },
+          "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
+            "$value": "#5B3935",
+            "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
+                "$value": "#FFFEFB",
+                "$ref": "monotone.white"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
+            "$value": "#47201C",
+            "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
-              }
-            }
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10",
-            "$themes": {
-              "roast": {
-                "$value": "#FFFEFB33",
-                "$ref": "alpha.light.20"
+                "$value": "#C9BEBA",
+                "$ref": "brown.300"
+              },
+              "hype": {
+                "$value": "#354F4B",
+                "$ref": "teal.800"
               }
             }
           }
         }
       },
       "textButtonDark": {
-        "content": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#C9BEBA",
-            "$ref": "brown.300",
-            "$themes": {
-              "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
+        "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#47201C",
-                "$ref": "brown.800"
-              }
-            }
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#C9BEBA",
-            "$ref": "brown.300",
-            "$themes": {
-              "roast": {
-                "$value": "#846A67",
-                "$ref": "brown.500"
-              },
-              "hype": {
-                "$value": "#698C84",
-                "$ref": "teal.500"
-              }
-            }
-          }
-        },
-        "background": {
-          "default": {
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "loading": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -3857,40 +3799,15 @@
                 "$ref": "alpha.light.0"
               }
             }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "disabled": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
           }
         },
         "border": {
-          "default": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB00",
-            "$ref": "alpha.light.0"
-          },
           "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "default": {
             "$type": "color",
             "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
@@ -3905,9 +3822,30 @@
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#FFFEFB00",
+            "$ref": "alpha.light.0"
           }
         },
-        "iconForeground": {
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#47201C",
+                "$ref": "brown.800"
+              }
+            }
+          },
           "default": {
             "$type": "color",
             "$value": "#FFFEFB",
@@ -3920,47 +3858,6 @@
               "hype": {
                 "$value": "#46635E",
                 "$ref": "teal.700"
-              }
-            }
-          },
-          "onPress": {
-            "$type": "color",
-            "$value": "#C9BEBA",
-            "$ref": "brown.300",
-            "$themes": {
-              "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "loading": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#5B3935",
-                "$ref": "brown.700"
-              },
-              "hype": {
-                "$value": "#46635E",
-                "$ref": "teal.700"
-              }
-            }
-          },
-          "complete": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white",
-            "$themes": {
-              "roast": {
-                "$value": "#47201C",
-                "$ref": "brown.800"
               }
             }
           },
@@ -3978,9 +3875,54 @@
                 "$ref": "teal.500"
               }
             }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#C9BEBA",
+            "$ref": "brown.300",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
           }
         },
         "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB33",
+            "$ref": "alpha.light.20",
+            "$themes": {
+              "roast": {
+                "$value": "#0E06051A",
+                "$ref": "alpha.dark.10"
+              },
+              "hype": {
+                "$value": "#0E06051A",
+                "$ref": "alpha.dark.10"
+              }
+            }
+          },
           "default": {
             "$type": "color",
             "$value": "#FFFEFB33",
@@ -3996,7 +3938,7 @@
               }
             }
           },
-          "onPress": {
+          "disabled": {
             "$type": "color",
             "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
@@ -4026,7 +3968,7 @@
               }
             }
           },
-          "complete": {
+          "onPress": {
             "$type": "color",
             "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
@@ -4040,19 +3982,77 @@
                 "$ref": "alpha.dark.10"
               }
             }
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#47201C",
+                "$ref": "brown.800"
+              }
+            }
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB33",
-            "$ref": "alpha.light.20",
+            "$value": "#C9BEBA",
+            "$ref": "brown.300",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
-                "$ref": "alpha.dark.10"
+                "$value": "#846A67",
+                "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#0E06051A",
-                "$ref": "alpha.dark.10"
+                "$value": "#698C84",
+                "$ref": "teal.500"
+              }
+            }
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
+              }
+            }
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#C9BEBA",
+            "$ref": "brown.300",
+            "$themes": {
+              "roast": {
+                "$value": "#5B3935",
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$value": "#46635E",
+                "$ref": "teal.700"
               }
             }
           }
@@ -4061,70 +4061,16 @@
     },
     "input": {
       "text": {
-        "default": {
-          "label": {
-            "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600"
-          },
-          "value": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800"
-          },
-          "placeholder": {
-            "$type": "color",
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
-          },
-          "hint": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#C9BEBA",
-                "$ref": "brown.300"
-              }
-            }
-          },
-          "iconForeground": {
-            "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800",
-            "$themes": {
-              "roast": {
-                "$value": "#C9BEBA",
-                "$ref": "brown.300"
-              }
-            }
-          },
-          "background": {
-            "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
-          },
-          "border": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          }
-        },
         "active": {
-          "label": {
+          "background": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600"
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
           },
-          "value": {
+          "border": {
             "$type": "color",
             "$value": "#47201C",
             "$ref": "brown.800"
-          },
-          "placeholder": {
-            "$type": "color",
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
           },
           "hint": {
             "$type": "color",
@@ -4148,32 +4094,32 @@
               }
             }
           },
-          "background": {
+          "label": {
             "$type": "color",
-            "$value": "#FFFEFB",
-            "$ref": "monotone.white"
+            "$value": "#6F514E",
+            "$ref": "brown.600"
           },
-          "border": {
+          "placeholder": {
+            "$type": "color",
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
+          "value": {
             "$type": "color",
             "$value": "#47201C",
             "$ref": "brown.800"
           }
         },
         "complete": {
-          "label": {
+          "background": {
             "$type": "color",
-            "$value": "#6F514E",
-            "$ref": "brown.600"
+            "$value": "#DED9D4",
+            "$ref": "brown.200"
           },
-          "value": {
+          "border": {
             "$type": "color",
-            "$value": "#47201C",
-            "$ref": "brown.800"
-          },
-          "placeholder": {
-            "$type": "color",
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
           },
           "hint": {
             "$type": "color",
@@ -4191,92 +4137,37 @@
             "$value": "#47201C",
             "$ref": "brown.800"
           },
-          "background": {
-            "$type": "color",
-            "$value": "#DED9D4",
-            "$ref": "brown.200"
-          },
-          "border": {
-            "$type": "color",
-            "$value": "#0E06051A",
-            "$ref": "alpha.dark.10"
-          }
-        },
-        "error": {
           "label": {
             "$type": "color",
             "$value": "#6F514E",
             "$ref": "brown.600"
           },
+          "placeholder": {
+            "$type": "color",
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
           "value": {
             "$type": "color",
             "$value": "#47201C",
             "$ref": "brown.800"
-          },
-          "placeholder": {
-            "$type": "color",
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
-          },
-          "hint": {
-            "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              }
-            }
-          },
-          "iconForeground": {
-            "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700",
-            "$themes": {
-              "roast": {
-                "$value": "#A52D1A",
-                "$ref": "red.800"
-              }
-            }
-          },
+          }
+        },
+        "default": {
           "background": {
             "$type": "color",
-            "$value": "#DED9D4",
-            "$ref": "brown.200"
+            "$value": "#FFFEFB",
+            "$ref": "monotone.white"
           },
           "border": {
             "$type": "color",
-            "$value": "#B4422F",
-            "$ref": "red.700",
-            "$themes": {
-              "roast": {
-                "$value": "#D26C58",
-                "$ref": "red.500"
-              }
-            }
-          }
-        },
-        "disabled": {
-          "label": {
-            "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500"
-          },
-          "value": {
-            "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500"
-          },
-          "placeholder": {
-            "$type": "color",
-            "$value": "#AC9B98",
-            "$ref": "brown.400"
+            "$value": "#0E06051A",
+            "$ref": "alpha.dark.10"
           },
           "hint": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
+            "$value": "#47201C",
+            "$ref": "brown.800",
             "$themes": {
               "roast": {
                 "$value": "#C9BEBA",
@@ -4286,8 +4177,8 @@
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#846A67",
-            "$ref": "brown.500",
+            "$value": "#47201C",
+            "$ref": "brown.800",
             "$themes": {
               "roast": {
                 "$value": "#C9BEBA",
@@ -4295,6 +4186,23 @@
               }
             }
           },
+          "label": {
+            "$type": "color",
+            "$value": "#6F514E",
+            "$ref": "brown.600"
+          },
+          "placeholder": {
+            "$type": "color",
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800"
+          }
+        },
+        "disabled": {
           "background": {
             "$type": "color",
             "$value": "#FFFEFB80",
@@ -4316,6 +4224,98 @@
                 "$ref": "alpha.light.20"
               }
             }
+          },
+          "hint": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#C9BEBA",
+                "$ref": "brown.300"
+              }
+            }
+          },
+          "iconForeground": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500",
+            "$themes": {
+              "roast": {
+                "$value": "#C9BEBA",
+                "$ref": "brown.300"
+              }
+            }
+          },
+          "label": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500"
+          },
+          "placeholder": {
+            "$type": "color",
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#846A67",
+            "$ref": "brown.500"
+          }
+        },
+        "error": {
+          "background": {
+            "$type": "color",
+            "$value": "#DED9D4",
+            "$ref": "brown.200"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "#B4422F",
+            "$ref": "red.700",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              }
+            }
+          },
+          "hint": {
+            "$type": "color",
+            "$value": "#B4422F",
+            "$ref": "red.700",
+            "$themes": {
+              "roast": {
+                "$value": "#D26C58",
+                "$ref": "red.500"
+              }
+            }
+          },
+          "iconForeground": {
+            "$type": "color",
+            "$value": "#B4422F",
+            "$ref": "red.700",
+            "$themes": {
+              "roast": {
+                "$value": "#A52D1A",
+                "$ref": "red.800"
+              }
+            }
+          },
+          "label": {
+            "$type": "color",
+            "$value": "#6F514E",
+            "$ref": "brown.600"
+          },
+          "placeholder": {
+            "$type": "color",
+            "$value": "#AC9B98",
+            "$ref": "brown.400"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#47201C",
+            "$ref": "brown.800"
           }
         }
       }

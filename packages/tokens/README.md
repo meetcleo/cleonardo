@@ -129,6 +129,12 @@ Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type
 
 Design is migrating these roles from `Themes` to the `Modes` collection, where the theme is a real Figma mode rather than a name segment. When that lands, `themeAxis.kind` becomes `"mode"` and the emitted output is identical — a config change, not a rewrite.
 
+### Ordering
+
+Keys are written in a **canonical** order — alphabetical by group, numeric-aware within a group, so palette scales read `50, 100, … 1000` rather than `100, 1000, …, 50`. The order does not depend on the dump.
+
+That matters because the dump carries Figma's own variable order. Ordering used to be inherited from it, which made output stable for identical input but not canonical across inputs: a designer reordering variables in Figma produced a whole-file diff with no value changes, burying the real ones. Leaves keep their authored key order (`$type`, `$value`, `$ref`, `$themes`) and `$themes` follows the configured theme order — both already deterministic, and both easier to read than alphabetical.
+
 ### Change policy
 
 The transform is **additive and mutative by default, but never destructive**:

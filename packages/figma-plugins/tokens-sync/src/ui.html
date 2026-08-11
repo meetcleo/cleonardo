@@ -1,0 +1,120 @@
+<style>
+  body {
+    font: 11px/1.5 Inter, system-ui, sans-serif;
+    color: var(--figma-color-text);
+    background: var(--figma-color-bg);
+    margin: 0;
+    padding: 12px;
+  }
+  h2 { font-size: 12px; margin: 0 0 4px; }
+  .muted { color: var(--figma-color-text-secondary); }
+  .ok { color: var(--figma-color-text-success, #0d7d55); }
+  .hidden { display: none; }
+  .row {
+    border: 1px solid var(--figma-color-border);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 6px;
+  }
+  .row-head { display: flex; gap: 6px; align-items: baseline; justify-content: space-between; }
+  #problems {
+    border: 1px solid var(--figma-color-border-danger-strong, #e03e1a);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  #problems ul { margin: 6px 0 0; padding-left: 16px; }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px;
+    font: inherit;
+    color: var(--figma-color-text);
+    background: var(--figma-color-bg-secondary);
+    border: 1px solid var(--figma-color-border);
+    border-radius: 4px;
+  }
+  button {
+    font: inherit;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--figma-color-border);
+    background: var(--figma-color-bg-brand, #0d99ff);
+    color: var(--figma-color-text-onbrand, #fff);
+    cursor: pointer;
+  }
+  button.secondary { background: transparent; color: var(--figma-color-text); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .actions { display: flex; gap: 6px; margin: 8px 0; }
+  #log {
+    white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    background: var(--figma-color-bg-secondary);
+    border-radius: 4px;
+    padding: 8px;
+    max-height: 140px;
+    overflow: auto;
+  }
+  section { margin-bottom: 12px; }
+  details {
+    border: 1px solid var(--figma-color-border);
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  summary {
+    cursor: pointer;
+    padding: 8px;
+    font-weight: 600;
+    /* The disclosure marker is the only affordance that this opens, so keep it. */
+    list-style-position: inside;
+  }
+  details[open] summary {
+    border-bottom: 1px solid var(--figma-color-border);
+  }
+  .panel { padding: 8px; }
+  .panel .actions { margin-bottom: 0; }
+</style>
+
+<div id="loading">Reading variables…</div>
+
+<div id="content" class="hidden">
+  <section>
+    <h2>Cleo Token Sync</h2>
+    <div class="muted" id="file"></div>
+  </section>
+
+  <div id="problems" class="hidden"></div>
+
+  <section>
+    <h2>Collections in the dump</h2>
+    <div id="collections"></div>
+    <div class="muted" id="aliases"></div>
+  </section>
+
+  <details id="config">
+    <summary>Config</summary>
+    <div class="panel">
+      <div class="muted">
+        <strong>GitHub token.</strong> Write access to meetcleo/cleonardo — fine-grained with
+        Contents: read and write, or classic with <code>repo</code>. Stored only in this Figma
+        client, never committed.
+      </div>
+      <input id="pat" type="password" placeholder="github_pat_… or ghp_…" autocomplete="off" />
+      <div class="actions">
+        <button id="forget" class="secondary">Forget token</button>
+      </div>
+    </div>
+  </details>
+
+  <div class="actions">
+    <button id="sync">Sync to GitHub</button>
+    <button id="copy" class="secondary">Print summary</button>
+  </div>
+
+  <section>
+    <h2>Log</h2>
+    <div id="log"></div>
+  </section>
+</div>
+
+<script>__UI_SCRIPT__</script>
