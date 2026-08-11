@@ -1,2 +1,4 @@
 /figma-exports/
 dist/
+*.gem
+Gemfile.lock
