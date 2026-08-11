@@ -16,6 +16,7 @@ import {
   buildTokens,
   buildKeyUnions,
   renderTokenKeysFile,
+  naturalCompare,
 } from './transform-core.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -175,6 +176,39 @@ describe('buildTokens', () => {
 });
 
 // ---------- build: failure classes ----------
+
+describe('canonical ordering', () => {
+  it('orders palette scales numerically, not lexicographically', () => {
+    expect(['500', '50', '1000', '100'].sort(naturalCompare)).toEqual(['50', '100', '500', '1000']);
+  });
+
+  it('orders mixed segments by text then number', () => {
+    expect(['level10', 'level2', 'alpha', 'level1'].sort(naturalCompare)).toEqual([
+      'alpha',
+      'level1',
+      'level2',
+      'level10',
+    ]);
+  });
+
+  it('emits identical output whatever order the dump lists things in', () => {
+    // Figma's own variable order leaks into the dump. Before this was imposed, a designer
+    // reordering variables produced a whole-file diff with no value changes.
+    const source = dump('valid');
+    const shuffled = {
+      ...source,
+      collections: [...source.collections].reverse(),
+      variables: [...source.variables].reverse(),
+    };
+
+    const a = buildTokens(source);
+    const b = buildTokens(shuffled);
+
+    expect(JSON.stringify(b.semOut)).toEqual(JSON.stringify(a.semOut));
+    expect(JSON.stringify(b.primOut)).toEqual(JSON.stringify(a.primOut));
+    expect(buildKeyUnions(b.primOut, b.semOut)).toEqual(buildKeyUnions(a.primOut, a.semOut));
+  });
+});
 
 describe('buildTokens validation', () => {
   it('records a dangling alias id with its collection', () => {

@@ -318,7 +318,40 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
     audit.semanticRoleCount++;
   }
 
-  return { primOut, semOut, themes, audit };
+  return { primOut: sortTree(primOut), semOut: sortTree(semOut), themes, audit };
+}
+
+// ---------- canonical ordering ----------
+//
+// Key order used to be inherited from the dump, which is Figma's own variable order. That made
+// output stable for identical input but not canonical across inputs: a designer reordering
+// variables in Figma produced a whole-file diff with no value changes, burying the real ones.
+// Ordering is imposed here instead, so the committed files depend only on the token set.
+
+/** Numeric-aware, so palette scales read 50, 100, … 1000 rather than 100, 1000, …, 50. */
+export function naturalCompare(a, b) {
+  const chunks = (s) => s.match(/\d+|\D+/g) ?? [];
+  const left = chunks(a);
+  const right = chunks(b);
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
+    const x = left[i];
+    const y = right[i];
+    if (x === y) continue;
+    if (/^\d+$/.test(x) && /^\d+$/.test(y)) return Number(x) - Number(y);
+    return x < y ? -1 : 1;
+  }
+  return left.length - right.length;
+}
+
+/** Rebuild every group with its keys in canonical order. Leaves are returned untouched: their
+ *  `$type` / `$value` / `$ref` / `$themes` order is set by the code that builds them, and
+ *  `$themes` follows the configured theme order — both deterministic already, and both more
+ *  readable than alphabetical. */
+function sortTree(node) {
+  if (isLeaf(node)) return node;
+  const out = {};
+  for (const key of Object.keys(node).sort(naturalCompare)) out[key] = sortTree(node[key]);
+  return out;
 }
 
 // ---------- reading the emitted shape ----------
@@ -387,9 +420,10 @@ export function die(msg, code = 1) {
 // ---------- emitted types ----------
 
 export function buildKeyUnions(primTree, semTree) {
+  // Same comparator as the JSON, so the unions read in the same order as the files they describe.
   return {
-    primitives: [...flattenKeys(primTree)].sort(),
-    semantic: [...flattenKeys(semTree)].sort(),
+    primitives: [...flattenKeys(primTree)].sort(naturalCompare),
+    semantic: [...flattenKeys(semTree)].sort(naturalCompare),
   };
 }
 
