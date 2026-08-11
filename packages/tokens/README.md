@@ -10,7 +10,33 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 
 ## Format
 
-[DTCG JSON](https://www.designtokens.org/tr/drafts/format/) (Design Tokens Community Group format). Every leaf token has `$type: "color"` and a `$value` that is either a hex string (primitives) or a `{…}` reference (semantic).
+Two files, both keyed by lowerCamel dot paths. Every `$value` is a fully-resolved hex string, so consumers never follow a reference.
+
+`tokens/color/primitives.json` — the palette. A leaf carries a value and nothing else:
+
+```json
+"brown": { "800": { "$type": "color", "$value": "#47201C" } }
+```
+
+`tokens/color/semantic.json` — the roles. The `Base` theme sits on the leaf; other themes appear under `$themes` **only where they genuinely differ**:
+
+```json
+"core": { "content": { "primary": {
+  "$type": "color",
+  "$value": "#47201C",
+  "$ref": "brown.800",
+  "$themes": {
+    "roast": { "$value": "#F8F6F2", "$ref": "brown.50" }
+  }
+} } }
+```
+
+- **`$ref`** is the primitive the value came from, as a valid primitives fetch key. It records *intent* — that `core.content.primary` is meant to be `brown.800`, not merely that it happens to equal `#47201C`.
+- **No `$ref`** means a palette gap: no primitive carries that value. See [Known exceptions](#known-exceptions).
+- **A theme absent from `$themes` resolves to Base.** A theme earns an entry only by differing from Base in its value or its `$ref`.
+- **No `$value` on the leaf at all** means the role exists in some themes but not Base — a Figma-side gap, reported by the transform rather than papered over. A themeless read raises.
+
+The theme is an **axis**, not part of the key: `core.content.primary` is one role with per-theme values, not four keys. That's why 1880 leaf entries collapse to 473 roles plus 336 overrides.
 
 ## Layout
 
@@ -18,79 +44,133 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 packages/tokens/
   tokens/
     color/
-      primitives.json   # Base Palette — hex values
-      semantic.json      # Semantic layer — aliases into primitives
+      primitives.json     # the palette — resolved hex, no themes
+      semantic.json        # the roles — Base on the leaf, overrides under $themes
   scripts/
-    transform.mjs         # Figma-export -> committed-JSON transform
+    transform.mjs          # CLI driver: reads the dump, writes the files
+    transform-core.mjs     # all the logic — parsing, resolution, key derivation
+  spec/
+    synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
+    fixtures/              # committed dumps + the value-equivalence expectations
+  src/
+    generated/
+      tokenKeys.ts         # generated key unions — do not hand-edit
 ```
 
-Reference paths mirror the JSON structure, e.g. `{color.primitives.Brown.800}`. The `color.` prefix leaves room for `radius.`, `typography.`, `spacing.` etc. to slot in cleanly later.
+## Keys
 
-Naming is preserved as authored in Figma (PascalCase groups, palette scales like `500`, `800`). Downstream consumers can normalise casing if they need to.
+A key is the JSON path, dot-joined. Figma's authored casing is normalised to **lowerCamel**, and an all-caps segment lowercases whole:
 
-Scripts need only Node 18+ (the `>=20` pin carried over from `design-tokens` was aspirational — the real floor is Node 16.6, `Array.prototype.at()`). With no `workspaces` key in the root `package.json`, Yarn never reads this package's `engines` field — it's documentation, not enforcement.
+| Figma | key segment |
+| --- | --- |
+| `Credit Score` | `creditScore` |
+| `DataVisPrimary` | `dataVisPrimary` |
+| `ShimmerAlpha 2` | `shimmerAlpha2` |
+| `UI` | `ui` |
+| `EWA` | `ewa` |
+| `800` | `800` |
+
+Space is the only character outside `[A-Za-z0-9]` anywhere in the tree. One helper (`buildKey`) produces `$ref` values, the collision check and the generated unions, so the three can never disagree.
+
+The token *type* is not in the key — it's in the reader accessor (see [Consumers](#consumers)), which is what leaves room for `radii`, `typography` and `spacing` to arrive as siblings later.
 
 ## Rules
 
-1. **Semantic tokens alias primitives.** No hardcoded hex in `semantic.json` — every `$value` is a `{…}` reference to a primitive.
-2. **All references resolve.** No dead aliases pointing at primitives that don't exist.
-
-Both are checked whenever this package is updated. See [Known exceptions](#known-exceptions) below for the four semantic tokens that currently violate rule 1 (real palette gaps, not authoring mistakes).
+1. **Semantic roles alias primitives.** Every role has a `$ref` on its Base value and on each override, except the known gaps.
+2. **All references resolve.** No alias pointing at a variable that doesn't exist, or at anything outside the primitives collection.
+3. **No key resolves from more than one place within its bucket.** `primitives.json` and `semantic.json` have separate key namespaces, so the same key in both is fine. Two Figma names in one collection that normalise to the same key is not.
 
 ## Semantic namespaces
 
-The semantic layer has four top-level namespaces mirroring Cleo's product surfaces / personalities:
-
-- `Base` — default
-- `Chat`, `Roast`, `Hype` — personality-scoped overrides
-
-These are semantic groupings, not display modes.
+Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The four themes — `base`, `chat`, `roast`, `hype` — mirror Cleo's product personalities. They are **not** display modes: there is no light/dark axis here, and `roast` is already dark.
 
 ## Updating from Figma
 
 Designers own the tokens in Figma; this package mirrors them.
 
-1. Export the two Figma Variables collections (primitives + semantic) as JSON.
-2. Drop them into `figma-exports/` in this package, named `primitives.json` and `semantic.json`. (This folder is gitignored — the raw exports are input, not history.)
-3. Run `yarn tokens:check` for a dry-run diff, or `yarn tokens:transform` to apply.
-4. Review the change report and the resulting diff in `tokens/color/`, then open a PR.
+1. The Figma plugin (COREEXP-323) writes `figma-exports/figma-dump.json`. That folder is gitignored — the raw dump is input, not history.
+2. Run `yarn tokens:check` for a dry-run diff, or `yarn tokens:transform` to apply.
+3. Review the change report and the resulting diff in `tokens/color/` and `src/generated/`, then open a PR.
+
+### The input format
+
+One file, `figma-exports/figma-dump.json`, **verbatim from Figma's plugin API** — nothing nested, hexed, filtered or resolved:
+
+```json
+{
+  "$schema": "cleo-figma-dump/1",
+  "file": { "name": "Colour Modes and Themes" },
+  "collections": [
+    { "id": "VariableCollectionId:1:3", "name": "Themes", "source": "local",
+      "defaultModeId": "1:0", "modes": [{ "modeId": "1:0", "name": "Light" }] }
+  ],
+  "variables": [
+    { "id": "VariableID:1:5", "name": "Base/Core/Content/Primary",
+      "collectionId": "VariableCollectionId:1:3", "resolvedType": "COLOR",
+      "valuesByMode": { "1:0": { "type": "VARIABLE_ALIAS", "id": "VariableID:9:7" } } }
+  ]
+}
+```
+
+`valuesByMode` values are either `{ r, g, b, a }` floats in 0–1 or `{ type: "VARIABLE_ALIAS", id }`. Names keep `/` separators and Figma's casing. Aliases reference variables **by id**, and the dump must include every collection an alias reaches into.
+
+**This script owns every interpretation** — name splitting, theme extraction, RGBA→hex, alpha, alias resolution, type filtering, and the collection→file mapping. The plugin shapes nothing, so alias handling exists in exactly one place.
+
+### Which collection becomes which file
+
+Config, not hardcoded, because a second token type arrives later:
+
+| Figma collection | Output | Types | Theme axis |
+| --- | --- | --- | --- |
+| `Base Colors` | `tokens/color/primitives.json` | `COLOR` | none |
+| `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
+
+Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type`, `Border`, `Surface Level`, `Image Crops` from the Component Library). Non-`COLOR` variables inside a listed collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables.
+
+Design is migrating these roles from `Themes` to the `Modes` collection, where the theme is a real Figma mode rather than a name segment. When that lands, `themeAxis.kind` becomes `"mode"` and the emitted output is identical — a config change, not a rewrite.
 
 ### Change policy
 
 The transform is **additive and mutative by default, but never destructive**:
 
-- **Adds** (new tokens in Figma) — applied automatically.
-- **Changes** (same token, different value or reference) — applied automatically.
-- **Removals** (token gone from Figma) — the transform refuses to write and exits non-zero, listing what would be removed. If the removal really is intentional, re-run with `yarn tokens:transform -- --allow-removals` to acknowledge and apply.
-
-This guards against accidental Figma export mistakes silently deleting tokens that consumers depend on. Removal always needs a human "yes".
+- **Adds** and **changes** — applied automatically. A changed theme override shows as a change on that role; a re-point at an identical hex still counts, since `$ref` is part of what's compared.
+- **Removals** — the transform refuses to write and exits 1, listing what would go. If the removal is intentional, re-run with `yarn tokens:transform -- --allow-removals`.
 
 ### Validation
 
-The transform also fails on:
+Exits 2 and writes nothing on:
 
-- **Dead references** — a semantic token aliasing a primitive that no longer exists. Fix the Figma export and re-run.
-- **Missing input files** — `figma-exports/{primitives,semantic}.json` must both exist.
+- **Dangling alias id** — the target isn't in the dump at all. Names the id and its collection.
+- **Dead reference** — the target exists but sits outside the primitives collection.
+- **Semantic→semantic alias** — resolution is single-hop; an alias points at a primitive.
+- **Ambiguous hex recovery** — a role holds a literal that 2+ primitives share, so the transform can't tell which it meant. This exists so a missing `$ref` can only ever mean "genuine palette gap".
+- **Key collision** — two names in one collection normalising to the same key.
 
-It surfaces (as warnings, not failures):
-
-- **Hardcoded semantic tokens** — see [Known exceptions](#known-exceptions).
-- **Auto-recovered aliases** — semantic tokens Figma exported as raw hex that exactly matched a primitive; the transform restores the alias.
+Reported as warnings, not failures: palette gaps, roles missing from Base, aliases recovered by exact-hex match, skipped types, and ignored collections. All go to **stderr**, including the success line — CI has to capture it.
 
 ## Consumers
 
-**Nothing consumes this repo yet.** The generator, Ruby module, and other consumer wiring land in follow-up tickets. Don't import these JSON files directly into product code — wait for the generated artefact.
+The readers (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) are the canonical way to read a value — never import `tokens/color/*.json` directly. They're namespaced by token type, then by layer, with the theme passed alongside the key:
+
+```ruby
+CleoDesignTokens.colors.semantic.fetch("core.content.primary")                  # => "#47201C"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast)   # => "#F8F6F2"
+CleoDesignTokens.colors.primitives.fetch("brown.800")                          # => "#47201C"
+```
+
+Reach for `colors.semantic` by default. A `colors.primitives` call is reaching past the semantic layer into the raw palette — legitimate in a theme adapter that re-exports a palette tier, a smell anywhere else, and usually a sign that a semantic role is missing.
+
+`src/generated/tokenKeys.ts` type-checks the arguments on the TypeScript side and is generated, never hand-edited:
+
+- `ColorPrimitiveKey` — 106 members
+- `ColorSemanticKey` — 473 members
+- `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
 
 ## Known exceptions
 
-Four semantic tokens in `semantic.json` are hardcoded rather than aliased, because their value (`#00000033` — pure black at 20% alpha) has no matching primitive:
+**One palette gap.** `effects.background.glassMorphism` has no `$ref` in any theme: its value (`#00000033` — pure black at 20% alpha) matches no primitive. The closest is `alpha.dark.20` (`#0E060533`), which is Cleo's brand-black with alpha rather than pure black. Fixing it needs a design decision: add a pure-black primitive, or realign to `alpha.dark.20`.
 
-- `color.semantic.Base.Effects.Background.GlassMorphism`
-- `color.semantic.Chat.Effects.Background.GlassMorphism`
-- `color.semantic.Roast.Effects.Background.GlassMorphism`
-- `color.semantic.Hype.Effects.Background.GlassMorphism`
-
-The closest primitive is `Alpha.Dark.20` (`#0E060533`), but that's Cleo's brand-black with alpha, not pure black. Fixing this needs a design decision: either add a pure-black primitive, or realign these to `Alpha.Dark.20`.
+**Three roles missing from Base.** `core.border.level0`, `core.border.level3` and `core.border.level4` exist only in the `chat` theme. They emit `$themes` with no leaf `$value`, so reading them without a theme raises. That's a gap in Figma, not in the transform — adding them to Base there fixes it.
 
 ## Colour mapping to consumers
 
