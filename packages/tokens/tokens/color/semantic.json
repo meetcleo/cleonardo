@@ -453,7 +453,7 @@
       },
       "waitingMid": {
         "$type": "color",
-        "$value": "#695F9A",
+        "$value": "#695F9B",
         "$ref": "purple.500"
       },
       "waitingDark": {
