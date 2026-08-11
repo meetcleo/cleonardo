@@ -2,10 +2,9 @@
 // `null` origin, so only APIs sending `Access-Control-Allow-Origin: *` are reachable, and
 // `api.github.com` is one of them.
 
-import { BRANCH_PREFIX, DUMP_FILE, RAW_DIR, REPO } from './config';
+import { BASE_BRANCH, BRANCH_PREFIX, DUMP_FILE, RAW_DIR, REPO } from './config';
 
 const API = 'https://api.github.com';
-const BASE_BRANCH = 'main';
 
 type Loaded = {
   type: 'loaded';
