@@ -35,7 +35,11 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '18.18.0'
+          node-version: '20.10.0'
+          cache: yarn
+
+      # transform.mjs is dependency-free, but tokens:verify/test/typecheck below aren't.
+      - run: yarn install --frozen-lockfile
 
       - name: Copy the Figma dump into the gitignored input directory
         run: |
@@ -53,6 +57,14 @@ jobs:
           set -euo pipefail
           # transform.mjs logs the change report and every failure to stderr.
           node packages/tokens/scripts/transform.mjs 2>&1 | tee transform-report.txt
+
+      # Same layer 2 that runs on a human PR (tokens.yml), against the tree the transform just
+      # wrote — so a bad Figma export fails here, before a PR exists, rather than in review.
+      - run: yarn tokens:verify
+
+      - run: yarn tokens:test
+
+      - run: yarn tokens:typecheck
 
       - name: Open a token PR
         run: |

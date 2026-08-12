@@ -101,7 +101,7 @@ Designers own the tokens in Figma; this package mirrors them.
 
 1. The Figma plugin (COREEXP-323) writes `figma-exports/figma-dump.json`. That folder is gitignored — the raw dump is input, not history.
 2. Run `yarn tokens:check` for a dry-run diff, or `yarn tokens:transform` to apply.
-3. Review the change report and the resulting diff in `tokens/color/` and `src/generated/`, then open a PR.
+3. Review the change report and the resulting diff in `tokens/color/` and `src/generated/`, then open a PR. That PR must carry the `token-regen` label — `tokens/color/**` and `src/generated/**` are gated as generated output (see [CI](#ci)), and without the label the gate fails it by design.
 
 ### The input format
 
@@ -164,6 +164,22 @@ Exits 2 and writes nothing on:
 - **Key collision** — two names in one collection normalising to the same key.
 
 Reported as warnings, not failures: palette gaps, roles missing from Base, aliases recovered by exact-hex match, skipped types, and ignored collections. All go to **stderr**, including the success line — CI has to capture it.
+
+## CI
+
+Two layers, both required to merge, neither able to do the other's job:
+
+- **Generated files are generated** (`.github/workflows/tokens.yml`, layer 1). `tokens/color/**` and `src/generated/**` must be byte-identical to the PR's merge base, checked with `git diff` rather than a fixture — a committed fixture would go red on the first real Figma change. This is what catches a hand-edit on one of the 13 primitives nothing references (`alpha.dark.75`, `blue.300/500/900`, `green.300/500/600/800`, `orange.300/600/700/900`, `yellow.600`): nothing in `semantic.json` points at them, so a value-comparison check has nothing to compare against. Skip it by applying the **`token-regen`** label — that's how a human who ran `yarn tokens:transform` and reviewed the diff (see [Updating from Figma](#updating-from-figma)) tells the gate "yes, I regenerated these". It's a different label from `figma-sync`, which `figma-sync.yml` applies to its own PRs — reusing it would make it impossible to tell an automated sync PR from a human one.
+- **Invariants on the committed tree** (`yarn tokens:verify`, layer 2, every run). Layer 1 says "unchanged"; this says "correct". It rebuilds the canonical form of both JSON files and `tokenKeys.ts` and byte-compares, checks every `$ref` resolves and matches its primitive's value, and checks the two allowlists below. It's the only gate that runs on a `figma-sync` PR — see below — where the files legitimately move, so layer 1 doesn't apply.
+
+Both allowlists live as named consts at the top of `scripts/verify-tokens.mjs`, next to the *why*, mirroring [Known exceptions](#known-exceptions):
+
+- `PALETTE_GAP_ALLOWLIST` — the one reviewed `$ref`-less semantic entry, pinned to its hex.
+- `MISSING_BASE_ALLOWLIST` — the three roles Figma defines only under `chat`.
+
+Editing an allowlisted token, or letting an allowlist entry go stale (the gap gets fixed in Figma but the exception isn't removed), fails `tokens:verify` either way.
+
+**A `figma-sync` PR is checked inside `figma-sync.yml`, not `tokens.yml`.** GitHub does not fire `pull_request` workflow events for PRs opened with `GITHUB_TOKEN`, so `tokens.yml` never runs on one. `figma-sync.yml` runs `tokens:verify`, `tokens:test` and `tokens:typecheck` itself, against the tree the transform just wrote, before it opens the PR — a bad export fails the sync workflow rather than landing in review.
 
 ## Consumers
 

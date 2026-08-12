@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.10.0"
   },
   "scripts": {
     "lint": "eslint ./packages",
@@ -11,6 +11,7 @@
     "generate-images": "tsx scripts/generate-images.ts",
     "tokens:transform": "node packages/tokens/scripts/transform.mjs",
     "tokens:check": "node packages/tokens/scripts/transform.mjs --check",
+    "tokens:verify": "node packages/tokens/scripts/verify-tokens.mjs",
     "tokens:test": "vitest run --root packages/tokens",
     "tokens:typecheck": "tsc -p packages/tokens/tsconfig.json",
     "tokens:build": "tsc -p packages/tokens/tsconfig.build.json",

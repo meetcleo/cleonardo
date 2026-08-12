@@ -4,7 +4,7 @@
   "description": "Canonical source of truth for Cleo's design tokens (DTCG JSON), plus a TypeScript reader.",
   "type": "module",
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.10.0"
   },
   "main": "dist/src/CleoDesignTokens.js",
   "types": "dist/src/CleoDesignTokens.d.ts",
@@ -21,6 +21,7 @@
   "scripts": {
     "transform": "node scripts/transform.mjs",
     "check": "node scripts/transform.mjs --check",
+    "verify": "node scripts/verify-tokens.mjs",
     "build": "tsc -p tsconfig.build.json",
     "prepack": "yarn build"
   }
