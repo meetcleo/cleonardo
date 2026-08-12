@@ -15,5 +15,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Not publishable from here — publishing is COREEXP-334.
-  spec.metadata["allowed_push_host"] = "https://gemfury.invalid/not-a-real-host"
+  spec.metadata["allowed_push_host"] = "https://example.org/not-a-real-host"
 end

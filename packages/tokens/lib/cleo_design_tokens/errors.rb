@@ -1,5 +1,5 @@
 module CleoDesignTokens
   class UnknownTokenError < KeyError; end
-  class UnknownThemeError < StandardError; end
-  class DuplicateTokenError < StandardError; end
+  class UnknownThemeError < ArgumentError; end
+  class DuplicateTokenError < KeyError; end
 end
