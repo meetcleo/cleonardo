@@ -14,7 +14,7 @@ module CleoDesignTokens
       origins = {}
       TreeWalker.walk(tree) do |path, leaf|
         key = register(lookup, origins, path)
-        lookup[key] = leaf["$value"].dup.freeze
+        lookup[key] = leaf["$value"].freeze
       end
       lookup
     end
@@ -29,27 +29,34 @@ module CleoDesignTokens
 
         themes = {}
         (leaf["$themes"] || {}).each do |theme, override|
-          themes[theme] = override["$value"].dup.freeze
+          themes[theme] = override["$value"].freeze
         end
 
-        value = leaf["$value"]
-        lookup[key] = SemanticEntry.new(value && value.dup.freeze, themes.freeze).freeze
+        # `Data#new` freezes the instance itself; the Hash inside it still
+        # needs its own `.freeze` — freezing is shallow.
+        lookup[key] = SemanticEntry.new(leaf["$value"]&.freeze, themes.freeze)
       end
       lookup
     end
 
-    # Raises if `path`'s key already exists in `lookup`, else records the
-    # origin and returns the key. Shared by both builders so the duplicate-
-    # detection message can't drift between them.
+    # Raises if `path`'s key already exists in `lookup`, else records `path`
+    # against it and returns the key. Shared by both builders so the
+    # duplicate-detection message can't drift between them.
+    #
+    # `origins` maps key -> the *path array* that produced it, not the key
+    # itself — two different paths can normalise to the same key (e.g. a
+    # segment that itself contains a literal `.`), and storing the path
+    # (rather than re-deriving the identical string) is what lets the error
+    # below name both distinctly instead of printing the same string twice.
     def self.register(lookup, origins, path)
       key = path.join(".")
-      if lookup.key?(key)
+      if origins.key?(key)
         raise DuplicateTokenError,
               "duplicate design token #{key.inspect}: defined at both " \
-              "#{origins.fetch(key)} and #{path.join('.')}"
+              "#{origins.fetch(key).inspect} and #{path.inspect}"
       end
 
-      origins[key] = path.join(".")
+      origins[key] = path
       key
     end
     private_class_method :register

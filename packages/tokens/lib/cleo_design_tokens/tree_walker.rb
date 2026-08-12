@@ -16,11 +16,7 @@ module CleoDesignTokens
 
     def self.walk(node, path = [], &on_leaf)
       return unless node.is_a?(Hash)
-
-      if leaf?(node)
-        on_leaf.call(path, node)
-        return
-      end
+      return on_leaf.call(path, node) if leaf?(node)
 
       node.each do |child_key, child_value|
         next if child_key.start_with?("$")

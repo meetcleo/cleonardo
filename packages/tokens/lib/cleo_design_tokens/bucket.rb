@@ -10,7 +10,13 @@ module CleoDesignTokens
     end
 
     def fetch(key)
-      @lookup.fetch(key) { raise UnknownTokenError, "unknown design token: #{key.inspect}" }
+      value = @lookup.fetch(key) { raise UnknownTokenError, "unknown design token: #{key.inspect}" }
+      # `Hash#fetch` only guards a missing *key* — a key present with a nil
+      # value (malformed data: a primitive leaf with no `$value`) would
+      # otherwise return nil instead of raising.
+      raise UnknownTokenError, "design token #{key.inspect} has no value" if value.nil?
+
+      value
     end
   end
 end

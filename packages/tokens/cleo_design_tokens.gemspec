@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.description = "Flattens Cleo's colour design tokens (packages/tokens/tokens/color) " \
                       "into frozen colors.primitives / colors.semantic lookups, with the theme " \
                       "passed alongside the key."
-  spec.required_ruby_version = ">= 3.1"
+  spec.required_ruby_version = ">= 3.2" # Data.define
 
   # The data ships with the gem, or the gem is useless.
   spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"]

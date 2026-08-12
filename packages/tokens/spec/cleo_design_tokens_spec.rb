@@ -73,6 +73,11 @@ RSpec.describe CleoDesignTokens do
       expect { described_class::LookupBuilder.build_lookup(load_fixture("collision")) }
         .to raise_error(CleoDesignTokens::DuplicateTokenError, /brown\.800/)
     end
+
+    it "names both distinct colliding paths, not the same string twice" do
+      expect { described_class::LookupBuilder.build_lookup(load_fixture("collision")) }
+        .to raise_error(CleoDesignTokens::DuplicateTokenError, /\["brown", "800"\].*\["brown\.800"\]/)
+    end
   end
 
   describe "PRIMITIVES_LOOKUP / SEMANTIC_LOOKUP" do
