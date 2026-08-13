@@ -6,13 +6,18 @@ name: tokens
 # never sees a figma-sync PR. Those get the same checks (minus layer 1, which doesn't apply — the
 # transform just wrote the files) run inline inside figma-sync.yml, before the PR is opened.
 #
-# Layer 1 (this file) — generated files are generated. tokens/color/** and src/generated/** must
+# Layer 1 (verify job) — generated files are generated. tokens/color/** and src/generated/** must
 # be byte-identical to the merge base unless the PR carries the `token-regen` label. Catches a
 # hand-edit anywhere in the generated tree, including the 13 primitives nothing references (a
 # $ref-based check can't reach those) and the allowlisted gap.
 #
 # Layer 2 (tokens:verify) — invariants on the committed tree, every run. Catches a bad value on a
 # referenced token or a bad Figma export; it's what runs inside figma-sync.yml too.
+#
+# ruby-test job — the Ruby reader (COREEXP-264) has its own rspec suite and no other CI runs it.
+# Independent of the two Node layers above: it doesn't touch tokens/color or src/generated, so it
+# has nothing to do with layer 1, and no equivalent inside figma-sync.yml, since a sync PR never
+# touches lib/ or spec/.
 #
 # See packages/tokens/README.md -> "CI" for the full picture.
 
@@ -83,3 +88,23 @@ jobs:
       - run: yarn tokens:test
 
       - run: yarn tokens:typecheck
+
+  ruby-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/tokens
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          # cleo_design_tokens.gemspec declares >= 3.2 (Data.define) — pinned to that floor for
+          # the same reason the Node jobs are pinned rather than floating: a mismatch surfaces
+          # here, not on someone's machine. Gemfile.lock is gitignored (a gem, not an app), so
+          # bundler-cache below resolves fresh each run rather than reusing a committed lock.
+          ruby-version: '3.2.0'
+          bundler-cache: true
+          working-directory: packages/tokens
+
+      - run: bundle exec rspec
