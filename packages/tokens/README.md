@@ -52,7 +52,18 @@ packages/tokens/
   spec/
     synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
     fixtures/              # committed dumps + the value-equivalence expectations
+    fixtures/reader/       # small hand-written fixtures for the reader's own tests
+  lib/
+    cleo_design_tokens.rb            # Ruby reader — requires the below, wires up `colors`
+    cleo_design_tokens/
+      tree_walker.rb                 # walks a token tree, yielding each leaf
+      lookup_builder.rb              # flattens a tree into a frozen key -> value/SemanticEntry lookup
+      semantic_entry.rb              # one role's Base value + theme overrides
+      bucket.rb                      # colors.primitives — one lookup, one `fetch`
+      semantic_bucket.rb             # colors.semantic — adds the `theme:` axis
+      errors.rb                      # UnknownTokenError, UnknownThemeError, DuplicateTokenError
   src/
+    CleoDesignTokens.ts    # TypeScript reader
     generated/
       tokenKeys.ts         # generated key unions — do not hand-edit
 ```
@@ -90,7 +101,7 @@ Designers own the tokens in Figma; this package mirrors them.
 
 1. The Figma plugin (COREEXP-323) writes `figma-exports/figma-dump.json`. That folder is gitignored — the raw dump is input, not history.
 2. Run `yarn tokens:check` for a dry-run diff, or `yarn tokens:transform` to apply.
-3. Review the change report and the resulting diff in `tokens/color/` and `src/generated/`, then open a PR.
+3. Review the change report and the resulting diff in `tokens/color/` and `src/generated/`, then open a PR. That PR must carry the `token-regen` label — `tokens/color/**` and `src/generated/**` are gated as generated output (see [CI](#ci)), and without the label the gate fails it by design.
 
 ### The input format
 
@@ -154,6 +165,24 @@ Exits 2 and writes nothing on:
 
 Reported as warnings, not failures: palette gaps, roles missing from Base, aliases recovered by exact-hex match, skipped types, and ignored collections. All go to **stderr**, including the success line — CI has to capture it.
 
+## CI
+
+`.github/workflows/tokens.yml` runs two jobs on every PR touching this package, both required to merge. `verify` covers the TypeScript side, in two layers, neither able to do the other's job:
+
+- **Generated files are generated** (`.github/workflows/tokens.yml`, layer 1). `tokens/color/**` and `src/generated/**` must be byte-identical to the PR's merge base, checked with `git diff` rather than a fixture — a committed fixture would go red on the first real Figma change. This is what catches a hand-edit on one of the 13 primitives nothing references (`alpha.dark.75`, `blue.300/500/900`, `green.300/500/600/800`, `orange.300/600/700/900`, `yellow.600`): nothing in `semantic.json` points at them, so a value-comparison check has nothing to compare against. Skip it by applying the **`token-regen`** label — that's how a human who ran `yarn tokens:transform` and reviewed the diff (see [Updating from Figma](#updating-from-figma)) tells the gate "yes, I regenerated these". It's a different label from `figma-sync`, kept separate so a reviewer can still tell an automated sync PR from a human one — but `figma-sync.yml` applies **both** to its own PRs: `token-regen` is true there by construction (the PR's entire content is generated output), and it's what keeps layer 1 from failing if a human later pushes a follow-up commit to that PR branch (that push isn't made with `GITHUB_TOKEN`, so it *does* trigger `tokens.yml`, unlike the PR's own `opened` event — see below).
+- **Invariants on the committed tree** (`yarn tokens:verify`, layer 2, every run). Layer 1 says "unchanged"; this says "correct". It rebuilds the canonical form of both JSON files and `tokenKeys.ts` and byte-compares, checks every `$ref` resolves and matches its primitive's value, and checks the two allowlists below. It's the only gate that runs on a `figma-sync` PR — see below — where the files legitimately move, so layer 1 doesn't apply.
+
+Both allowlists live as named consts at the top of `scripts/verify-tokens.mjs`, next to the *why*, mirroring [Known exceptions](#known-exceptions):
+
+- `PALETTE_GAP_ALLOWLIST` — the one reviewed `$ref`-less semantic entry, pinned to its hex.
+- `MISSING_BASE_ALLOWLIST` — the three roles Figma defines only under `chat`.
+
+Editing an allowlisted token, or letting an allowlist entry go stale (the gap gets fixed in Figma but the exception isn't removed), fails `tokens:verify` either way.
+
+**A `figma-sync` PR is checked inside `figma-sync.yml`, not `tokens.yml`.** GitHub does not fire `pull_request` workflow events for actions taken with `GITHUB_TOKEN`, so `tokens.yml` never runs on the PR's own `opened` event. `figma-sync.yml` runs `tokens:verify`, `tokens:test` and `tokens:typecheck` itself, against the tree the transform just wrote, before it opens the PR — a bad export fails the sync workflow rather than landing in review. That restriction doesn't cover what happens afterwards, though: a human pushing a follow-up commit to that PR branch uses their own credentials, which does trigger `tokens.yml`'s `synchronize` event as normal — the `token-regen` label applied at creation (see above) is what keeps layer 1 from failing on that push.
+
+**`ruby-test` covers the Ruby reader** (`cleo_design_tokens`, COREEXP-264) — `bundle exec rspec` against its own spec suite. Independent of `verify`: it doesn't touch `tokens/color` or `src/generated`, so it has no layer 1, and `figma-sync.yml` has no equivalent step, since a sync PR never touches `lib/` or `spec/`.
+
 ## Consumers
 
 The readers (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) are the canonical way to read a value — never import `tokens/color/*.json` directly. They're namespaced by token type, then by layer, with the theme passed alongside the key:
@@ -171,6 +200,40 @@ Reach for `colors.semantic` by default. A `colors.primitives` call is reaching p
 - `ColorPrimitiveKey` — 106 members
 - `ColorSemanticKey` — 473 members
 - `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
+
+### Ruby — `cleo_design_tokens`
+
+```ruby
+CleoDesignTokens.colors.semantic.fetch("core.content.primary")                  # => "#47201C"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast)   # => "#F8F6F2"
+CleoDesignTokens.colors.primitives.fetch("brown.800")                          # => "#47201C"
+```
+
+Add to a `Gemfile`:
+
+```ruby
+gem "cleo_design_tokens", path: "path/to/cleonardo/packages/tokens"
+```
+
+`colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
+
+### TypeScript — `@meetcleo/design-tokens`
+
+```ts
+import CleoDesignTokens from "@meetcleo/design-tokens";
+
+CleoDesignTokens.colors.semantic.fetch("core.content.primary"); // => "#47201C"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "#F8F6F2"
+CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
+```
+
+Theme is a plain second positional argument here, not the `theme:` keyword the Ruby reader uses — TypeScript has no equivalent that's as cheap as a positional param, and an options object (`fetch(key, { theme })`) would buy nothing. Imported as the `CleoDesignTokens` namespace, not a bare `fetch` — `import { fetch } from "@meetcleo/design-tokens"` would shadow the global `fetch` in that file.
+
+### Versioning
+
+`package.json`'s `version` is the single source of truth (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout. One file, no drift, nothing to remember to run. Starts at `0.1.0`.
+
+Publishing either package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here. The gemspec's `allowed_push_host` points at a non-existent host so a stray `gem push` can't land.
 
 ## Known exceptions
 

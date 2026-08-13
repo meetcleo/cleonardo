@@ -1,4 +1,4 @@
-# Cleo Token Sync
+# Cleonardo Token Sync
 
 Figma plugin that exports Cleo's colour Variables and opens a review PR of the resulting token
 files in this repo. First half of the pipeline in
@@ -95,9 +95,11 @@ see [Setup](#setup).
 
 Two things to expect:
 
-- **Figma assigns a real plugin id on first publish** and rewrites `manifest.json`, which currently
-  holds the placeholder `cleo-token-sync`. Commit that change, or the next person importing from the
-  manifest ends up with a different plugin.
+- **The `id` in `manifest.json` is the published plugin**, assigned by Figma on first publish. Don't
+  change it: importing from a manifest with a different id creates a separate development plugin, so
+  an update published from it would go somewhere other than the plugin designers have installed.
+- **The name shown in Figma comes from the publish form, not the manifest.** Renaming here doesn't
+  rename the published plugin — change it in the form when publishing an update.
 - **Publishing uploads your local build**, and `dist/` is gitignored. Always `yarn plugin:build`
   from an up-to-date checkout first, or you ship whatever was last built on that machine.
 

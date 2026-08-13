@@ -1,0 +1,11 @@
+# Core Experience owns this repository. GitHub requests their review on every PR — including the
+# automated `figma-sync` token PRs, which are opened by Actions and so have no author to pick
+# reviewers for them.
+#
+# A team is only honoured as a code owner if it has **write** access to the repository. Without
+# that the entry is ignored silently: no error, and no reviewer requested.
+#
+# To hand a subtree to a different team later, add a more specific line below this one —
+# the last matching pattern wins.
+
+*  @meetcleo/core-experience

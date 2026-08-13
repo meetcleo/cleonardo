@@ -8,6 +8,8 @@ Welcome to the Cleonardo Design System repository — a centralized source of tr
 
 `packages/tokens/tokens/color/{primitives,semantic}.json` is **the** canonical source of truth for Cleo colour, moved here from `meetcleo/design-tokens` ([COREEXP-321](https://cleo.atlassian.net/browse/COREEXP-321)). See [`packages/tokens/README.md`](./packages/tokens/README.md) for the Figma update runbook and known exceptions.
 
+The package now publishes under `@meetcleo/design-tokens` (npm) and `cleo_design_tokens` (RubyGems) — a TypeScript and a Ruby reader that flatten the tokens into `colors.primitives`/`colors.semantic` lookups, with the theme passed alongside the key ([COREEXP-264](https://cleo.atlassian.net/browse/COREEXP-264)). Publishing itself is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334).
+
 ---
 
 ## Repository Structure

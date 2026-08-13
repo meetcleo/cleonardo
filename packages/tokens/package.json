@@ -1,14 +1,28 @@
 {
-  "name": "@cleonardo/tokens",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Canonical source of truth for Cleo's design tokens (DTCG JSON).",
+  "name": "@meetcleo/design-tokens",
+  "version": "0.1.0",
+  "description": "Canonical source of truth for Cleo's design tokens (DTCG JSON), plus a TypeScript reader.",
   "type": "module",
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=24"
   },
+  "main": "dist/src/CleoDesignTokens.js",
+  "types": "dist/src/CleoDesignTokens.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/CleoDesignTokens.d.ts",
+      "default": "./dist/src/CleoDesignTokens.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "transform": "node scripts/transform.mjs",
-    "check": "node scripts/transform.mjs --check"
+    "check": "node scripts/transform.mjs --check",
+    "verify": "node scripts/verify-tokens.mjs",
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "yarn build"
   }
 }
