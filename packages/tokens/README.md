@@ -53,6 +53,15 @@ packages/tokens/
     synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
     fixtures/              # committed dumps + the value-equivalence expectations
     fixtures/reader/       # small hand-written fixtures for the reader's own tests
+  lib/
+    cleo_design_tokens.rb            # Ruby reader — requires the below, wires up `colors`
+    cleo_design_tokens/
+      tree_walker.rb                 # walks a token tree, yielding each leaf
+      lookup_builder.rb              # flattens a tree into a frozen key -> value/SemanticEntry lookup
+      semantic_entry.rb              # one role's Base value + theme overrides
+      bucket.rb                      # colors.primitives — one lookup, one `fetch`
+      semantic_bucket.rb             # colors.semantic — adds the `theme:` axis
+      errors.rb                      # UnknownTokenError, UnknownThemeError, DuplicateTokenError
   src/
     CleoDesignTokens.ts    # TypeScript reader
     generated/
@@ -174,6 +183,22 @@ Reach for `colors.semantic` by default. A `colors.primitives` call is reaching p
 - `ColorSemanticKey` — 473 members
 - `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
 
+### Ruby — `cleo_design_tokens`
+
+```ruby
+CleoDesignTokens.colors.semantic.fetch("core.content.primary")                  # => "#47201C"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast)   # => "#F8F6F2"
+CleoDesignTokens.colors.primitives.fetch("brown.800")                          # => "#47201C"
+```
+
+Add to a `Gemfile`:
+
+```ruby
+gem "cleo_design_tokens", path: "path/to/cleonardo/packages/tokens"
+```
+
+`colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
+
 ### TypeScript — `@meetcleo/design-tokens`
 
 ```ts
@@ -188,9 +213,9 @@ Theme is a plain second positional argument here, not the `theme:` keyword the R
 
 ### Versioning
 
-`package.json`'s `version` is the source of truth. Starts at `0.1.0`.
+`package.json`'s `version` is the single source of truth (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout. One file, no drift, nothing to remember to run. Starts at `0.1.0`.
 
-Publishing this package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here.
+Publishing either package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here. The gemspec's `allowed_push_host` points at a non-existent host so a stray `gem push` can't land.
 
 ## Known exceptions
 
