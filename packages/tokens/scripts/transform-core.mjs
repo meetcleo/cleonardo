@@ -347,7 +347,7 @@ export function naturalCompare(a, b) {
  *  `$type` / `$value` / `$ref` / `$themes` order is set by the code that builds them, and
  *  `$themes` follows the configured theme order — both deterministic already, and both more
  *  readable than alphabetical. */
-function sortTree(node) {
+export function sortTree(node) {
   if (isLeaf(node)) return node;
   const out = {};
   for (const key of Object.keys(node).sort(naturalCompare)) out[key] = sortTree(node[key]);
