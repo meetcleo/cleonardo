@@ -213,7 +213,7 @@ Theme is a plain second positional argument here, not the `theme:` keyword the R
 
 ### Versioning
 
-`package.json`'s `version` is the source of truth (npm requires a literal); `lib/cleo_design_tokens/version.rb` holds its own literal `VERSION` rather than parsing `package.json` at load — an installed gem ships without `package.json`, so that would raise `Errno::ENOENT`. `scripts/check_version.rb` asserts the two agree; run it whenever you bump the version. Both start at `0.1.0`.
+`package.json`'s `version` is the single source of truth (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout. One file, no drift, nothing to remember to run. Starts at `0.1.0`.
 
 Publishing either package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here. The gemspec's `allowed_push_host` points at a non-existent host so a stray `gem push` can't land.
 

@@ -10,8 +10,11 @@ Gem::Specification.new do |spec|
                       "passed alongside the key."
   spec.required_ruby_version = ">= 3.2" # Data.define
 
-  # The data ships with the gem, or the gem is useless.
-  spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"]
+  # The data ships with the gem, or the gem is useless. `package.json` ships
+  # too — not data, but `version.rb` reads it as the version's single
+  # source of truth, so it has to be present in an installed gem as well
+  # as this source checkout.
+  spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + ["package.json"]
   spec.require_paths = ["lib"]
 
   # Not publishable from here — publishing is COREEXP-334.
