@@ -155,10 +155,22 @@ InfoSec separately from this ticket; ask #4 above must be a
   `bundle exec rspec` (in `packages/tokens`) — all green, unaffected by the
   metadata changes in this ticket.
 
-Not runnable in this ticket (need org action or another repo): the
-Bundler two-deep-gemspec resolve from `meetcleo` with a developer's own
-credentials, the live Dependabot test, and the `mobile-app` npm resolution
-check. See the plan's verification steps 4–6.
+Not runnable in this ticket (need org action or another repo):
+
+- **Bundler two-deep-gemspec resolve.** On a throwaway `meetcleo` branch,
+  add the `gem "cleo_design_tokens", github: ..., glob: ..., tag: ...`
+  line above and run `bundle install` using a developer's own GitHub
+  credentials (no org grant needed) — proves `glob:` lifts Bundler's
+  one-level `DEFAULT_GLOB` limit. Also literally AC #2.
+- **The live Dependabot test.** Needs ask #2 and #5 to have landed first —
+  see "Gem channel" above for the exact procedure.
+- **`mobile-app` npm resolution.** After a prerelease publish, add
+  `@meetcleo` to `mobile-app`'s `.yarnrc.yml` `npmScopes` and
+  `yarn add @meetcleo/design-tokens@<prerelease>` on a throwaway branch.
+
+`glob:`'s Dependabot behaviour and the Dependabot release-notes rendering
+are the ticket's central open question, and they stay open by design until
+these three run.
 
 ## Acceptance criteria — two flagged for amendment on the Jira ticket
 
