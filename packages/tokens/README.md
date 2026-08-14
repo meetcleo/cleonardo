@@ -215,6 +215,20 @@ Add to a `Gemfile`:
 gem "cleo_design_tokens", path: "path/to/cleonardo/packages/tokens"
 ```
 
+**Once published** (COREEXP-334) — provisional, pending the live Dependabot
+test in [`docs/publishing-access.md`](https://github.com/meetcleo/cleonardo/blob/main/docs/publishing-access.md).
+No version tag exists on this repo yet; `<tag>` below is a placeholder for
+whatever release tag gets cut:
+
+```ruby
+gem "cleo_design_tokens", github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "<tag>"
+```
+
+`glob:` is required — the gemspec lives two directories deep and Bundler's
+default glob only reaches one. This is the default channel (git tag, no
+new registry); a registry fallback is documented alongside the permission
+request if the live test doesn't confirm it.
+
 `colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
 
 ### TypeScript — `@meetcleo/design-tokens`
@@ -225,6 +239,24 @@ import CleoDesignTokens from "@meetcleo/design-tokens";
 CleoDesignTokens.colors.semantic.fetch("core.content.primary"); // => "#47201C"
 CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "#F8F6F2"
 CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
+```
+
+**Once published** (COREEXP-334) — provisional, pending the permission
+request in [`docs/publishing-access.md`](https://github.com/meetcleo/cleonardo/blob/main/docs/publishing-access.md).
+Add a `meetcleo` entry to the consuming repo's `.yarnrc.yml` `npmScopes`
+(unverified against `mobile-app`'s existing `react-native-google-signin`
+entry — match that entry's key shape if it differs from this):
+
+```yaml
+# .yarnrc.yml
+npmScopes:
+  meetcleo:
+    npmRegistryServer: "https://npm.pkg.github.com"
+    npmAlwaysAuth: true
+```
+
+```
+yarn add @meetcleo/design-tokens
 ```
 
 Theme is a plain second positional argument here, not the `theme:` keyword the Ruby reader uses — TypeScript has no equivalent that's as cheap as a positional param, and an options object (`fetch(key, { theme })`) would buy nothing. Imported as the `CleoDesignTokens` namespace, not a bare `fetch` — `import { fetch } from "@meetcleo/design-tokens"` would shadow the global `fetch` in that file.
