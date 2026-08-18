@@ -27,6 +27,8 @@ name: tokens-release
 on:
   push:
     branches: [main]
+    # What ships in the gemspec's spec.files or the npm package's files — not README.md, even
+    # though it's in the npm files list too: a docs-only edit doesn't warrant cutting a release.
     paths:
       - 'packages/tokens/tokens/color/**'
       - 'packages/tokens/lib/**'
@@ -66,9 +68,13 @@ jobs:
           set -euo pipefail
           # Explicit, not relied on from checkout's fetch-depth: 0 — same reasoning tokens.yml
           # gives for naming its base-branch fetch: a missing tag should fail loudly here, not as
-          # a bare exit code from git describe.
+          # a bare exit code from a lookup below.
           git fetch --tags --force origin
-          tag=$(git describe --tags --match 'tokens-v*' --abbrev=0 2>/dev/null || true)
+          # A version sort over the tag list, NOT `git describe --tags` — describe only finds a
+          # tag that's an ancestor of HEAD, and the release commit a tag points at (see "Tag the
+          # release" below) is deliberately never merged back into main. One release later,
+          # describe would find nothing even though the previous tag exists.
+          tag=$(git tag --list 'tokens-v*' --sort=-version:refname | head -n1)
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
       - name: Plan this release
@@ -138,8 +144,11 @@ jobs:
           set -euo pipefail
           git config user.name 'cleo-token-release[bot]'
           git config user.email 'engineering@meetcleo.com'
+          # Only the version bump, not -a: the working tree also holds this job's build output
+          # (packages/tokens/dist/, gitignored, but no need to depend on that) and the auth-bearing
+          # .npmrc from the previous step, already removed but not worth trusting blindly here.
           # Local commit only, matching main's paragraph above — never pushed as a branch.
-          git commit -am "Release tokens $VERSION"
+          git commit -m "Release tokens $VERSION" packages/tokens/package.json
           git tag "$TAG"
           git push origin "$TAG"
 

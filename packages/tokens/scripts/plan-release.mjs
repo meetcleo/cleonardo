@@ -20,7 +20,7 @@
 // from a checkout that has that tag fetched.
 //
 // Writes ./release-notes.md (repo-root-relative CWD) and prints $GITHUB_OUTPUT-shaped lines to
-// stdout: version=, tag=, has-color-change=.
+// stdout: version=, tag=, has-colour-change=.
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -62,7 +62,7 @@ export function planRelease({ previousTag, committedVersion, primOld, semOld, pr
   if (!previousTag) {
     return {
       version: committedVersion,
-      hasColorChange: true,
+      hasColourChange: true,
       notes: `Initial release. ${flatten(primNew).size} primitives, ` +
         `${flatten(semNew).size} semantic role/theme entries.`,
     };
@@ -70,17 +70,17 @@ export function planRelease({ previousTag, committedVersion, primOld, semOld, pr
 
   const primDiff = diffFlat(flatten(primOld), flatten(primNew));
   const semDiff = diffFlat(flatten(semOld), flatten(semNew));
-  const hasColorChange = !diffIsEmpty(primDiff) || !diffIsEmpty(semDiff);
+  const hasColourChange = !diffIsEmpty(primDiff) || !diffIsEmpty(semDiff);
 
-  const version = nextVersion(versionFromTag(previousTag), hasColorChange ? "minor" : "patch");
+  const version = nextVersion(versionFromTag(previousTag), hasColourChange ? "minor" : "patch");
 
-  const notes = hasColorChange
+  const notes = hasColourChange
     ? renderDiffReport({ primDiff, semDiff }) +
       "\n\nA `@theme` entry in \"removed\" means that theme now resolves to Base — the colour " +
       "isn't gone, the override is."
     : "No colour changes in this release.";
 
-  return { version, hasColorChange, notes };
+  return { version, hasColourChange, notes };
 }
 
 // ---------- CLI ----------
@@ -105,7 +105,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
 
-  const { version, hasColorChange, notes } = planRelease({
+  const { version, hasColourChange, notes } = planRelease({
     previousTag,
     committedVersion: pkg.version,
     primOld: readJsonAt(previousTag, PRIM_REL),
@@ -117,5 +117,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   writeFileSync("release-notes.md", notes + "\n");
   console.log(`version=${version}`);
   console.log(`tag=tokens-v${version}`);
-  console.log(`has-color-change=${hasColorChange}`);
+  console.log(`has-colour-change=${hasColourChange}`);
 }

@@ -275,7 +275,7 @@ That value only matches what's actually released on `main`'s tip during the firs
 * **npm** publishes to **GitHub Packages** (`packages: write`, requested in [COREEXP-325](https://cleo.atlassian.net/browse/COREEXP-325)). One provider, no new secret beyond the built-in `GITHUB_TOKEN`.
 * **The gem is not published anywhere.** COREEXP-325 read `dependabot-core`'s source and found a version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and commit links — a registry (GitHub Packages' RubyGems support) is documented there as the fallback, with open upstream bugs, not the default. So `meetcleo` consumes the gem straight from this repo:
   ```ruby
-  gem "cleo_design_tokens", github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "tokens-v0.1.0"
+  gem "cleo_design_tokens", github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "tokens-v0.1.0" # pin to the latest tokens-v* tag
   ```
   The tag and the GitHub Release `tokens-release.yml` creates on it *are* the gem's publish step. `allowed_push_host` stays pointed at its fake host — nothing here runs `gem push`, so a stray one is still refused.
 * **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit.

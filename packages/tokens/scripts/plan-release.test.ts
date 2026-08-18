@@ -47,7 +47,7 @@ describe('planRelease', () => {
     });
 
     expect(result.version).toBe('0.1.0');
-    expect(result.hasColorChange).toBe(true);
+    expect(result.hasColourChange).toBe(true);
     expect(result.notes).toMatch(/Initial release/);
     expect(result.notes).toMatch(/1 primitives/);
     expect(result.notes).toMatch(/1 semantic/);
@@ -64,7 +64,7 @@ describe('planRelease', () => {
     });
 
     expect(result.version).toBe('0.3.0');
-    expect(result.hasColorChange).toBe(true);
+    expect(result.hasColourChange).toBe(true);
     expect(result.notes).toContain('primitives added:');
     expect(result.notes).toContain('+ brown.800 = #47201C');
   });
@@ -107,7 +107,7 @@ describe('planRelease', () => {
       semNew: { core: { content: { primary: leaf('#695F9A', 'indigo.500') } } },
     });
 
-    expect(result.hasColorChange).toBe(true);
+    expect(result.hasColourChange).toBe(true);
     expect(result.notes).toContain('~ core.content.primary: #695F9A {purple.500} -> #695F9A {indigo.500}');
   });
 
@@ -163,7 +163,7 @@ describe('planRelease', () => {
     });
 
     expect(result.version).toBe('0.2.1');
-    expect(result.hasColorChange).toBe(false);
+    expect(result.hasColourChange).toBe(false);
     expect(result.notes).toBe('No colour changes in this release.');
   });
 });
