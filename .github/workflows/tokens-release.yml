@@ -1,0 +1,154 @@
+name: tokens-release
+
+# Publishes the token packages on every merge to main that ships a change (COREEXP-334). One
+# trigger, one version bump, one set of release notes, shared across both artefacts:
+#
+# * npm — `@meetcleo/design-tokens`, published to GitHub Packages (`packages: write`, requested
+#   in COREEXP-325, not yet granted as of this workflow landing — the publish step fails closed
+#   until it is).
+# * the gem — NOT published anywhere. COREEXP-325's research into dependabot-core found that a
+#   version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and
+#   commit links; a registry (GitHub Packages' RubyGems support) is a fallback with open bugs
+#   (dependabot-core#7327, #11843), not the default. So `meetcleo` consumes the gem via
+#   `github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "tokens-vX.Y.Z"` — the
+#   tag and GitHub Release this workflow creates are the entire "publish" for the gem.
+#   `allowed_push_host` in the gemspec stays pointed at its fake host: nothing here ever runs
+#   `gem push`, so a stray one is still refused.
+#
+# Versioning: the release's version comes from the previous `tokens-v*` tag, not from
+# `packages/tokens/package.json`'s committed value — see plan-release.mjs and
+# packages/tokens/README.md ("Versioning") for why. The version bump is committed locally so the
+# published npm tarball's package.json and the gemspec's version.rb read (see COREEXP-264) both
+# carry the real release version, but that commit is never pushed to main — main's ruleset
+# (`main-branch-protection`) requires a PR and a review with no bypass actors, so a direct push
+# would fail the "no manual steps" acceptance criterion outright. Only the tag is pushed; tags
+# aren't covered by that ruleset (`conditions.ref_name` targets the branch only).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/tokens/tokens/color/**'
+      - 'packages/tokens/lib/**'
+      - 'packages/tokens/src/**'
+      - 'packages/tokens/package.json'
+      - 'packages/tokens/cleo_design_tokens.gemspec'
+
+# Serialised, not cancelled: two releases landing back-to-back must not compute the same "next
+# version" from a stale view of the previous tag.
+concurrency:
+  group: tokens-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24.10.0'
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Find the previous release
+        id: prev
+        run: |
+          set -euo pipefail
+          # Explicit, not relied on from checkout's fetch-depth: 0 — same reasoning tokens.yml
+          # gives for naming its base-branch fetch: a missing tag should fail loudly here, not as
+          # a bare exit code from git describe.
+          git fetch --tags --force origin
+          tag=$(git describe --tags --match 'tokens-v*' --abbrev=0 2>/dev/null || true)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Plan this release
+        id: plan
+        run: |
+          set -euo pipefail
+          prev="${{ steps.prev.outputs.tag }}"
+          if [ -n "$prev" ]; then
+            node packages/tokens/scripts/plan-release.mjs --previous-tag "$prev" >> "$GITHUB_OUTPUT"
+          else
+            node packages/tokens/scripts/plan-release.mjs >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if already released
+        id: guard
+        run: |
+          set -euo pipefail
+          # A re-run of this exact push (a manual workflow re-run, or a retry after a step below
+          # failed) recomputes the same version from the same previous tag — this is what stops
+          # that from re-attempting a publish that already succeeded.
+          tag="${{ steps.plan.outputs.tag }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "Already released $tag — nothing to do."
+            echo "already-released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already-released=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write the release version
+        if: steps.guard.outputs.already-released == 'false'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("fs");
+            const path = "packages/tokens/package.json";
+            const pkg = JSON.parse(fs.readFileSync(path, "utf8"));
+            pkg.version = process.env.VERSION;
+            fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
+          '
+
+      - name: Build the npm package
+        if: steps.guard.outputs.already-released == 'false'
+        run: yarn tokens:build
+
+      - name: Publish the npm package to GitHub Packages
+        if: steps.guard.outputs.already-released == 'false'
+        working-directory: packages/tokens
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          {
+            echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
+            echo "@meetcleo:registry=https://npm.pkg.github.com"
+          } > .npmrc
+          npm publish --registry=https://npm.pkg.github.com
+          rm .npmrc
+
+      - name: Tag the release
+        if: steps.guard.outputs.already-released == 'false'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+          TAG: ${{ steps.plan.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name 'cleo-token-release[bot]'
+          git config user.email 'engineering@meetcleo.com'
+          # Local commit only, matching main's paragraph above — never pushed as a branch.
+          git commit -am "Release tokens $VERSION"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Publish the GitHub Release
+        if: steps.guard.outputs.already-released == 'false'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+          TAG: ${{ steps.plan.outputs.tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release create "$TAG" --title "tokens v$VERSION" --notes-file release-notes.md
