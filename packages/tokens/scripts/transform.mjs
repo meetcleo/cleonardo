@@ -40,7 +40,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildTokens, flatten, diffFlat, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
+import { buildTokens, flatten, diffFlat, buildKeyUnions, renderTokenKeysFile, renderDiffReport, die } from "./transform-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const IN_DUMP = join(ROOT, "figma-exports", "figma-dump.json");
@@ -97,16 +97,7 @@ function run() {
 
   // ---------- report ----------
 
-  console.error("=== change report ===");
-  summarise("primitives", primDiff);
-  summarise("semantic  ", semDiff);
-
-  list("primitives added", primDiff.added, (k, v) => `+ ${k} = ${v}`);
-  list("primitives changed", primDiff.changed, (k, v) => `~ ${k}: ${v.from} -> ${v.to}`);
-  list("primitives removed", primDiff.removed, (k, v) => `- ${k} (was ${v})`);
-  list("semantic added", semDiff.added, (k, v) => `+ ${k} = ${v}`);
-  list("semantic changed", semDiff.changed, (k, v) => `~ ${k}: ${v.from} -> ${v.to}`);
-  list("semantic removed", semDiff.removed, (k, v) => `- ${k} (was ${v})`);
+  console.error(renderDiffReport({ primDiff, semDiff }));
 
   console.error(
     `\n${audit.primitiveCount} primitives, ${audit.semanticRoleCount} semantic roles, themes: ${themes.join(", ")}`,
@@ -169,12 +160,3 @@ function reportFatal(entries, headline, formatter, remedy) {
   die(remedy, 2);
 }
 
-function summarise(title, d) {
-  console.error(`\n${title}: +${d.added.size} added  ~${d.changed.size} changed  -${d.removed.size} removed`);
-}
-
-function list(label, entries, formatter) {
-  if (!entries.size) return;
-  console.error(`\n${label}:`);
-  for (const [k, v] of entries) console.error(`  ${formatter(k, v)}`);
-}
