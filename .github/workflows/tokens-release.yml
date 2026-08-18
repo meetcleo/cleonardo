@@ -147,8 +147,14 @@ jobs:
           # Only the version bump, not -a: the working tree also holds this job's build output
           # (packages/tokens/dist/, gitignored, but no need to depend on that) and the auth-bearing
           # .npmrc from the previous step, already removed but not worth trusting blindly here.
-          # Local commit only, matching main's paragraph above — never pushed as a branch.
-          git commit -m "Release tokens $VERSION" packages/tokens/package.json
+          # On the first release VERSION is the already-committed value (see plan-release.mjs),
+          # so "Write the release version" was a no-op and there's nothing to commit — `git commit`
+          # would fail on that empty pathspec, so only commit when the write actually changed
+          # something. Local commit only either way, matching main's paragraph above — never
+          # pushed as a branch.
+          if ! git diff --quiet -- packages/tokens/package.json; then
+            git commit -m "Release tokens $VERSION" packages/tokens/package.json
+          fi
           git tag "$TAG"
           git push origin "$TAG"
 
