@@ -8,9 +8,13 @@ permissions" below.
 
 ## Current state
 
-- `cleonardo` is **PRIVATE** today (confirmed via `gh repo view`). Several
-  items below depend on flipping it to **internal** (ask #2) — until that
-  lands, treat the private-repo caveats as live.
+- `cleonardo` is **PUBLIC** (confirmed via `gh api repos/meetcleo/cleonardo`:
+  `visibility: public`, secret scanning + push protection both enabled, 0
+  alerts). This went further than this doc's original recommendation of
+  private → internal — flagging that, not re-deciding it: it was already
+  done by the time this doc was updated. This removes ask #2's target
+  (nothing to flip) and, per "The permission request" below, ask #5 with
+  it.
 - Both artefacts (`@meetcleo/design-tokens` npm package,
   `cleo_design_tokens` gem) are consumed today only via local `path:`/
   relative references. Nothing is published yet.
@@ -52,17 +56,32 @@ Org-level settings need a GitHub **org owner** — confirm who from
 [Cleo Tech Tools](https://app.notion.com/p/ab735b5d41c942479b9107de60b1c689)
 rather than assuming a name.
 
-| # | Ask | Why | Route it serves |
-|---|---|---|---|
-| 1 | `packages: write` on `cleonardo` (workflow-level; built-in `GITHUB_TOKEN` suffices) | publish to GitHub Packages | npm (certain) + gem fallback |
-| 2 | Flip `cleonardo` private → **internal**, else a point-in-time Dependabot private-repo access grant for `meetcleo` and `mobile-app` | Dependabot reads release notes from the source repo | both routes |
-| 3 | Confirm "Allow GitHub Actions to create and approve pull requests" is on for `cleonardo` (admin toggle, not YAML) | `figma-sync.yml` opens PRs with `gh pr create` | COREEXP-323 (already merged — verify, don't re-request if on) |
-| 4 | A **classic** PAT with `read:packages`, org-scoped, stored as a Dependabot secret + Actions secret in `meetcleo`/`mobile-app` — not committed | consume a private GH Packages package | registry routes |
-| 5 | A PAT with **contents: read** on `cleonardo`, as a Dependabot secret in `meetcleo` (`type: git` registry entry: `username: x-access-token`, `password: ${{secrets.…}}`) | Dependabot cloning a private git-source gem | git-tag route (the default) |
+| # | Ask | Status | Why | Route it serves |
+|---|---|---|---|---|
+| 1 | `packages: write` on `cleonardo` (workflow-level; built-in `GITHUB_TOKEN` suffices) | **still needed** | publish to GitHub Packages | npm (certain) + gem fallback |
+| 2 | Flip `cleonardo` private → internal | **done** — repo is public, which is a further step than internal | — | — |
+| 3 | Confirm "Allow GitHub Actions to create and approve pull requests" is on for `cleonardo` (admin toggle, not YAML) | **already confirmed** | `figma-sync.yml` opens PRs with `gh pr create` | COREEXP-323 (already merged) |
+| 4 | A **classic** PAT with `read:packages`, org-scoped, stored as a Dependabot secret + Actions secret in `meetcleo`/`mobile-app` — not committed | **still needed** — unaffected by repo visibility | consume a GH Packages package | registry routes |
+| 5 | A PAT with **contents: read** on `cleonardo`, as a Dependabot secret in `meetcleo` (`type: git` registry entry: `username: x-access-token`, `password: ${{secrets.…}}`) | **no longer required** — see below | Dependabot cloning a private git-source gem | git-tag route (the default) |
 
-Ask #5 is not optional for the recommended route: dependabot-core#3587 and
-#7605 both resolved with an explicit token *after* an org-UI access grant
-proved insufficient — **do not assume ask #2 removes the need for ask #5.**
+**Ask #5 is moot now that `cleonardo` is public.** It existed solely to let
+Dependabot clone a private/internal repo; a public repo needs no credential
+to clone at all — this is exactly the pattern already confirmed working in
+`meetcleo`'s Gemfile today (`wachtwoord`, `avro_turf`, `statsd-instrument`,
+et al. — all tag-pinned gems from public `meetcleo`-org repos, no
+`registries:` entry, no secret). The prior caution here (dependabot-core
+#3587/#7605 — an org-UI access grant alone wasn't sufficient) applied to
+private/internal repos specifically; it does not apply to a public one.
+Net: **only asks #1 and #4 remain to be submitted** — #2 and #3 are already
+settled.
+
+**Ask #4 is unaffected by the visibility change** — verified against
+GitHub's own docs and community threads: GitHub Packages' npm registry
+requires an authenticated token for every install, even for a fully public
+package (unlike npmjs.org). See
+[GitHub Packages npm registry docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
+and
+[community discussion #33875](https://github.com/orgs/community/discussions/33875).
 
 Flag up front when submitting:
 - Ask #4 cannot be a fine-grained token — GitHub Packages is classic-PAT-only.
@@ -106,8 +125,12 @@ minted.
    native helpers and preserved by `GitSourceRemover`'s `GOOD_KEYS` —
    **but there is zero test coverage for `glob:` in dependabot-core and no
    issue discussing it. Treat as unverified until the live Dependabot test
-   (below) runs.** Needs ask #5's `type: git` registry entry, which then
-   triggers the `insecure-external-code-execution` interaction above.
+   (below) runs.** Now that `cleonardo` is public, this route needs **no
+   Dependabot registry entry at all** — ask #5 and the
+   `insecure-external-code-execution` interaction above no longer apply.
+   This makes the default route strictly simpler than it was when the repo
+   was private: it's now just a plain tag-pinned `github:` gem, the same
+   shape as `meetcleo`'s other public-repo git dependencies.
 2. **Fallback: GitHub Packages RubyGems.** Same `packages: write`, but a
    real bug tail (dependabot-core#7327 — private registry poisons *all*
    Bundler lookups; #11843 — `rubygems-server` vs `rubygems_server` naming).
@@ -116,12 +139,14 @@ minted.
    tokens publicly. A disclosure decision for a human, not an engineering
    one.
 
-Decisive test (run once ask #2 and #5 land): cut `v0.1.0`/`v0.1.1` tags with
-real GitHub Releases containing a colour diff, pin `meetcleo` to `v0.1.0` on
-a throwaway branch with a `type: git` registry entry, trigger Dependabot,
-and read the resulting PR body. A **Release notes** section = git-tag route
-confirmed. Run once against a throwaway public repo pair first, to separate
-a `glob:` failure from a private-repo-access failure (ask #2/#5).
+Decisive test (runnable now — no longer blocked on ask #2/#5, since
+`cleonardo` is already public): cut `v0.1.0`/`v0.1.1` tags with real GitHub
+Releases containing a colour diff, pin `meetcleo` to `v0.1.0` on a
+throwaway branch (plain `github:`/`tag:`/`glob:`, no registry entry needed
+now), trigger Dependabot, and read the resulting PR body. A **Release
+notes** section = git-tag route confirmed. What remains genuinely unproven
+is `glob:` itself — dependabot-core has zero test coverage for it — not
+private-repo access, which is now moot.
 
 ## Security note (out of scope for this ticket, must be raised separately)
 
@@ -155,22 +180,24 @@ InfoSec separately from this ticket; ask #4 above must be a
   `bundle exec rspec` (in `packages/tokens`) — all green, unaffected by the
   metadata changes in this ticket.
 
-Not runnable in this ticket (need org action or another repo):
+Not runnable in this ticket (need org action, a real tag, or another repo):
 
 - **Bundler two-deep-gemspec resolve.** On a throwaway `meetcleo` branch,
   add the `gem "cleo_design_tokens", github: ..., glob: ..., tag: ...`
   line above and run `bundle install` using a developer's own GitHub
   credentials (no org grant needed) — proves `glob:` lifts Bundler's
   one-level `DEFAULT_GLOB` limit. Also literally AC #2.
-- **The live Dependabot test.** Needs ask #2 and #5 to have landed first —
-  see "Gem channel" above for the exact procedure.
+- **The live Dependabot test.** No longer blocked on ask #2/#5 — only
+  needs real tags cut on `cleonardo` (now public) and a throwaway
+  `meetcleo` branch. See "Gem channel" above for the exact procedure.
 - **`mobile-app` npm resolution.** After a prerelease publish, add
   `@meetcleo` to `mobile-app`'s `.yarnrc.yml` `npmScopes` and
   `yarn add @meetcleo/design-tokens@<prerelease>` on a throwaway branch.
+  Still needs ask #4 (npm read token), unaffected by the visibility change.
 
 `glob:`'s Dependabot behaviour and the Dependabot release-notes rendering
 are the ticket's central open question, and they stay open by design until
-these three run.
+these three run — that part is unchanged by the visibility flip.
 
 ## Acceptance criteria — two flagged for amendment on the Jira ticket
 
