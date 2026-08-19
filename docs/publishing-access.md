@@ -58,10 +58,10 @@ rather than assuming a name.
 
 | # | Ask | Status | Why | Route it serves |
 |---|---|---|---|---|
-| 1 | `packages: write` on `cleonardo` (workflow-level; built-in `GITHUB_TOKEN` suffices) | **still needed** | publish to GitHub Packages | npm (certain) + gem fallback |
+| 1 | `packages: write` on `cleonardo` (workflow-level; built-in `GITHUB_TOKEN` suffices) | **done** — `tokens-release.yml` published `@meetcleo/design-tokens@0.1.0` to GitHub Packages on the first real run, no further grant needed | publish to GitHub Packages | npm (confirmed) |
 | 2 | Flip `cleonardo` private → internal | **done** — repo is public, which is a further step than internal | — | — |
 | 3 | Confirm "Allow GitHub Actions to create and approve pull requests" is on for `cleonardo` (admin toggle, not YAML) | **already confirmed** | `figma-sync.yml` opens PRs with `gh pr create` | COREEXP-323 (already merged) |
-| 4 | A **classic** PAT with `read:packages`, org-scoped, stored as a Dependabot secret + Actions secret in `meetcleo`/`mobile-app` — not committed | **still needed** — unaffected by repo visibility | consume a GH Packages package | registry routes |
+| 4 | A **classic** PAT with `read:packages`, org-scoped, stored as a Dependabot secret + Actions secret in `meetcleo`/`mobile-app` — not committed | **not needed** — see below | consume a GH Packages package | superseded |
 | 5 | A PAT with **contents: read** on `cleonardo`, as a Dependabot secret in `meetcleo` (`type: git` registry entry: `username: x-access-token`, `password: ${{secrets.…}}`) | **no longer required** — see below | Dependabot cloning a private git-source gem | git-tag route (the default) |
 
 **Ask #5 is moot now that `cleonardo` is public.** It existed solely to let
@@ -72,23 +72,44 @@ et al. — all tag-pinned gems from public `meetcleo`-org repos, no
 `registries:` entry, no secret). The prior caution here (dependabot-core
 #3587/#7605 — an org-UI access grant alone wasn't sufficient) applied to
 private/internal repos specifically; it does not apply to a public one.
-Net: **only asks #1 and #4 remain to be submitted** — #2 and #3 are already
-settled.
 
-**Ask #4 is unaffected by the visibility change** — verified against
-GitHub's own docs and community threads: GitHub Packages' npm registry
-requires an authenticated token for every install, even for a fully public
-package (unlike npmjs.org). See
-[GitHub Packages npm registry docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
-and
-[community discussion #33875](https://github.com/orgs/community/discussions/33875).
+**Ask #4 turned out not to be needed — empirically, contradicting what this
+doc said earlier.** The claim below (GitHub Packages always requires a
+token, even for a public package) is what GitHub's own docs and the
+GitHub community say, and is presumably still right for a *private*
+package. It does not hold for this one: on `mobile-app`, adding only
 
-Flag up front when submitting:
+```yaml
+# .yarnrc.yml
+npmScopes:
+  meetcleo:
+    npmRegistryServer: "https://npm.pkg.github.com"
+```
+
+— no `npmAuthToken`, no `npmAlwaysAuth` — was sufficient to
+`yarn add @meetcleo/design-tokens@0.1.0` and read a value back out of it.
+Verified in a cold environment (checked first: no pre-existing GH Packages
+credential anywhere in that machine's global npm/yarn config, `gh` session,
+or env vars that yarn could have picked up instead). Net: **no permission
+ask remains outstanding.** Asks #1–3 are done or confirmed; #4 and #5 are
+both superseded rather than submitted.
+
+The contradiction itself is worth flagging onward rather than explained
+away: either GitHub's public-package behaviour changed since the docs
+above were written, or there's a scope of "public" this doc's sources
+didn't cover (e.g. package-level vs. repo-level visibility settling
+differently). This doc doesn't resolve which — that's for whoever owns the
+GitHub Packages relationship going forward, not something to design around
+without understanding.
+
+Superseded, kept for context rather than deleted:
 - Ask #4 cannot be a fine-grained token — GitHub Packages is classic-PAT-only.
-  This is the item most likely to bounce.
+  Moot now, but relevant again if a *private* GH Packages package is ever
+  needed.
 - A GitHub changelog entry dated 2026-06-23 reportedly lets Dependabot's own
-  `GITHUB_TOKEN` reach `*.pkg.github.com`, which would remove ask #4 —
-  **unverified: the page 404s. Do not design around it.**
+  `GITHUB_TOKEN` reach `*.pkg.github.com` — still unverified, the page still
+  404s, and doesn't explain this finding anyway (this was a plain `yarn add`,
+  not Dependabot).
 
 **No Figma API token needed.** The epic's premise here is stale — COREEXP-323
 is Done, and its auth design is a per-designer fine-grained PAT in
@@ -152,11 +173,10 @@ private-repo access, which is now moot.
 
 `meetcleo/mobile-app` has a classic GitHub PAT committed in plaintext on
 `main`, in both `.npmrc` and `.yarnrc.yml` (annotated as having no access to
-Cleo repos). That pattern cannot be reused for `@meetcleo/design-tokens`:
-GitHub Packages is classic-PAT-only, and a token that can read a private
-Cleo-org package must never be committed. Raise the existing token with
-InfoSec separately from this ticket; ask #4 above must be a
-**secret-managed** credential, never committed.
+Cleo repos). Raise it with InfoSec separately from this ticket — unrelated
+to `@meetcleo/design-tokens` now that ask #4 turned out not to be needed
+(see "The permission request" above), but a bad pattern regardless of
+that.
 
 ## Verified in this repo (empirical, this ticket)
 
@@ -179,8 +199,15 @@ InfoSec separately from this ticket; ask #4 above must be a
 - `yarn tokens:verify && yarn tokens:test && yarn tokens:typecheck` and
   `bundle exec rspec` (in `packages/tokens`) — all green, unaffected by the
   metadata changes in this ticket.
+- **`mobile-app` npm resolution.** `tokens-release.yml` published
+  `@meetcleo/design-tokens@0.1.0` for real (COREEXP-334). On a throwaway
+  `mobile-app` branch, adding only `npmScopes.meetcleo.npmRegistryServer`
+  to `.yarnrc.yml` (no `npmAuthToken`) resolved `yarn add
+  @meetcleo/design-tokens@0.1.0` and read a value back out of it, in an
+  environment confirmed to hold no other GH Packages credential. This is
+  what retired ask #4 above.
 
-Not runnable in this ticket (need org action, a real tag, or another repo):
+Not runnable in this ticket (need a real tag or another repo):
 
 - **Bundler two-deep-gemspec resolve.** On a throwaway `meetcleo` branch,
   add the `gem "cleo_design_tokens", github: ..., glob: ..., tag: ...`
@@ -190,10 +217,6 @@ Not runnable in this ticket (need org action, a real tag, or another repo):
 - **The live Dependabot test.** No longer blocked on ask #2/#5 — only
   needs real tags cut on `cleonardo` (now public) and a throwaway
   `meetcleo` branch. See "Gem channel" above for the exact procedure.
-- **`mobile-app` npm resolution.** After a prerelease publish, add
-  `@meetcleo` to `mobile-app`'s `.yarnrc.yml` `npmScopes` and
-  `yarn add @meetcleo/design-tokens@<prerelease>` on a throwaway branch.
-  Still needs ask #4 (npm read token), unaffected by the visibility change.
 
 `glob:`'s Dependabot behaviour and the Dependabot release-notes rendering
 are the ticket's central open question, and they stay open by design until
