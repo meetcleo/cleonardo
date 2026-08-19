@@ -3,9 +3,8 @@ name: tokens-release
 # Publishes the token packages on every merge to main that ships a change (COREEXP-334). One
 # trigger, one version bump, one set of release notes, shared across both artefacts:
 #
-# * npm — `@meetcleo/design-tokens`, published to GitHub Packages (`packages: write`, requested
-#   in COREEXP-325, not yet granted as of this workflow landing — the publish step fails closed
-#   until it is).
+# * npm — `@meetcleo/design-tokens`, published to GitHub Packages. Needs `packages: write`
+#   (COREEXP-325) — a 401/403 on the publish step below means that permission isn't in place.
 # * the gem — NOT published anywhere. COREEXP-325's research into dependabot-core found that a
 #   version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and
 #   commit links; a registry (GitHub Packages' RubyGems support) is a fallback with open bugs
