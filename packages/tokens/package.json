@@ -3,6 +3,19 @@
   "version": "0.1.0",
   "description": "Canonical source of truth for Cleo's design tokens (DTCG JSON), plus a TypeScript reader.",
   "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meetcleo/cleonardo.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://github.com/meetcleo/cleonardo/tree/main/packages/tokens",
+  "bugs": {
+    "url": "https://github.com/meetcleo/cleonardo/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "engines": {
     "node": ">=24"
   },
