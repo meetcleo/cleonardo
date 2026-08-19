@@ -215,19 +215,23 @@ Add to a `Gemfile`:
 gem "cleo_design_tokens", path: "path/to/cleonardo/packages/tokens"
 ```
 
-**Once published** (COREEXP-334) — provisional, pending the live Dependabot
-test in [`docs/publishing-access.md`](https://github.com/meetcleo/cleonardo/blob/main/docs/publishing-access.md).
-No version tag exists on this repo yet; `<tag>` below is a placeholder for
-whatever release tag gets cut:
-
 ```ruby
-gem "cleo_design_tokens", github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "<tag>"
+gem "cleo_design_tokens", github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "tokens-v0.1.0" # pin to the latest tokens-v* tag
 ```
 
 `glob:` is required — the gemspec lives two directories deep and Bundler's
-default glob only reaches one. This is the default channel (git tag, no
-new registry); a registry fallback is documented alongside the permission
-request if the live test doesn't confirm it.
+default glob only reaches one. This is the release channel (see
+[Release](#release)); resolving it this way is confirmed working, but the
+Dependabot release-notes rendering for a tag-pinned git gem — the whole
+point of the git-tag route over a registry — hasn't had its live test run
+yet (cut a real Dependabot PR against this tag and check the PR body for a
+release notes section).
+
+If `meetcleo`'s `dependabot.yml` ever gains a Bundler `registries:` entry
+for any other gem, this one needs `insecure-external-code-execution: allow`
+alongside it — a `registries:` block flips Dependabot's external code
+execution to deny-by-default, which `Dependabot::UnexpectedExternalCode`s
+any git-source gem, this one included.
 
 `colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
 
@@ -241,23 +245,27 @@ CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "
 CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
 ```
 
-**Once published** (COREEXP-334) — provisional, pending the permission
-request in [`docs/publishing-access.md`](https://github.com/meetcleo/cleonardo/blob/main/docs/publishing-access.md).
-Add a `meetcleo` entry to the consuming repo's `.yarnrc.yml` `npmScopes`
-(unverified against `mobile-app`'s existing `react-native-google-signin`
-entry — match that entry's key shape if it differs from this):
+Add a `meetcleo` entry to the consuming repo's `.yarnrc.yml` `npmScopes`:
 
 ```yaml
 # .yarnrc.yml
 npmScopes:
   meetcleo:
     npmRegistryServer: "https://npm.pkg.github.com"
-    npmAlwaysAuth: true
 ```
 
 ```
 yarn add @meetcleo/design-tokens
 ```
+
+No auth token needed, confirmed against the real published package — this
+contradicts GitHub's own docs and community reports that GitHub Packages'
+npm registry requires a token for every install, even a public package's.
+Verified in an environment confirmed to hold no other GH Packages
+credential yarn could have picked up instead. Why it doesn't need one here
+is unresolved — flag it if you're the one figuring out whether that's a
+`cleonardo`-specific setting or a GitHub Packages behaviour change, rather
+than assuming it'll hold for a private package too.
 
 Theme is a plain second positional argument here, not the `theme:` keyword the Ruby reader uses — TypeScript has no equivalent that's as cheap as a positional param, and an options object (`fetch(key, { theme })`) would buy nothing. Imported as the `CleoDesignTokens` namespace, not a bare `fetch` — `import { fetch } from "@meetcleo/design-tokens"` would shadow the global `fetch` in that file.
 
@@ -276,7 +284,7 @@ That value only matches what's actually released on `main`'s tip during the firs
 * **The gem is not published anywhere.** COREEXP-325 read `dependabot-core`'s source and found a version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and commit links — a registry (GitHub Packages' RubyGems support) is documented there as the fallback, with open upstream bugs, not the default. So `meetcleo` consumes the gem straight from this repo's `tokens-v*` tag (see [Consumers](#consumers) for the exact `Gemfile` line). The tag and the GitHub Release `tokens-release.yml` creates on it *are* the gem's publish step. `allowed_push_host` stays pointed at its fake host — nothing here runs `gem push`, so a stray one is still refused.
 * **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit.
 
-Needs `packages: write` actually granted (COREEXP-325) for the publish step to succeed — see `docs/publishing-access.md` for the permission request.
+`tokens-v0.1.0` is the first real release, published this way.
 
 ## Known exceptions
 

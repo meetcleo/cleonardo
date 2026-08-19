@@ -9,6 +9,9 @@ Gem::Specification.new do |spec|
                       "into frozen colors.primitives / colors.semantic lookups, with the theme " \
                       "passed alongside the key."
   spec.required_ruby_version = ">= 3.2" # Data.define
+  # Not "UNLICENSED" — that's an npm convention. RubyGems validates against SPDX identifiers and
+  # rejects it; "Nonstandard" is the correct RubyGems signal for a proprietary, non-public
+  # license. package.json's own "license" field uses "UNLICENSED", correctly, for the same gem.
   spec.license = "Nonstandard"
   spec.homepage = "https://github.com/meetcleo/cleonardo/tree/main/packages/tokens"
   spec.metadata["source_code_uri"] = "https://github.com/meetcleo/cleonardo/tree/main/packages/tokens"
