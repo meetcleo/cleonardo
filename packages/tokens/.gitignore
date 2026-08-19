@@ -2,3 +2,4 @@
 dist/
 *.gem
 Gemfile.lock
+release-notes.md

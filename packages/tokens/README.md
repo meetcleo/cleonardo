@@ -263,9 +263,20 @@ Theme is a plain second positional argument here, not the `theme:` keyword the R
 
 ### Versioning
 
-`package.json`'s `version` is the single source of truth (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout. One file, no drift, nothing to remember to run. Starts at `0.1.0`.
+`package.json`'s `version` is the single source of truth for what an installed copy of either package reports (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout.
 
-Publishing either package is [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334) — not done here. The gemspec's `allowed_push_host` points at a non-existent host so a stray `gem push` can't land.
+That value only matches what's actually released on `main`'s tip during the first release. After that, the committed file is a floor, not a live version — `main` is protected by a ruleset requiring a PR and a review with no bypass actors, so the release pipeline (below) can't commit a bump there without reintroducing a manual step. The **authoritative** version of any given release is its `tokens-v*` tag; the release commit that carries the matching `package.json` exists only as that tag's target, never on `main`'s history. Reading `package.json` on `main` tells you the floor a fresh checkout starts from, not the latest published version — for that, check the latest `tokens-v*` tag or the registry.
+
+### Release
+
+[COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334): `.github/workflows/tokens-release.yml` publishes on every merge to `main` that changes a shipped file (`tokens/color/**`, `lib/**`, `src/**`, `package.json`, the gemspec). One trigger, one version bump, one set of release notes, covering both artefacts:
+
+* **Version and release notes** come from `scripts/plan-release.mjs`, diffing the previous `tokens-v*` tag against the tree on `main` — reusing `transform-core.mjs`'s `flatten`/`diffFlat`/`renderDiffReport`, the same functions behind the Figma-sync change report, so a colour change reads identically wherever it's described. A colour change (`primitives` or `semantic` touched) always bumps **minor**, never **patch** — `meetcleo`'s Dependabot config ignores all patch updates, so a patch-versioned colour change would never open a pull request.
+* **npm** publishes to **GitHub Packages**, needing only `packages: write` — one provider, no new secret beyond the built-in `GITHUB_TOKEN`.
+* **The gem is not published anywhere.** COREEXP-325 read `dependabot-core`'s source and found a version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and commit links — a registry (GitHub Packages' RubyGems support) is documented there as the fallback, with open upstream bugs, not the default. So `meetcleo` consumes the gem straight from this repo's `tokens-v*` tag (see [Consumers](#consumers) for the exact `Gemfile` line). The tag and the GitHub Release `tokens-release.yml` creates on it *are* the gem's publish step. `allowed_push_host` stays pointed at its fake host — nothing here runs `gem push`, so a stray one is still refused.
+* **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit.
+
+Needs `packages: write` actually granted (COREEXP-325) for the publish step to succeed — see `docs/publishing-access.md` for the permission request.
 
 ## Known exceptions
 

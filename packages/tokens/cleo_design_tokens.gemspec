@@ -21,6 +21,9 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + ["package.json"]
   spec.require_paths = ["lib"]
 
-  # Not publishable from here — publishing is COREEXP-334.
+  # `gem push` stays refused deliberately. COREEXP-334's release pipeline never runs it — the
+  # gem is consumed straight from a `tokens-v*` git tag (glob: "packages/tokens/*.gemspec"), per
+  # COREEXP-325's finding that a version-tag-pinned git dependency already gets Dependabot-native
+  # release notes. See packages/tokens/README.md -> "Release".
   spec.metadata["allowed_push_host"] = "https://example.org/not-a-real-host"
 end

@@ -417,6 +417,48 @@ export function die(msg, code = 1) {
   throw err;
 }
 
+// ---------- change-report rendering ----------
+//
+// Shared by transform.mjs (dump vs on-disk, printed to stderr during a Figma sync) and the
+// release pipeline's release-notes script (last release vs on-disk, written into the GitHub
+// Release body, COREEXP-334) — one formatter, so both describe a colour change the same way.
+// `$ref` is already baked into the compared value by `describe()`, so a re-point at an
+// identical hex still shows as a change here, and a theme override that starts resolving to
+// Base again shows as a removal of its `key@theme` entry rather than vanishing.
+
+function summariseLine(title, d) {
+  return `${title}: +${d.added.size} added  ~${d.changed.size} changed  -${d.removed.size} removed`;
+}
+
+function listLines(label, entries, formatter) {
+  if (!entries.size) return [];
+  return [`\n${label}:`, ...[...entries].map(([k, v]) => `  ${formatter(k, v)}`)];
+}
+
+/** True when a diff (as `diffFlat` produces it) touched nothing in that bucket. */
+export function diffIsEmpty(diff) {
+  return diff.added.size === 0 && diff.changed.size === 0 && diff.removed.size === 0;
+}
+
+/** Renders the two-bucket change report in the shape transform.mjs has always printed to
+ *  stderr: a summary line per bucket, then every added, changed and removed key. Callers
+ *  decide where the string goes (stderr, a release note); this only ever formats. */
+export function renderDiffReport({ primDiff, semDiff }) {
+  return [
+    "=== change report ===",
+    "",
+    summariseLine("primitives", primDiff),
+    "",
+    summariseLine("semantic  ", semDiff),
+    ...listLines("primitives added", primDiff.added, (k, v) => `+ ${k} = ${v}`),
+    ...listLines("primitives changed", primDiff.changed, (k, v) => `~ ${k}: ${v.from} -> ${v.to}`),
+    ...listLines("primitives removed", primDiff.removed, (k, v) => `- ${k} (was ${v})`),
+    ...listLines("semantic added", semDiff.added, (k, v) => `+ ${k} = ${v}`),
+    ...listLines("semantic changed", semDiff.changed, (k, v) => `~ ${k}: ${v.from} -> ${v.to}`),
+    ...listLines("semantic removed", semDiff.removed, (k, v) => `- ${k} (was ${v})`),
+  ].join("\n");
+}
+
 // ---------- emitted types ----------
 
 export function buildKeyUnions(primTree, semTree) {
