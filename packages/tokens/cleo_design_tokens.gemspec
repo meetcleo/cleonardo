@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://github.com/meetcleo/cleonardo/tree/main/packages/tokens"
   spec.metadata["source_code_uri"] = "https://github.com/meetcleo/cleonardo/tree/main/packages/tokens"
   spec.metadata["changelog_uri"] = "https://github.com/meetcleo/cleonardo/releases"
+  spec.metadata["github_repo"] = "ssh://github.com/meetcleo/cleonardo"
 
   # The data ships with the gem, or the gem is useless. `package.json` ships
   # too — not data, but `version.rb` reads it as the version's single
@@ -24,9 +25,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + ["package.json"]
   spec.require_paths = ["lib"]
 
-  # `gem push` stays refused deliberately. COREEXP-334's release pipeline never runs it — the
-  # gem is consumed straight from a `tokens-v*` git tag (glob: "packages/tokens/*.gemspec"), per
-  # COREEXP-325's finding that a version-tag-pinned git dependency already gets Dependabot-native
-  # release notes. See packages/tokens/README.md -> "Release".
-  spec.metadata["allowed_push_host"] = "https://example.org/not-a-real-host"
+  # The release workflow is the only intended publisher. This also prevents an accidental push
+  # to public RubyGems, where this proprietary package does not belong.
+  spec.metadata["allowed_push_host"] = "https://rubygems.pkg.github.com/meetcleo"
 end
