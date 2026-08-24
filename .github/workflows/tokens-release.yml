@@ -5,14 +5,10 @@ name: tokens-release
 #
 # * npm — `@meetcleo/design-tokens`, published to GitHub Packages. Needs `packages: write`
 #   (COREEXP-325) — a 401/403 on the publish step below means that permission isn't in place.
-# * the gem — NOT published anywhere. COREEXP-325's research into dependabot-core found that a
-#   version-tag-pinned git dependency already gets Dependabot-native release notes, changelog and
-#   commit links; a registry (GitHub Packages' RubyGems support) is a fallback with open bugs
-#   (dependabot-core#7327, #11843), not the default. So `meetcleo` consumes the gem via
-#   `github: "meetcleo/cleonardo", glob: "packages/tokens/*.gemspec", tag: "tokens-vX.Y.Z"` — the
-#   tag and GitHub Release this workflow creates are the entire "publish" for the gem.
-#   `allowed_push_host` in the gemspec stays pointed at its fake host: nothing here ever runs
-#   `gem push`, so a stray one is still refused.
+# * RubyGems — `cleo_design_tokens`, published to GitHub Packages' RubyGems registry. The gem is
+#   built after the shared version is written, then pushed with this repository's `GITHUB_TOKEN`.
+#   Consumers configure Dependabot with a `rubygems-server` registry and a `read:packages` token;
+#   see packages/tokens/README.md.
 #
 # Versioning: the release's version comes from the previous `tokens-v*` tag, not from
 # `packages/tokens/package.json`'s committed value — see plan-release.mjs and
@@ -120,6 +116,11 @@ jobs:
         if: steps.guard.outputs.already-released == 'false'
         run: yarn tokens:build
 
+      - uses: ruby/setup-ruby@v1
+        if: steps.guard.outputs.already-released == 'false'
+        with:
+          ruby-version: '3.2.0'
+
       - name: Publish the npm package to GitHub Packages
         if: steps.guard.outputs.already-released == 'false'
         working-directory: packages/tokens
@@ -133,6 +134,24 @@ jobs:
           } > .npmrc
           npm publish --registry=https://npm.pkg.github.com
           rm .npmrc
+
+      - name: Publish the Ruby gem to GitHub Packages
+        if: steps.guard.outputs.already-released == 'false'
+        working-directory: packages/tokens
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.gem
+          chmod 700 ~/.gem
+          trap 'rm -f ~/.gem/credentials' EXIT
+          printf '%s\n' '---' ":github: Bearer $GITHUB_TOKEN" > ~/.gem/credentials
+          chmod 600 ~/.gem/credentials
+          gem build cleo_design_tokens.gemspec
+          gem push --key github \
+            --host https://rubygems.pkg.github.com/meetcleo \
+            "cleo_design_tokens-$VERSION.gem"
 
       - name: Tag the release
         if: steps.guard.outputs.already-released == 'false'
