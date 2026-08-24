@@ -6,7 +6,7 @@ name: tokens-release
 # * npm — `@meetcleo/design-tokens`, published to GitHub Packages. Needs `packages: write`
 #   (COREEXP-325) — a 401/403 on the publish step below means that permission isn't in place.
 # * RubyGems — `cleo_design_tokens`, published publicly to RubyGems.org. The gem is built after
-#   the shared version is written, then pushed with the `RUBYGEMS_API_KEY` repository secret.
+#   the shared version is written, then pushed with RubyGems trusted publishing.
 #
 # Versioning: the release's version comes from the previous `tokens-v*` tag, not from
 # `packages/tokens/package.json`'s committed value — see plan-release.mjs and
@@ -38,6 +38,7 @@ concurrency:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
   release:
@@ -124,32 +125,33 @@ jobs:
         working-directory: packages/tokens
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.plan.outputs.version }}
         run: |
           set -euo pipefail
           {
             echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
             echo "@meetcleo:registry=https://npm.pkg.github.com"
           } > .npmrc
-          npm publish --registry=https://npm.pkg.github.com
+          if npm view "@meetcleo/design-tokens@$VERSION" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "@meetcleo/design-tokens@$VERSION is already published."
+          else
+            npm publish --registry=https://npm.pkg.github.com
+          fi
           rm .npmrc
+
+      - name: Configure RubyGems trusted publishing
+        if: steps.guard.outputs.already-released == 'false'
+        uses: rubygems/configure-rubygems-credentials@v2.1.0
 
       - name: Publish the Ruby gem to RubyGems.org
         if: steps.guard.outputs.already-released == 'false'
         working-directory: packages/tokens
         env:
-          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
           set -euo pipefail
-          mkdir -p ~/.gem
-          chmod 700 ~/.gem
-          trap 'rm -f ~/.gem/credentials' EXIT
-          printf '%s\n' '---' ":rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials
-          chmod 600 ~/.gem/credentials
           gem build cleo_design_tokens.gemspec
-          gem push --key rubygems_api_key \
-            --host https://rubygems.org \
-            "cleo_design_tokens-$VERSION.gem"
+          gem push --host https://rubygems.org "cleo_design_tokens-$VERSION.gem"
 
       - name: Tag the release
         if: steps.guard.outputs.already-released == 'false'
