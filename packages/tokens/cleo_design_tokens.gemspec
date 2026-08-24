@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + ["package.json"]
   spec.require_paths = ["lib"]
 
-  # The release workflow is the only intended publisher. This also prevents an accidental push
-  # to public RubyGems, where this proprietary package does not belong.
-  spec.metadata["allowed_push_host"] = "https://rubygems.pkg.github.com/meetcleo"
+  # The release workflow is the only intended publisher. Restrict pushes to the public registry.
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 end

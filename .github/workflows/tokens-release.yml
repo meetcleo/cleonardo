@@ -5,10 +5,8 @@ name: tokens-release
 #
 # * npm — `@meetcleo/design-tokens`, published to GitHub Packages. Needs `packages: write`
 #   (COREEXP-325) — a 401/403 on the publish step below means that permission isn't in place.
-# * RubyGems — `cleo_design_tokens`, published to GitHub Packages' RubyGems registry. The gem is
-#   built after the shared version is written, then pushed with this repository's `GITHUB_TOKEN`.
-#   Consumers configure Dependabot with a `rubygems-server` registry and a `read:packages` token;
-#   see packages/tokens/README.md.
+# * RubyGems — `cleo_design_tokens`, published publicly to RubyGems.org. The gem is built after
+#   the shared version is written, then pushed with the `RUBYGEMS_API_KEY` repository secret.
 #
 # Versioning: the release's version comes from the previous `tokens-v*` tag, not from
 # `packages/tokens/package.json`'s committed value — see plan-release.mjs and
@@ -135,22 +133,22 @@ jobs:
           npm publish --registry=https://npm.pkg.github.com
           rm .npmrc
 
-      - name: Publish the Ruby gem to GitHub Packages
+      - name: Publish the Ruby gem to RubyGems.org
         if: steps.guard.outputs.already-released == 'false'
         working-directory: packages/tokens
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
           set -euo pipefail
           mkdir -p ~/.gem
           chmod 700 ~/.gem
           trap 'rm -f ~/.gem/credentials' EXIT
-          printf '%s\n' '---' ":github: Bearer $GITHUB_TOKEN" > ~/.gem/credentials
+          printf '%s\n' '---' ":rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials
           chmod 600 ~/.gem/credentials
           gem build cleo_design_tokens.gemspec
-          gem push --key github \
-            --host https://rubygems.pkg.github.com/meetcleo \
+          gem push --key rubygems_api_key \
+            --host https://rubygems.org \
             "cleo_design_tokens-$VERSION.gem"
 
       - name: Tag the release
