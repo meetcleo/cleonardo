@@ -150,8 +150,12 @@ jobs:
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
           set -euo pipefail
-          gem build cleo_design_tokens.gemspec
-          gem push --host https://rubygems.org "cleo_design_tokens-$VERSION.gem"
+          if gem list --remote --all --exact cleo_design_tokens --source https://rubygems.org | tr '(),' '\n' | grep -qx "$VERSION"; then
+            echo "cleo_design_tokens@$VERSION is already published."
+          else
+            gem build cleo_design_tokens.gemspec
+            gem push --host https://rubygems.org "cleo_design_tokens-$VERSION.gem"
+          fi
 
       - name: Tag the release
         if: steps.guard.outputs.already-released == 'false'
