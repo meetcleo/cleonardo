@@ -216,21 +216,10 @@ gem "cleo_design_tokens", path: "path/to/cleonardo/packages/tokens"
 ```
 
 ```ruby
-source "https://rubygems.pkg.github.com/meetcleo" do
-  gem "cleo_design_tokens", "0.1.1"
-end
+gem "cleo_design_tokens"
 ```
 
-Authenticate Bundler with a classic GitHub PAT that has `read:packages` and access to the
-package:
-
-```sh
-bundle config set https://rubygems.pkg.github.com/meetcleo USERNAME:TOKEN
-```
-
-For Dependabot, configure this as a `rubygems-server` registry with a `read:packages` PAT. GitHub
-documents GitHub Packages' RubyGems registry as supported by Dependabot; see [Configuring access
-to private registries](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries).
+The gem is public on RubyGems.org, so Bundler and Dependabot need no registry credentials.
 
 `colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
 
@@ -279,7 +268,7 @@ That value only matches what's actually released on `main`'s tip during the firs
 [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334): `.github/workflows/tokens-release.yml` publishes on every merge to `main` that changes a shipped file (`tokens/color/**`, `lib/**`, `src/**`, `package.json`, the gemspec). One trigger, one version bump, one set of release notes, covering both artefacts:
 
 * **Version and release notes** come from `scripts/plan-release.mjs`, diffing the previous `tokens-v*` tag against the tree on `main` — reusing `transform-core.mjs`'s `flatten`/`diffFlat`/`renderDiffReport`, the same functions behind the Figma-sync change report, so a colour change reads identically wherever it's described. A colour change (`primitives` or `semantic` touched) always bumps **minor**, never **patch** — `meetcleo`'s Dependabot config ignores all patch updates, so a patch-versioned colour change would never open a pull request.
-* **npm and RubyGems** publish to **GitHub Packages**, needing only `packages: write` — one provider, no new secret beyond the built-in `GITHUB_TOKEN`. The gem's `allowed_push_host` points to GitHub Packages, preventing an accidental public RubyGems push.
+* **npm** publishes to GitHub Packages using the built-in `GITHUB_TOKEN`; **RubyGems** publishes publicly to RubyGems.org using the `RUBYGEMS_API_KEY` repository secret. The gem's `allowed_push_host` points to RubyGems.org.
 * **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit.
 
 `tokens-v0.1.0` is the first real release, published this way.
