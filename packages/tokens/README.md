@@ -246,7 +246,7 @@ Theme is a plain second positional argument here, not the `theme:` keyword the R
 
 The release workflow writes the computed version into `package.json` before building either package. npm publishes that literal, and `lib/cleo_design_tokens/version.rb` reads it when the gem loads; the gemspec ships `package.json` alongside `lib/` so that read works from an installed gem too.
 
-The source manifest intentionally has no committed version. The first release uses `INITIAL_VERSION` in `scripts/plan-release.mjs`; later releases derive the next version from the previous `tokens-v*` tag. The release-only commit carries the computed `package.json` and is the target of that tag; it is not pushed to protected `main`.
+The source manifest carries the manual release version. On the first release it is used as-is. On later releases, a manifest version higher than the previous `tokens-v*` tag is treated as an exact manual override (for a major release); otherwise the previous tag is bumped minor for colour changes or patch for other shipped changes. The release-only commit carries the computed `package.json` and is the target of that tag; it is not pushed to protected `main`.
 
 ### Release
 

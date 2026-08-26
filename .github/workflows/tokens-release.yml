@@ -9,8 +9,8 @@ name: tokens-release
 #   the shared version is written, then pushed with RubyGems trusted publishing.
 #
 # Versioning: the release's version comes from the previous `tokens-v*` tag, not from
-# a fixed initial version for the first release, then from the previous `tokens-v*` tag — see
-# plan-release.mjs and packages/tokens/README.md ("Versioning") for why. The version is written
+# the higher of the committed manifest version and previous `tokens-v*` tag — see plan-release.mjs
+# and packages/tokens/README.md ("Versioning") for why. The version is written
 # into package.json before both packages are built, then retained in the release-only commit that
 # the `tokens-v*` tag points to.
 
@@ -154,9 +154,10 @@ jobs:
           git config user.email 'engineering@meetcleo.com'
           # Only the version bump, not -a: the working tree also holds this job's build output
           # (packages/tokens/dist/, gitignored, but no need to depend on that).
-          # On the first release VERSION comes from INITIAL_VERSION (see plan-release.mjs), and
-          # on later releases it comes from the previous tokens-v* tag. Only commit when the
-          # workflow's version write actually changed package.json. This release-only commit is
+          # On the first release VERSION comes from package.json (see plan-release.mjs), and on
+          # later releases a higher manifest version is a manual override; otherwise the previous
+          # tokens-v* tag is bumped. Only commit when the workflow's version write changed the
+          # package. This release-only commit is
           # tagged below but is not pushed back to protected main.
           if ! git diff --quiet -- packages/tokens/package.json; then
             git commit -m "Release tokens $VERSION" packages/tokens/package.json
