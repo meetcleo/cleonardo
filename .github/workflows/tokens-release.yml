@@ -3,8 +3,8 @@ name: tokens-release
 # Publishes the token packages on every merge to main that ships a change (COREEXP-334). One
 # trigger, one version bump, one set of release notes, shared across both artefacts:
 #
-# * npm — `@meetcleo/design-tokens`, published to GitHub Packages. Needs `packages: write`
-#   (COREEXP-325) — a 401/403 on the publish step below means that permission isn't in place.
+# * npm — `@meetcleo/design-tokens`, published to npmjs via npm trusted publishing. It uses the
+#   workflow's OIDC identity (`id-token: write`), rather than a long-lived registry token.
 # * RubyGems — `cleo_design_tokens`, published publicly to RubyGems.org. The gem is built after
 #   the shared version is written, then pushed with RubyGems trusted publishing.
 #
@@ -37,7 +37,6 @@ concurrency:
 
 permissions:
   contents: write
-  packages: write
   id-token: write
 
 jobs:
@@ -120,24 +119,18 @@ jobs:
         with:
           ruby-version: '3.2.0'
 
-      - name: Publish the npm package to GitHub Packages
+      - name: Publish the npm package to npmjs
         if: steps.guard.outputs.already-released == 'false'
         working-directory: packages/tokens
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
           set -euo pipefail
-          {
-            echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}"
-            echo "@meetcleo:registry=https://npm.pkg.github.com"
-          } > .npmrc
-          if npm view "@meetcleo/design-tokens@$VERSION" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+          if npm view "@meetcleo/design-tokens@$VERSION" version --registry=https://registry.npmjs.org >/dev/null 2>&1; then
             echo "@meetcleo/design-tokens@$VERSION is already published."
           else
-            npm publish --registry=https://npm.pkg.github.com
+            npm publish
           fi
-          rm .npmrc
 
       - name: Configure RubyGems trusted publishing
         if: steps.guard.outputs.already-released == 'false'
@@ -163,8 +156,7 @@ jobs:
           git config user.name 'cleo-token-release[bot]'
           git config user.email 'engineering@meetcleo.com'
           # Only the version bump, not -a: the working tree also holds this job's build output
-          # (packages/tokens/dist/, gitignored, but no need to depend on that) and the auth-bearing
-          # .npmrc from the previous step, already removed but not worth trusting blindly here.
+          # (packages/tokens/dist/, gitignored, but no need to depend on that).
           # On the first release VERSION is the already-committed value (see plan-release.mjs),
           # so "Write the release version" was a no-op and there's nothing to commit — `git commit`
           # would fail on that empty pathspec, so only commit when the write actually changed
