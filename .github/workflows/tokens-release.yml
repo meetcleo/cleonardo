@@ -9,10 +9,10 @@ name: tokens-release
 #   the shared version is written, then pushed with RubyGems trusted publishing.
 #
 # Versioning: the release's version comes from the previous `tokens-v*` tag, not from
-# `packages/tokens/package.json`'s committed value — see plan-release.mjs and
-# packages/tokens/README.md ("Versioning") for why. The version is written before both packages
-# are built, then committed to main after they publish successfully. The GitHub Actions app needs
-# bypass permission for main's pull-request requirement to push that release commit.
+# a fixed initial version for the first release, then from the previous `tokens-v*` tag — see
+# plan-release.mjs and packages/tokens/README.md ("Versioning") for why. The version is written
+# into package.json before both packages are built, then retained in the release-only commit that
+# the `tokens-v*` tag points to.
 
 on:
   push:
@@ -154,14 +154,13 @@ jobs:
           git config user.email 'engineering@meetcleo.com'
           # Only the version bump, not -a: the working tree also holds this job's build output
           # (packages/tokens/dist/, gitignored, but no need to depend on that).
-          # On the first release VERSION is the already-committed value (see plan-release.mjs),
-          # so "Write the release version" was a no-op and there's nothing to commit — `git commit`
-          # would fail on that empty pathspec, so only commit when the write actually changed
-          # something.
+          # On the first release VERSION comes from INITIAL_VERSION (see plan-release.mjs), and
+          # on later releases it comes from the previous tokens-v* tag. Only commit when the
+          # workflow's version write actually changed package.json. This release-only commit is
+          # tagged below but is not pushed back to protected main.
           if ! git diff --quiet -- packages/tokens/package.json; then
             git commit -m "Release tokens $VERSION" packages/tokens/package.json
           fi
-          git push origin HEAD:main
           git tag "$TAG"
           git push origin "$TAG"
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { nextVersion, versionFromTag, planRelease } from './plan-release.mjs';
+import { INITIAL_VERSION, nextVersion, versionFromTag, planRelease } from './plan-release.mjs';
 
 // ---------- version arithmetic ----------
 
@@ -36,17 +36,16 @@ describe('versionFromTag', () => {
 const leaf = (value: string, ref?: string) => ({ $type: 'color', $value: value, ...(ref ? { $ref: ref } : {}) });
 
 describe('planRelease', () => {
-  it('ships the committed version as-is on the first release, with no diff listing', () => {
+  it('ships the initial version on the first release, with no diff listing', () => {
     const result = planRelease({
       previousTag: null,
-      committedVersion: '0.1.0',
       primOld: {},
       semOld: {},
       primNew: { brown: { 800: leaf('#47201C') } },
       semNew: { core: { content: { primary: leaf('#47201C', 'brown.800') } } },
     });
 
-    expect(result.version).toBe('0.1.0');
+    expect(result.version).toBe(INITIAL_VERSION);
     expect(result.hasColourChange).toBe(true);
     expect(result.notes).toMatch(/Initial release/);
     expect(result.notes).toMatch(/1 primitives/);
@@ -56,7 +55,6 @@ describe('planRelease', () => {
   it('bumps minor and lists an added primitive', () => {
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: {},
       semOld: {},
       primNew: { brown: { 800: leaf('#47201C') } },
@@ -72,7 +70,6 @@ describe('planRelease', () => {
   it('bumps minor and lists a changed value', () => {
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: { purple: { 500: leaf('#695F9A') } },
       semOld: {},
       primNew: { purple: { 500: leaf('#695F9B') } },
@@ -86,7 +83,6 @@ describe('planRelease', () => {
   it('bumps minor and lists a removed key', () => {
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: { purple: { 500: leaf('#695F9A') } },
       semOld: {},
       primNew: {},
@@ -100,7 +96,6 @@ describe('planRelease', () => {
   it('counts a re-point at an identical hex as a change — $ref is part of the compared value', () => {
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: { purple: { 500: leaf('#695F9A') }, indigo: { 500: leaf('#695F9A') } },
       semOld: { core: { content: { primary: leaf('#695F9A', 'purple.500') } } },
       primNew: { purple: { 500: leaf('#695F9A') }, indigo: { 500: leaf('#695F9A') } },
@@ -119,7 +114,6 @@ describe('planRelease', () => {
     };
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: {},
       semOld: { core: { content: { primary: before } } },
       primNew: {},
@@ -139,7 +133,6 @@ describe('planRelease', () => {
     };
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: {},
       semOld: { core: { content: { primary: before } } },
       primNew: {},
@@ -155,7 +148,6 @@ describe('planRelease', () => {
     const tree = { brown: { 800: leaf('#47201C') } };
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',
-      committedVersion: '0.1.0',
       primOld: tree,
       semOld: {},
       primNew: tree,

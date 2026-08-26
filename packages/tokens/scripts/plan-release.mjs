@@ -5,18 +5,17 @@
 // Figma-sync change report — so a colour change reads identically wherever it's reported, rather
 // than re-deriving it here.
 //
-// Versioning: `packages/tokens/package.json`'s committed version is only ever used as the first
-// release's version (see README "Versioning") — every later release computes its version from
-// the previous `tokens-v*` tag, never from the committed file, so main's static baseline can't
-// collide with an already-shipped version. Colour changes never ship as a patch release
+// Versioning: the first release uses INITIAL_VERSION below; every later release computes its
+// version from the previous `tokens-v*` tag, never from package.json, so the source manifest has
+// no stale committed version. Colour changes never ship as a patch release
 // (meetcleo's Dependabot ignores patch updates, so one would never open a pull request); any
 // other change (reader code, docs shipped in a package) ships as a patch.
 //
 // Usage:
 //   node scripts/plan-release.mjs [--previous-tag tokens-vX.Y.Z]
 //
-// With no --previous-tag (the first release), prints the committed package.json version as-is
-// and treats every token as added. Reads old tree(s) via `git show <tag>:<path>`, so it must run
+// With no --previous-tag (the first release), prints INITIAL_VERSION and treats every token as
+// added. Reads old tree(s) via `git show <tag>:<path>`, so it must run
 // from a checkout that has that tag fetched.
 //
 // Writes ./release-notes.md (repo-root-relative CWD) and prints $GITHUB_OUTPUT-shaped lines to
@@ -31,6 +30,7 @@ import { flatten, diffFlat, diffIsEmpty, renderDiffReport } from "./transform-co
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_REL = "packages/tokens/tokens/color/primitives.json";
 const SEM_REL = "packages/tokens/tokens/color/semantic.json";
+export const INITIAL_VERSION = "0.1.0";
 
 // ---------- version arithmetic ----------
 
@@ -56,12 +56,12 @@ export function versionFromTag(tag) {
 
 /** Everything the release needs, computed without touching git or the filesystem — the part
  *  worth unit testing directly. `previousTag: null` means "first release": no diff is computed
- *  (there's nothing to diff against), the committed version ships as-is, and the notes say so
+ *  (there's nothing to diff against), INITIAL_VERSION ships, and the notes say so
  *  rather than listing every token as "added". */
-export function planRelease({ previousTag, committedVersion, primOld, semOld, primNew, semNew }) {
+export function planRelease({ previousTag, primOld, semOld, primNew, semNew }) {
   if (!previousTag) {
     return {
-      version: committedVersion,
+      version: INITIAL_VERSION,
       hasColourChange: true,
       notes: `Initial release. ${flatten(primNew).size} primitives, ` +
         `${flatten(semNew).size} semantic role/theme entries.`,
@@ -103,11 +103,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const previousTag = args[args.indexOf("--previous-tag") + 1] || null;
 
-  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
-
   const { version, hasColourChange, notes } = planRelease({
     previousTag,
-    committedVersion: pkg.version,
     primOld: readJsonAt(previousTag, PRIM_REL),
     semOld: readJsonAt(previousTag, SEM_REL),
     primNew: readJsonOnDisk("tokens/color/primitives.json"),
