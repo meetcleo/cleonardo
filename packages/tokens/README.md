@@ -233,43 +233,28 @@ CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "
 CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
 ```
 
-Add a `meetcleo` entry to the consuming repo's `.yarnrc.yml` `npmScopes`:
-
-```yaml
-# .yarnrc.yml
-npmScopes:
-  meetcleo:
-    npmRegistryServer: "https://npm.pkg.github.com"
-```
-
 ```
 yarn add @meetcleo/design-tokens
 ```
 
-No auth token needed, confirmed against the real published package — this
-contradicts GitHub's own docs and community reports that GitHub Packages'
-npm registry requires a token for every install, even a public package's.
-Verified in an environment confirmed to hold no other GH Packages
-credential yarn could have picked up instead. Why it doesn't need one here
-is unresolved — flag it if you're the one figuring out whether that's a
-`cleonardo`-specific setting or a GitHub Packages behaviour change, rather
-than assuming it'll hold for a private package too.
+The package is published publicly to npmjs; no registry override or npmjs
+authentication is required to install it.
 
 Theme is a plain second positional argument here, not the `theme:` keyword the Ruby reader uses — TypeScript has no equivalent that's as cheap as a positional param, and an options object (`fetch(key, { theme })`) would buy nothing. Imported as the `CleoDesignTokens` namespace, not a bare `fetch` — `import { fetch } from "@meetcleo/design-tokens"` would shadow the global `fetch` in that file.
 
 ### Versioning
 
-`package.json`'s `version` is the single source of truth for what an installed copy of either package reports (npm requires a literal, so it can't defer to us). `lib/cleo_design_tokens/version.rb` reads it at load rather than holding its own copy — the gemspec's `spec.files` ships `package.json` alongside `lib/`, specifically so that read works from an installed gem too, not just this source checkout.
+The release workflow writes the computed version into `package.json` before building either package. npm publishes that literal, and `lib/cleo_design_tokens/version.rb` reads it when the gem loads; the gemspec ships `package.json` alongside `lib/` so that read works from an installed gem too.
 
-That value only matches what's actually released on `main`'s tip during the first release. After that, the committed file is a floor, not a live version — `main` is protected by a ruleset requiring a PR and a review with no bypass actors, so the release pipeline (below) can't commit a bump there without reintroducing a manual step. The **authoritative** version of any given release is its `tokens-v*` tag; the release commit that carries the matching `package.json` exists only as that tag's target, never on `main`'s history. Reading `package.json` on `main` tells you the floor a fresh checkout starts from, not the latest published version — for that, check the latest `tokens-v*` tag or the registry.
+The source manifest carries the manual release version. On the first release it is used as-is. On later releases, a manifest version higher than the previous `tokens-v*` tag is treated as an exact manual override (for a major release); otherwise the previous tag is bumped minor for colour changes or patch for other shipped changes. The release-only commit carries the computed `package.json` and is the target of that tag; it is not pushed to protected `main`.
 
 ### Release
 
 [COREEXP-334](https://cleo.atlassian.net/browse/COREEXP-334): `.github/workflows/tokens-release.yml` publishes on every merge to `main` that changes a shipped file (`tokens/color/**`, `lib/**`, `src/**`, `package.json`, the gemspec). One trigger, one version bump, one set of release notes, covering both artefacts:
 
 * **Version and release notes** come from `scripts/plan-release.mjs`, diffing the previous `tokens-v*` tag against the tree on `main` — reusing `transform-core.mjs`'s `flatten`/`diffFlat`/`renderDiffReport`, the same functions behind the Figma-sync change report, so a colour change reads identically wherever it's described. A colour change (`primitives` or `semantic` touched) always bumps **minor**, never **patch** — `meetcleo`'s Dependabot config ignores all patch updates, so a patch-versioned colour change would never open a pull request.
-* **npm** publishes to GitHub Packages using the built-in `GITHUB_TOKEN`; **RubyGems** publishes publicly to RubyGems.org through trusted publishing, using a short-lived OIDC token rather than a repository secret. The gem's `allowed_push_host` points to RubyGems.org.
-* **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit.
+* **npm** publishes the public `@meetcleo/design-tokens` package to npmjs through trusted publishing, using a short-lived OIDC token rather than a repository secret; **RubyGems** does the same for its public package. The gem's `allowed_push_host` points to RubyGems.org.
+* **Shared version, one bump.** Both artefacts release under the same version in the same run — there's only one trigger and one colour diff to describe, and `CleoDesignTokens.colors.*` is already meant to be one vocabulary across both languages (see [Consumers](#consumers)); a version split would just be a second thing to keep in sync for no reader-visible benefit. After both publishes succeed, that version is tagged in the release-only commit.
 
 `tokens-v0.1.0` is the first real release, published this way.
 

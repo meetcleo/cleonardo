@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { nextVersion, versionFromTag, planRelease } from './plan-release.mjs';
+import { compareVersions, nextVersion, versionFromTag, planRelease } from './plan-release.mjs';
 
 // ---------- version arithmetic ----------
 
@@ -31,12 +31,20 @@ describe('versionFromTag', () => {
   });
 });
 
+describe('compareVersions', () => {
+  it('compares semantic versions numerically', () => {
+    expect(compareVersions('1.0.0', '0.9.9')).toBeGreaterThan(0);
+    expect(compareVersions('0.10.0', '0.9.9')).toBeGreaterThan(0);
+    expect(compareVersions('0.2.0', '0.2.0')).toBe(0);
+  });
+});
+
 // ---------- planRelease ----------
 
 const leaf = (value: string, ref?: string) => ({ $type: 'color', $value: value, ...(ref ? { $ref: ref } : {}) });
 
 describe('planRelease', () => {
-  it('ships the committed version as-is on the first release, with no diff listing', () => {
+  it('ships the manifest version on the first release, with no diff listing', () => {
     const result = planRelease({
       previousTag: null,
       committedVersion: '0.1.0',
@@ -51,6 +59,19 @@ describe('planRelease', () => {
     expect(result.notes).toMatch(/Initial release/);
     expect(result.notes).toMatch(/1 primitives/);
     expect(result.notes).toMatch(/1 semantic/);
+  });
+
+  it('uses a higher manifest version as an exact manual override', () => {
+    const result = planRelease({
+      previousTag: 'tokens-v0.4.2',
+      committedVersion: '1.0.0',
+      primOld: {},
+      semOld: {},
+      primNew: {},
+      semNew: {},
+    });
+
+    expect(result.version).toBe('1.0.0');
   });
 
   it('bumps minor and lists an added primitive', () => {

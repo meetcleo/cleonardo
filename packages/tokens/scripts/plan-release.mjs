@@ -5,18 +5,17 @@
 // Figma-sync change report — so a colour change reads identically wherever it's reported, rather
 // than re-deriving it here.
 //
-// Versioning: `packages/tokens/package.json`'s committed version is only ever used as the first
-// release's version (see README "Versioning") — every later release computes its version from
-// the previous `tokens-v*` tag, never from the committed file, so main's static baseline can't
-// collide with an already-shipped version. Colour changes never ship as a patch release
+// Versioning: package.json is the manual major-release control. If its version is higher than the
+// previous `tokens-v*` tag, that exact version is released; otherwise the previous tag is bumped
+// minor for colour changes or patch for other shipped changes. Colour changes never ship as a patch release
 // (meetcleo's Dependabot ignores patch updates, so one would never open a pull request); any
 // other change (reader code, docs shipped in a package) ships as a patch.
 //
 // Usage:
 //   node scripts/plan-release.mjs [--previous-tag tokens-vX.Y.Z]
 //
-// With no --previous-tag (the first release), prints the committed package.json version as-is
-// and treats every token as added. Reads old tree(s) via `git show <tag>:<path>`, so it must run
+// With no --previous-tag (the first release), prints package.json's version and treats every
+// token as added. Reads old tree(s) via `git show <tag>:<path>`, so it must run
 // from a checkout that has that tag fetched.
 //
 // Writes ./release-notes.md (repo-root-relative CWD) and prints $GITHUB_OUTPUT-shaped lines to
@@ -52,11 +51,20 @@ export function versionFromTag(tag) {
   return match[1];
 }
 
+export function compareVersions(left, right) {
+  const a = left.split('.').map(Number);
+  const b = right.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if (a[i] !== b[i]) return a[i] - b[i];
+  }
+  return 0;
+}
+
 // ---------- pure planning ----------
 
 /** Everything the release needs, computed without touching git or the filesystem — the part
  *  worth unit testing directly. `previousTag: null` means "first release": no diff is computed
- *  (there's nothing to diff against), the committed version ships as-is, and the notes say so
+ *  (there's nothing to diff against), the manifest version ships, and the notes say so
  *  rather than listing every token as "added". */
 export function planRelease({ previousTag, committedVersion, primOld, semOld, primNew, semNew }) {
   if (!previousTag) {
@@ -72,7 +80,10 @@ export function planRelease({ previousTag, committedVersion, primOld, semOld, pr
   const semDiff = diffFlat(flatten(semOld), flatten(semNew));
   const hasColourChange = !diffIsEmpty(primDiff) || !diffIsEmpty(semDiff);
 
-  const version = nextVersion(versionFromTag(previousTag), hasColourChange ? "minor" : "patch");
+  const previousVersion = versionFromTag(previousTag);
+  const version = compareVersions(committedVersion, previousVersion) > 0
+    ? committedVersion
+    : nextVersion(previousVersion, hasColourChange ? "minor" : "patch");
 
   const notes = hasColourChange
     ? renderDiffReport({ primDiff, semDiff }) +
