@@ -26,13 +26,9 @@ on:
     # labeled/unlabeled are load-bearing: the default types are opened/synchronize/reopened, so
     # applying `token-regen` would not re-trigger, and a manual re-run replays the original
     # payload — the label would stay invisible and the PR stuck red until someone pushed a commit.
+    # `verify` and `ruby-test` are required checks, so this workflow must run for every PR.
+    # Path filters would leave required checks in an expected state on unrelated changes.
     types: [opened, synchronize, reopened, labeled, unlabeled]
-    paths:
-      - 'packages/tokens/**'
-      - 'package.json'
-      - 'yarn.lock'
-      - 'tsconfig.json'
-      - '.github/workflows/tokens.yml'
   push:
     branches: [main]
 
