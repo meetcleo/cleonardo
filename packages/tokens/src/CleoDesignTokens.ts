@@ -7,6 +7,22 @@ export class UnknownThemeError extends Error {}
 export class DuplicateTokenError extends Error {}
 
 const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype']);
+const SPACING_BASE_UNIT_PX = 4;
+
+function spacing(multiplier: number | 'auto'): string {
+  if (multiplier === 'auto') return 'auto';
+
+  if (
+    typeof multiplier !== 'number' ||
+    !Number.isFinite(multiplier) ||
+    multiplier < 0 ||
+    !Number.isInteger(multiplier * SPACING_BASE_UNIT_PX)
+  ) {
+    throw new RangeError(`spacing multiplier must be "auto" or a non-negative multiple of 0.25; received ${String(multiplier)}`);
+  }
+
+  return `${multiplier * SPACING_BASE_UNIT_PX}px`;
+}
 
 // A leaf is `{ $type: "color", ... }` — matches transform-core.mjs's `isLeaf`
 // exactly. A role can carry `$themes` and no `$value` at all (defined only
@@ -144,13 +160,14 @@ export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(buil
 
 // Namespaced by token type (`colors`), then by layer (`primitives`,
 // `semantic`) — no selector argument, no top-level `fetch` defaulting to
-// semantic. Theme is a second, optional argument on the semantic reader
+// semantic. `spacing` is code-owned rather than Figma-generated. Theme is a second, optional argument on the semantic reader
 // only — the primitive palette has one value per key:
 //
 //   CleoDesignTokens.colors.semantic.fetch('core.content.primary')
 //   CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')
 //   CleoDesignTokens.colors.primitives.fetch('brown.800')
 export const CleoDesignTokens = Object.freeze({
+  spacing,
   colors: Object.freeze({
     primitives: makePrimitiveBucket(PRIMITIVES_LOOKUP),
     semantic: makeSemanticBucket(SEMANTIC_LOOKUP),

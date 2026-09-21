@@ -20,6 +20,8 @@ module CleoDesignTokens
   TOKENS_DIR = File.expand_path("../tokens/color", __dir__)
   PRIMITIVES_PATH = File.join(TOKENS_DIR, "primitives.json")
   SEMANTIC_PATH = File.join(TOKENS_DIR, "semantic.json")
+  SPACING_BASE_UNIT_PX = 4
+  private_constant :SPACING_BASE_UNIT_PX
 
   # Built at load, into constants — not `@lookup ||=`, which would race under
   # concurrent access. Frozen from the moment the gem loads, so every reader
@@ -41,5 +43,19 @@ module CleoDesignTokens
 
   def self.colors
     COLORS
+  end
+
+  # Spacing is code-owned, not generated from Figma. It is the package's
+  # sole public spacing API, matching the TypeScript reader.
+  def self.spacing(multiplier)
+    return "auto".freeze if multiplier == "auto"
+
+    pixels = multiplier * SPACING_BASE_UNIT_PX if multiplier.is_a?(Numeric)
+    unless multiplier.is_a?(Numeric) && !multiplier.is_a?(Complex) && multiplier.finite? && multiplier >= 0 && (pixels % 1).zero?
+      raise ArgumentError,
+        "spacing multiplier must be \"auto\" or a non-negative multiple of 0.25; received #{multiplier.inspect}"
+    end
+
+    "#{pixels.to_i}px".freeze
   end
 end

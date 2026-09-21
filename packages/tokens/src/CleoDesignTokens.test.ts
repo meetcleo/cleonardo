@@ -137,3 +137,19 @@ describe('CleoDesignTokens.colors', () => {
     expect(CleoDesignTokens.colors).toBe(CleoDesignTokens.colors);
   });
 });
+
+describe('CleoDesignTokens.spacing', () => {
+  it.each([
+    [1, '4px'],
+    [0.25, '1px'],
+    [2.5, '10px'],
+    [0, '0px'],
+    ['auto', 'auto'],
+  ] as const)('resolves %s to %s', (multiplier, value) => {
+    expect(CleoDesignTokens.spacing(multiplier)).toBe(value);
+  });
+
+  it.each([-0.25, 0.1, Number.NaN, Number.POSITIVE_INFINITY, 'one'])('rejects an invalid multiplier: %s', (multiplier) => {
+    expect(() => CleoDesignTokens.spacing(multiplier as number)).toThrow(/spacing multiplier/);
+  });
+});

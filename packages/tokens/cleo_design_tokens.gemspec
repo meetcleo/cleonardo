@@ -4,10 +4,10 @@ Gem::Specification.new do |spec|
   spec.name = "cleo_design_tokens"
   spec.version = CleoDesignTokens::VERSION
   spec.authors = ["Cleo"]
-  spec.summary = "Ruby reader for Cleo's canonical colour design tokens"
+  spec.summary = "Ruby reader for Cleo's canonical design tokens"
   spec.description = "Flattens Cleo's colour design tokens (packages/tokens/tokens/color) " \
                       "into frozen colors.primitives / colors.semantic lookups, with the theme " \
-                      "passed alongside the key."
+                      "passed alongside the key, plus a code-owned base-unit spacing API."
   spec.required_ruby_version = ">= 3.2" # Data.define
   # Not "UNLICENSED" — that's an npm convention. RubyGems validates against SPDX identifiers and
   # rejects it; "Nonstandard" is the correct RubyGems signal for a proprietary, non-public

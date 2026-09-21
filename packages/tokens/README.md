@@ -6,7 +6,22 @@ Every downstream consumer — the generator, the Ruby module, the User Prompt pi
 
 ## Current scope
 
-**Colour only** (primitives + semantic). Radii, typography, spacing, and other token types land in follow-up tickets.
+Colour primitives and semantic roles, plus a code-owned base-unit spacing API. Radii, typography, and other token types land in follow-up tickets.
+
+## Spacing
+
+Use `CleoDesignTokens.spacing(multiplier)` for every spacing value. `spacing` is code-owned: it is not exported from Figma, included in token files, or changed by the Figma sync route.
+
+It accepts `"auto"` or a non-negative multiple of `0.25` and returns a CSS pixel value using a fixed 4px base unit:
+
+```ts
+CleoDesignTokens.spacing(1);    // "4px"
+CleoDesignTokens.spacing(0.25); // "1px"
+CleoDesignTokens.spacing(2.5);  // "10px"
+CleoDesignTokens.spacing("auto"); // "auto"
+```
+
+The Ruby reader has the equivalent API: `CleoDesignTokens.spacing(1) # => "4px"`.
 
 ## Format
 
