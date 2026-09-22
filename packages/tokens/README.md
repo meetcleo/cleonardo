@@ -10,19 +10,27 @@ Colour primitives and semantic roles, plus a code-owned base-unit spacing API. R
 
 ## Spacing
 
-Use `CleoDesignTokens.spacing(multiplier)` for every spacing value. `spacing` is code-owned: it is not exported from Figma, included in token files, or changed by the Figma sync route.
+Use `CleoDesignTokens.spacing(multiplier, options)` for every spacing value. `spacing` is code-owned: it is not exported from Figma, included in token files, or changed by the Figma sync route.
 
-It accepts `"auto"` or a finite positive or negative multiple of `0.25` and returns a CSS pixel value using a fixed 4px base unit. Negative values support layout offsets:
+It accepts `"auto"` / `:auto` or a finite positive or negative multiple of `0.25`, using a fixed 4px base unit. Without `unit`, it returns a numeric pixel value for React Native. CSS callers opt into `px`, `rem`, or `em`; relative units use a 16px base.
 
 ```ts
-CleoDesignTokens.spacing(1);    // "4px"
-CleoDesignTokens.spacing(0.25); // "1px"
-CleoDesignTokens.spacing(2.5);  // "10px"
-CleoDesignTokens.spacing(-1.5); // "-6px"
-CleoDesignTokens.spacing("auto"); // "auto"
+CleoDesignTokens.spacing(1);                   // 4
+CleoDesignTokens.spacing(1, { unit: 'px' });   // '4px'
+CleoDesignTokens.spacing(1, { unit: 'rem' });  // '0.25rem'
+CleoDesignTokens.spacing(-1.5, { unit: 'em' });// '-0.375em'
+CleoDesignTokens.spacing('auto', { unit: 'rem' }); // 'auto'
 ```
 
-The Ruby reader has the equivalent API: `CleoDesignTokens.spacing(1) # => "4px"`.
+```ruby
+CleoDesignTokens.spacing(1)                 # 4
+CleoDesignTokens.spacing(1, unit: :px)      # "4px"
+CleoDesignTokens.spacing(1, unit: :rem)     # "0.25rem"
+CleoDesignTokens.spacing(-1.5, unit: :em)   # "-0.375em"
+CleoDesignTokens.spacing(:auto, unit: :rem) # "auto"
+```
+
+Only `px`, `rem`, and `em` are supported units; another unit raises a clear error. `auto` ignores a supported unit but unsupported units are still rejected.
 
 ## Format
 

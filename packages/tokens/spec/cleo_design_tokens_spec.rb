@@ -111,27 +111,52 @@ RSpec.describe CleoDesignTokens do
 
   describe ".spacing" do
     {
-      1 => "4px",
-      0.25 => "1px",
-      2.5 => "10px",
-      -0.25 => "-1px",
-      -1.5 => "-6px",
-      0 => "0px",
-      "auto" => "auto"
-    }.each do |multiplier, value|
-      it "resolves #{multiplier.inspect} to #{value}" do
-        expect(described_class.spacing(multiplier)).to eq(value)
+      [1, nil] => 4,
+      [0.25, nil] => 1,
+      [2.5, nil] => 10,
+      [-0.25, nil] => -1,
+      [-1.5, nil] => -6,
+      [1, :px] => "4px",
+      [-0.25, :px] => "-1px",
+      [1, :rem] => "0.25rem",
+      [1, :em] => "0.25em",
+      [0.25, :rem] => "0.0625rem",
+      [-1.5, :em] => "-0.375em",
+      ["auto", nil] => "auto",
+      [:auto, :px] => "auto",
+      ["auto", :rem] => "auto"
+    }.each do |(multiplier, unit), value|
+      it "resolves #{multiplier.inspect} with unit #{unit.inspect} to #{value.inspect}" do
+        expect(described_class.spacing(multiplier, unit: unit)).to eq(value)
       end
     end
 
-    it "returns an immutable value" do
-      expect(described_class.spacing(1)).to be_frozen
+    it "accepts string units" do
+      expect(described_class.spacing(1, unit: "px")).to eq("4px")
+    end
+
+    it "formats precise relative-unit values without floating-point artifacts" do
+      expect(described_class.spacing(1.25, unit: :rem)).to eq("0.3125rem")
+    end
+
+    it "returns an immutable CSS value" do
+      expect(described_class.spacing(1, unit: :px)).to be_frozen
     end
 
     [-0.1, 0.1, Float::NAN, Float::INFINITY, -Float::INFINITY, "one", nil, Complex(1, 0)].each do |multiplier|
       it "rejects an invalid multiplier: #{multiplier.inspect}" do
         expect { described_class.spacing(multiplier) }.to raise_error(ArgumentError, /spacing multiplier/)
       end
+    end
+
+    [:pt, "pt", "", 1].each do |unit|
+      it "rejects an unsupported unit: #{unit.inspect}" do
+        expect { described_class.spacing(1, unit: unit) }.to raise_error(ArgumentError, /spacing unit/)
+      end
+    end
+
+    it "rejects unsupported units for auto too" do
+      expect { described_class.spacing(:auto, unit: :pt) }.to raise_error(ArgumentError, /spacing unit/)
     end
   end
 end

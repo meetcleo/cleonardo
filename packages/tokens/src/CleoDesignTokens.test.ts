@@ -139,19 +139,49 @@ describe('CleoDesignTokens.colors', () => {
 });
 
 describe('CleoDesignTokens.spacing', () => {
+  it('declares React Native and CSS return types precisely', () => {
+    const nativeValue: number = CleoDesignTokens.spacing(1);
+    const cssValue: string = CleoDesignTokens.spacing(1, { unit: 'px' });
+    const autoValue: 'auto' = CleoDesignTokens.spacing('auto', { unit: 'rem' });
+
+    expect([nativeValue, cssValue, autoValue]).toEqual([4, '4px', 'auto']);
+  });
+
   it.each([
-    [1, '4px'],
-    [0.25, '1px'],
-    [2.5, '10px'],
-    [-0.25, '-1px'],
-    [-1.5, '-6px'],
-    [0, '0px'],
-    ['auto', 'auto'],
-  ] as const)('resolves %s to %s', (multiplier, value) => {
-    expect(CleoDesignTokens.spacing(multiplier)).toBe(value);
+    [1, undefined, 4],
+    [0.25, undefined, 1],
+    [2.5, undefined, 10],
+    [-0.25, undefined, -1],
+    [-1.5, undefined, -6],
+    [1, 'px', '4px'],
+    [-0.25, 'px', '-1px'],
+    [1, 'rem', '0.25rem'],
+    [1, 'em', '0.25em'],
+    [0.25, 'rem', '0.0625rem'],
+    [-1.5, 'em', '-0.375em'],
+    ['auto', undefined, 'auto'],
+    ['auto', 'px', 'auto'],
+    ['auto', 'rem', 'auto'],
+  ] as const)('resolves %s with unit %s to %s', (multiplier, unit, value) => {
+    const result = unit === undefined
+      ? CleoDesignTokens.spacing(multiplier)
+      : CleoDesignTokens.spacing(multiplier, { unit });
+    expect(result).toBe(value);
+  });
+
+  it('preserves precise relative-unit display values', () => {
+    expect(CleoDesignTokens.spacing(1.25, { unit: 'rem' })).toBe('0.3125rem');
   });
 
   it.each([-0.1, 0.1, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, 'one', null, {}])('rejects an invalid multiplier: %s', (multiplier) => {
     expect(() => CleoDesignTokens.spacing(multiplier as number)).toThrow(/spacing multiplier/);
+  });
+
+  it.each(['pt', '', null, {}])('rejects an unsupported unit: %s', (unit) => {
+    expect(() => CleoDesignTokens.spacing(1, { unit } as never)).toThrow(/spacing unit/);
+  });
+
+  it('rejects unsupported units for auto too', () => {
+    expect(() => CleoDesignTokens.spacing('auto', { unit: 'pt' as never })).toThrow(/spacing unit/);
   });
 });
