@@ -8,19 +8,38 @@ export class DuplicateTokenError extends Error {}
 
 const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype']);
 const SPACING_BASE_UNIT_PX = 4;
+const RELATIVE_UNIT_BASE_PX = 16;
 
-function spacing(multiplier: number | 'auto'): string {
+export type SpacingUnit = 'px' | 'rem' | 'em';
+
+export interface SpacingOptions {
+  readonly unit?: SpacingUnit;
+}
+
+function spacing(multiplier: 'auto', options?: SpacingOptions): 'auto';
+function spacing(multiplier: number, options?: { readonly unit?: undefined }): number;
+function spacing(multiplier: number, options: { readonly unit: SpacingUnit }): string;
+function spacing(multiplier: number | 'auto', options?: SpacingOptions): number | string;
+function spacing(multiplier: number | 'auto', options: SpacingOptions = {}): number | string {
+  const { unit } = options;
+  if (unit !== undefined && unit !== 'px' && unit !== 'rem' && unit !== 'em') {
+    throw new RangeError(`spacing unit must be one of "px", "rem", "em"; received ${String(unit)}`);
+  }
+
   if (multiplier === 'auto') return 'auto';
 
-  if (
-    typeof multiplier !== 'number' ||
-    !Number.isFinite(multiplier) ||
-    !Number.isInteger(multiplier * SPACING_BASE_UNIT_PX)
-  ) {
+  const pixels = multiplier * SPACING_BASE_UNIT_PX;
+  if (typeof multiplier !== 'number' || !Number.isFinite(multiplier) || !Number.isInteger(pixels)) {
     throw new RangeError(`spacing multiplier must be "auto" or a finite multiple of 0.25; received ${String(multiplier)}`);
   }
 
-  return `${multiplier * SPACING_BASE_UNIT_PX}px`;
+  if (unit === undefined) return pixels;
+  if (unit === 'px') return `${pixels}px`;
+
+  // `pixels` is integral, so division by 16 (a power of two) has an exact
+  // binary representation. Stringifying it therefore cannot expose a
+  // floating-point rounding artifact.
+  return `${pixels / RELATIVE_UNIT_BASE_PX}${unit}`;
 }
 
 // A leaf is `{ $type: "color", ... }` — matches transform-core.mjs's `isLeaf`

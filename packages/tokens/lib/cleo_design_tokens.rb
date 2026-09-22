@@ -21,7 +21,8 @@ module CleoDesignTokens
   PRIMITIVES_PATH = File.join(TOKENS_DIR, "primitives.json")
   SEMANTIC_PATH = File.join(TOKENS_DIR, "semantic.json")
   SPACING_BASE_UNIT_PX = 4
-  private_constant :SPACING_BASE_UNIT_PX
+  RELATIVE_UNIT_BASE_PX = 16
+  private_constant :SPACING_BASE_UNIT_PX, :RELATIVE_UNIT_BASE_PX
 
   # Built at load, into constants — not `@lookup ||=`, which would race under
   # concurrent access. Frozen from the moment the gem loads, so every reader
@@ -45,10 +46,11 @@ module CleoDesignTokens
     COLORS
   end
 
-  # Spacing is code-owned, not generated from Figma. It is the package's
-  # sole public spacing API, matching the TypeScript reader.
-  def self.spacing(multiplier)
-    return "auto".freeze if multiplier == "auto"
+  # Spacing is code-owned, not generated from Figma. Without a unit it is a
+  # numeric React Native-ready pixel value; CSS callers opt into a unit.
+  def self.spacing(multiplier, unit: nil)
+    normalized_unit = normalize_spacing_unit(unit)
+    return "auto".freeze if multiplier == "auto" || multiplier == :auto
 
     pixels = multiplier * SPACING_BASE_UNIT_PX if multiplier.is_a?(Numeric)
     unless multiplier.is_a?(Numeric) && !multiplier.is_a?(Complex) && multiplier.finite? && (pixels % 1).zero?
@@ -56,6 +58,27 @@ module CleoDesignTokens
         "spacing multiplier must be \"auto\" or a finite multiple of 0.25; received #{multiplier.inspect}"
     end
 
-    "#{pixels.to_i}px".freeze
+    pixels = pixels.to_i
+    return pixels if normalized_unit.nil?
+    return "#{pixels}px".freeze if normalized_unit == :px
+
+    format_relative_spacing(pixels, normalized_unit).freeze
   end
+
+  def self.normalize_spacing_unit(unit)
+    return nil if unit.nil?
+    return unit if %i[px rem em].include?(unit)
+    return unit.to_sym if %w[px rem em].include?(unit)
+
+    raise ArgumentError, "spacing unit must be one of :px, :rem, :em; received #{unit.inspect}"
+  end
+  private_class_method :normalize_spacing_unit
+
+  def self.format_relative_spacing(pixels, unit)
+    sign = pixels.negative? ? "-" : ""
+    whole, sixteenths = pixels.abs.divmod(RELATIVE_UNIT_BASE_PX)
+    fraction = format("%04d", sixteenths * 625).sub(/0+\z/, "")
+    "#{sign}#{whole}#{fraction.empty? ? "" : ".#{fraction}"}#{unit}"
+  end
+  private_class_method :format_relative_spacing
 end
