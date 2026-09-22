@@ -12,12 +12,13 @@ Colour primitives and semantic roles, plus a code-owned base-unit spacing API. R
 
 Use `CleoDesignTokens.spacing(multiplier)` for every spacing value. `spacing` is code-owned: it is not exported from Figma, included in token files, or changed by the Figma sync route.
 
-It accepts `"auto"` or a non-negative multiple of `0.25` and returns a CSS pixel value using a fixed 4px base unit:
+It accepts `"auto"` or a finite positive or negative multiple of `0.25` and returns a CSS pixel value using a fixed 4px base unit. Negative values support layout offsets:
 
 ```ts
 CleoDesignTokens.spacing(1);    // "4px"
 CleoDesignTokens.spacing(0.25); // "1px"
 CleoDesignTokens.spacing(2.5);  // "10px"
+CleoDesignTokens.spacing(-1.5); // "-6px"
 CleoDesignTokens.spacing("auto"); // "auto"
 ```
 

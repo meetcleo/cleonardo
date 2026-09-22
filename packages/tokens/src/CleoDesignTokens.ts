@@ -15,10 +15,9 @@ function spacing(multiplier: number | 'auto'): string {
   if (
     typeof multiplier !== 'number' ||
     !Number.isFinite(multiplier) ||
-    multiplier < 0 ||
     !Number.isInteger(multiplier * SPACING_BASE_UNIT_PX)
   ) {
-    throw new RangeError(`spacing multiplier must be "auto" or a non-negative multiple of 0.25; received ${String(multiplier)}`);
+    throw new RangeError(`spacing multiplier must be "auto" or a finite multiple of 0.25; received ${String(multiplier)}`);
   }
 
   return `${multiplier * SPACING_BASE_UNIT_PX}px`;

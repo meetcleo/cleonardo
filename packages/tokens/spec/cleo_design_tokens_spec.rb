@@ -114,6 +114,8 @@ RSpec.describe CleoDesignTokens do
       1 => "4px",
       0.25 => "1px",
       2.5 => "10px",
+      -0.25 => "-1px",
+      -1.5 => "-6px",
       0 => "0px",
       "auto" => "auto"
     }.each do |multiplier, value|
@@ -126,7 +128,7 @@ RSpec.describe CleoDesignTokens do
       expect(described_class.spacing(1)).to be_frozen
     end
 
-    [-0.25, 0.1, Float::NAN, Float::INFINITY, "one", Complex(1, 0)].each do |multiplier|
+    [-0.1, 0.1, Float::NAN, Float::INFINITY, -Float::INFINITY, "one", nil, Complex(1, 0)].each do |multiplier|
       it "rejects an invalid multiplier: #{multiplier.inspect}" do
         expect { described_class.spacing(multiplier) }.to raise_error(ArgumentError, /spacing multiplier/)
       end

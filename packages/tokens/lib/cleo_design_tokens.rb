@@ -51,9 +51,9 @@ module CleoDesignTokens
     return "auto".freeze if multiplier == "auto"
 
     pixels = multiplier * SPACING_BASE_UNIT_PX if multiplier.is_a?(Numeric)
-    unless multiplier.is_a?(Numeric) && !multiplier.is_a?(Complex) && multiplier.finite? && multiplier >= 0 && (pixels % 1).zero?
+    unless multiplier.is_a?(Numeric) && !multiplier.is_a?(Complex) && multiplier.finite? && (pixels % 1).zero?
       raise ArgumentError,
-        "spacing multiplier must be \"auto\" or a non-negative multiple of 0.25; received #{multiplier.inspect}"
+        "spacing multiplier must be \"auto\" or a finite multiple of 0.25; received #{multiplier.inspect}"
     end
 
     "#{pixels.to_i}px".freeze
