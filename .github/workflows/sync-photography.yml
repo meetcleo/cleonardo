@@ -1,15 +1,21 @@
 name: sync-photography
 
-# Publishes committed photography crops after they are merged to main. Generation remains a
-# developer-controlled step; this workflow only mirrors the reviewed generated assets to the CDN.
+# Publishes committed photography crops after they are merged to main and keeps the mobile-app
+# CDN photography types reconciled with the S3 prefix.
 on:
   push:
     branches: [main]
     paths:
       - 'packages/photography/assets/generated/**'
+  schedule:
+    - cron: '0 2 * * *'
 
 permissions:
   contents: read
+
+concurrency:
+  group: sync-cdn-photography-types
+  cancel-in-progress: false
 
 jobs:
   sync:
@@ -30,4 +36,108 @@ jobs:
           role-duration-seconds: 3600
 
       - name: Sync photography crops to S3
+        if: github.event_name == 'push'
         run: aws s3 sync packages/photography/assets/generated/ s3://cleoassets/mobile_app/photography/
+
+      - name: Checkout mobile-app
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          repository: meetcleo/mobile-app
+          ref: main
+          path: mobile-app
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Generate CDN photography types
+        id: generate-types
+        env:
+          S3_BUCKET: cleoassets
+          S3_PREFIX: mobile_app/photography/
+          OUTPUT_PATH: ${{ runner.temp }}/cdn-photography-types.ts
+        run: |
+          set -euo pipefail
+
+          raw_s3_output=$(aws s3api list-objects-v2 \
+            --bucket "$S3_BUCKET" \
+            --prefix "$S3_PREFIX" \
+            --query 'Contents[].Key' \
+            --output json)
+          raw_s3_output=${raw_s3_output:-[]}
+
+          generate_type() {
+            local type_name="$1"
+            local asset_name="$2"
+            local file_names
+
+            file_names=$(jq -r --arg prefix "$S3_PREFIX" --arg asset_name "$asset_name" '
+              .[]? | select(endswith("/") | not) | sub($prefix; "") |
+              select(contains($asset_name)) |
+              select((contains("2x") | not) and (contains("3x") | not)) |
+              "\u0027" + . + "\u0027"
+            ' <<< "$raw_s3_output" | paste -sd '|' -)
+
+            if [[ -z "$file_names" ]]; then
+              printf 'export type %s = never;\n' "$type_name"
+            else
+              printf 'export type %s = %s;\n' "$type_name" "$file_names"
+            fi
+          }
+
+          {
+            generate_type SmallPortraitPhotography portrait_small
+            echo
+            generate_type MediumPortraitPhotography portrait_medium
+            echo
+            generate_type LargePortraitPhotography portrait_large
+            echo
+            generate_type LargeLandscapePhotography landscape_large
+            echo
+            generate_type LargeLandscape4To3RatioPhotography landscape_ratio_4_3
+            echo
+            cat <<'EOF'
+          /**
+          * This type file is generated automatically do not manually modify.
+          *
+          * To update/sync the type with the latest files from the S3 cleoassets bucket you
+          * can run the generation workflow from Cleonardo.
+          */
+          export type CDNPhotography = SmallPortraitPhotography | MediumPortraitPhotography | LargePortraitPhotography | LargeLandscapePhotography | LargeLandscape4To3RatioPhotography;
+          EOF
+          } > "$OUTPUT_PATH"
+
+      - name: Create or update mobile-app PR
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          BRANCH: chore/sync-cdn-photography-types
+          GENERATED_OUTPUT_PATH: ${{ runner.temp }}/cdn-photography-types.ts
+          OUTPUT_PATH: src/modules/shared/CDN/types.ts
+        working-directory: mobile-app
+        run: |
+          set -euo pipefail
+
+          git fetch origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+            git switch --track "origin/$BRANCH"
+            git rebase main
+          else
+            git switch --create "$BRANCH"
+          fi
+
+          cp "$GENERATED_OUTPUT_PATH" "$OUTPUT_PATH"
+          git add "$OUTPUT_PATH"
+          if git diff --staged --quiet; then
+            echo "CDN photography types are already current."
+            exit 0
+          fi
+
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git commit -m "chore: sync CDN photography types"
+          git push --force-with-lease origin "HEAD:$BRANCH"
+
+          if [ -z "$(gh pr list -R meetcleo/mobile-app --head "$BRANCH" --base main --state open --json number --jq '.[0].number')" ]; then
+            gh pr create -R meetcleo/mobile-app \
+              --base main \
+              --head "$BRANCH" \
+              --title "chore: sync CDN photography types" \
+              --body "Generated after Cleonardo synchronized photography crops to S3."
+          fi
