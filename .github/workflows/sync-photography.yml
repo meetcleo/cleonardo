@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -46,6 +46,7 @@ jobs:
           ref: main
           path: mobile-app
           token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
 
       - name: Generate CDN photography types
         id: generate-types
@@ -72,13 +73,13 @@ jobs:
               .[]? | select(endswith("/") | not) | sub($prefix; "") |
               select(contains($asset_name)) |
               select((contains("2x") | not) and (contains("3x") | not)) |
-              "\u0027" + . + "\u0027"
-            ' <<< "$raw_s3_output" | paste -sd '|' -)
+              .
+            ' <<< "$raw_s3_output" | sort | sed "s/^/  | '/; s/$/'/")
 
             if [[ -z "$file_names" ]]; then
               printf 'export type %s = never;\n' "$type_name"
             else
-              printf 'export type %s = %s;\n' "$type_name" "$file_names"
+              printf 'export type %s =\n%s;\n' "$type_name" "$file_names"
             fi
           }
 
@@ -93,14 +94,24 @@ jobs:
             echo
             generate_type LargeLandscape4To3RatioPhotography landscape_ratio_4_3
             echo
+            generate_type SocialSharePhotography social_share
+            echo
             cat <<'EOF'
           /**
           * This type file is generated automatically do not manually modify.
           *
           * To update/sync the type with the latest files from the S3 cleoassets bucket you
-          * can run the generation workflow from Cleonardo.
+          * can run the following command TODO(Munro): Add <command>
+          * This will trigger a github action that'll update your local remote repository with the new type file.
+          * Once it's complete run git pull to retrieve the new type.
           */
-          export type CDNPhotography = SmallPortraitPhotography | MediumPortraitPhotography | LargePortraitPhotography | LargeLandscapePhotography | LargeLandscape4To3RatioPhotography;
+          export type CDNPhotography =
+            | SmallPortraitPhotography
+            | MediumPortraitPhotography
+            | LargePortraitPhotography
+            | LargeLandscapePhotography
+            | LargeLandscape4To3RatioPhotography
+            | SocialSharePhotography;
           EOF
           } > "$OUTPUT_PATH"
 
@@ -117,7 +128,7 @@ jobs:
           git fetch origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
           if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
             git switch --track "origin/$BRANCH"
-            git rebase main
+            git rebase origin/main
           else
             git switch --create "$BRANCH"
           fi
@@ -139,5 +150,6 @@ jobs:
               --base main \
               --head "$BRANCH" \
               --title "chore: sync CDN photography types" \
+              --reviewer "meetcleo/core-experience" \
               --body "Generated after Cleonardo synchronized photography crops to S3."
           fi
