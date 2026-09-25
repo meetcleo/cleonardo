@@ -9,6 +9,7 @@ on:
       - 'packages/photography/assets/generated/**'
   schedule:
     - cron: '0 2 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -22,6 +23,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Restore photography asset timestamps
+        run: |
+          git ls-files -z packages/photography/assets/generated | while IFS= read -r -d '' file; do
+            touch --date="$(git log -1 --format=%cI -- "$file")" "$file"
+          done
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
@@ -36,7 +46,7 @@ jobs:
           role-duration-seconds: 3600
 
       - name: Sync photography crops to S3
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: aws s3 sync packages/photography/assets/generated/ s3://cleoassets/mobile_app/photography/
 
       - name: Checkout mobile-app
