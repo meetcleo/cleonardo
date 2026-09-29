@@ -6,6 +6,7 @@ import brandMoment10Config from './brandMoment10';
 import brandMoment11Config from './brandMoment11';
 import brandMoment12Config from './brandMoment12';
 import brandMoment13Config from './brandMoment13';
+import brandMoment13ForestConfig from './brandMoment13Forest';
 import brandMoment14Config from './brandMoment14';
 import brandMoment15Config from './brandMoment15';
 import brandMoment2Config from './brandMoment2';
@@ -93,6 +94,7 @@ export const configs = {
   brandMoment11: brandMoment11Config,
   brandMoment12: brandMoment12Config,
   brandMoment13: brandMoment13Config,
+  brandMoment13Forest: brandMoment13ForestConfig,
   brandMoment14: brandMoment14Config,
   brandMoment15: brandMoment15Config,
   brandMoment2: brandMoment2Config,
