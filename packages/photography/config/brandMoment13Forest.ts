@@ -8,18 +8,18 @@ const config: PhotographyConfig = {
         height: 2436,
       },
       focalPoint: {
-        x: 1218,
-        y: 1218,
-        normalizedX: 0.5,
-        normalizedY: 0.5,
+        x: 1340,
+        y: 590,
+        normalizedX: 0.55,
+        normalizedY: 0.242,
       },
     },
     crops: {
-      // extractParams are normalized from brandMoment13 (4039×4154) and scaled to 2436×2436
+      // extractParams are horizontally centred on the logo pill (x≈1340); vertical framing is unchanged
       PORTRAIT_LARGE: {
         extractParams: {
           top: 0,
-          left: 639,
+          left: 762,
           width: 1157,
           height: 2436,
         },
@@ -32,7 +32,7 @@ const config: PhotographyConfig = {
       PORTRAIT_SMALL: {
         extractParams: {
           top: 0,
-          left: 295,
+          left: 417,
           width: 1847,
           height: 2436,
         },
@@ -44,10 +44,10 @@ const config: PhotographyConfig = {
       },
       LANDSCAPE_LARGE: {
         extractParams: {
-          top: 334,
-          left: 0,
-          width: 2436,
-          height: 1333,
+          top: 384,
+          left: 246,
+          width: 2190,
+          height: 1232,
         },
         targetDimensions: {
           width: 400,
@@ -58,13 +58,26 @@ const config: PhotographyConfig = {
       PORTRAIT_MEDIUM: {
         extractParams: {
           top: 0,
-          left: 424,
+          left: 438,
           width: 1804,
           height: 2436,
         },
         targetDimensions: {
           width: 360,
           height: 500,
+        },
+        zoom: 1,
+      },
+      LANDSCAPE_RATIO_4_3: {
+        extractParams: {
+          top: 397,
+          left: 246,
+          width: 2190,
+          height: 1643,
+        },
+        targetDimensions: {
+          width: 400,
+          height: 300,
         },
         zoom: 1,
       },
