@@ -4,12 +4,12 @@ const config: PhotographyConfig = {
   focalPoint: {
     originalImage: {
       dimensions: {
-        width: 3194,
-        height: 2393,
+        width: 995,
+        height: 745,
       },
       focalPoint: {
-        x: 1597,
-        y: 1196.5,
+        x: 497.5,
+        y: 372.5,
         normalizedX: 0.5,
         normalizedY: 0.5,
       },
@@ -18,9 +18,9 @@ const config: PhotographyConfig = {
       PORTRAIT_LARGE: {
         extractParams: {
           top: 0,
-          left: 1043,
-          width: 1104,
-          height: 2393,
+          left: 325,
+          width: 344,
+          height: 745,
         },
         targetDimensions: {
           width: 375,
