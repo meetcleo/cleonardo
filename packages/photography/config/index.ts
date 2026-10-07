@@ -64,6 +64,7 @@ import negative6Config from './negative6';
 import negative7Config from './negative7';
 import negative8Config from './negative8';
 import outdoorGrocery1Config from './outdoorGrocery1';
+import partnerForest1Config from './partnerForest1';
 import placeholderConfig from './placeholder';
 import positive1Config from './positive1';
 import positive10Config from './positive10';
@@ -152,6 +153,7 @@ export const configs = {
   negative7: negative7Config,
   negative8: negative8Config,
   outdoorGrocery1: outdoorGrocery1Config,
+  partnerForest1: partnerForest1Config,
   placeholder: placeholderConfig,
   positive1: positive1Config,
   positive10: positive10Config,
