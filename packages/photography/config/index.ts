@@ -27,6 +27,7 @@ import cleoTaalmonumentShot2Config from './cleoTaalmonumentShot2';
 import debt1Config from './debt1';
 import debt2Config from './debt2';
 import debt3Config from './debt3';
+import expressFeeDiscount1Config from './expressFeeDiscount1';
 import gaming1Config from './gaming1';
 import gaming2Config from './gaming2';
 import gaming3Config from './gaming3';
@@ -119,6 +120,7 @@ export const configs = {
   debt1: debt1Config,
   debt2: debt2Config,
   debt3: debt3Config,
+  expressFeeDiscount1: expressFeeDiscount1Config,
   gaming1: gaming1Config,
   gaming2: gaming2Config,
   gaming3: gaming3Config,
