@@ -9,9 +9,9 @@ const config: PhotographyConfig = {
         height: 582,
       },
       focalPoint: {
-        x: 255.5,
+        x: 232.5,
         y: 291,
-        normalizedX: 0.5495,
+        normalizedX: 0.5,
         normalizedY: 0.5,
       },
     },
@@ -19,13 +19,13 @@ const config: PhotographyConfig = {
       PORTRAIT_MEDIUM: {
         extractParams: {
           top: 0,
-          left: 46,
-          width: 419,
+          left: 0,
+          width: 465,
           height: 582,
         },
         targetDimensions: {
           width: 360,
-          height: 500,
+          height: 450,
         },
         zoom: 1,
       },
