@@ -103,6 +103,7 @@ async function processCrop(
   originalHeight: number,
 ): Promise<void> {
   const cropSettings = cropSpecs[cropType];
+  const { width, height } = config.focalPoint?.crops?.[cropType]?.targetDimensions ?? cropSettings;
   const formattedCropType = cropType.replace(':', '-').toLowerCase();
 
   // Create a base instance with all extractions applied
@@ -111,8 +112,8 @@ async function processCrop(
   // Process all scale factors in parallel
   await Promise.all(
     scaleFactors.map(async ({ suffix, scale }) => {
-      const targetWidth = cropSettings.width * scale;
-      const targetHeight = cropSettings.height * scale;
+      const targetWidth = width * scale;
+      const targetHeight = height * scale;
       const outputFileName = `${baseName}_${formattedCropType}${suffix}.webp`;
       const outputPath = path.join(outputDir, outputFileName);
 
