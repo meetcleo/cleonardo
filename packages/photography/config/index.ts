@@ -28,6 +28,14 @@ import debt1Config from './debt1';
 import debt2Config from './debt2';
 import debt3Config from './debt3';
 import expressFeeDiscount1Config from './expressFeeDiscount1';
+import fallgtminvestConfig from './fallgtminvest';
+import fallgtminvestcompositeConfig from './fallgtminvestcomposite';
+import fallgtmpaylaterConfig from './fallgtmpaylater';
+import fallgtmpaylatercompositeConfig from './fallgtmpaylatercomposite';
+import fallgtmpromptConfig from './fallgtmprompt';
+import fallgtmpromptcompositeConfig from './fallgtmpromptcomposite';
+import fallgtmsavingsConfig from './fallgtmsavings';
+import fallgtmsavingscompositeConfig from './fallgtmsavingscomposite';
 import fallingCoinsConfig from './fallingCoins';
 import gaming1Config from './gaming1';
 import gaming2Config from './gaming2';
@@ -122,6 +130,14 @@ export const configs = {
   debt2: debt2Config,
   debt3: debt3Config,
   expressFeeDiscount1: expressFeeDiscount1Config,
+  fallgtminvest: fallgtminvestConfig,
+  fallgtminvestcomposite: fallgtminvestcompositeConfig,
+  fallgtmpaylater: fallgtmpaylaterConfig,
+  fallgtmpaylatercomposite: fallgtmpaylatercompositeConfig,
+  fallgtmprompt: fallgtmpromptConfig,
+  fallgtmpromptcomposite: fallgtmpromptcompositeConfig,
+  fallgtmsavings: fallgtmsavingsConfig,
+  fallgtmsavingscomposite: fallgtmsavingscompositeConfig,
   fallingCoins: fallingCoinsConfig,
   gaming1: gaming1Config,
   gaming2: gaming2Config,
