@@ -55,10 +55,6 @@ RSpec.describe CleoDesignTokens do
       expect { semantic_bucket.fetch("brown.800") }.to raise_error(CleoDesignTokens::UnknownTokenError)
     end
 
-    it "falls back to Base for refresh, which has no overrides yet" do
-      expect(semantic_bucket.fetch("core.content.primary", theme: :refresh)).to eq("#47201C")
-    end
-
     it "raises on an unknown theme" do
       expect { semantic_bucket.fetch("core.content.primary", theme: :nope) }.to raise_error(CleoDesignTokens::UnknownThemeError)
     end
@@ -69,6 +65,44 @@ RSpec.describe CleoDesignTokens do
       expect(described_class.colors.semantic.fetch("core.content.primary")).to eq("#47201C")
       expect(described_class.colors.semantic.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
       expect(described_class.colors.primitives.fetch("brown.800")).to eq("#47201C")
+    end
+  end
+
+  describe "palettes" do
+    let(:palettes) { {"current" => {}, "refresh" => {"brown.800" => "#192012", "brown.50" => "#F9F9F8"}} }
+    let(:patched_primitives) { described_class::Bucket.new(described_class::LookupBuilder.build_lookup(load_fixture("primitives")), palettes) }
+    let(:patched_semantic) { described_class::SemanticBucket.new(described_class::LookupBuilder.build_semantic_lookup(load_fixture("semantic")), palettes) }
+
+    it "patches a primitive and leaves the current palette alone" do
+      expect(patched_primitives.fetch("brown.800", palette: :refresh)).to eq("#192012")
+      expect(patched_primitives.fetch("brown.800", palette: :current)).to eq("#47201C")
+      expect(patched_primitives.fetch("brown.800")).to eq("#47201C")
+    end
+
+    it "follows a semantic role's $ref into the patch, per theme" do
+      expect(patched_semantic.fetch("core.content.primary", palette: :refresh)).to eq("#192012")
+      expect(patched_semantic.fetch("core.content.primary", theme: :roast, palette: :refresh)).to eq("#F9F9F8")
+      expect(patched_semantic.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
+    end
+
+    it "still raises for a Base-less role under a patch" do
+      expect { patched_semantic.fetch("core.border.level0", palette: :refresh) }.to raise_error(CleoDesignTokens::UnknownTokenError)
+    end
+
+    it "raises on an unknown palette" do
+      expect { patched_primitives.fetch("brown.800", palette: :nope) }.to raise_error(CleoDesignTokens::UnknownPaletteError)
+      expect { patched_semantic.fetch("core.content.primary", palette: :nope) }.to raise_error(CleoDesignTokens::UnknownPaletteError)
+    end
+
+    it "applies the real refresh patch, leaving a $ref-less palette gap alone" do
+      expect(described_class.colors.primitives.fetch("brown.800", palette: :refresh)).to eq("#192012")
+      expect(described_class.colors.semantic.fetch("core.content.primary", theme: :roast, palette: :refresh)).to eq("#F9F9F8")
+      expect(described_class.colors.semantic.fetch("effects.background.glassMorphism", palette: :refresh)).to eq("#00000033")
+    end
+
+    it "is frozen" do
+      expect(described_class::PALETTES).to be_frozen
+      described_class::PALETTES.each_value { |patch| expect(patch).to be_frozen }
     end
   end
 

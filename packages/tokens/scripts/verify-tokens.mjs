@@ -12,7 +12,7 @@
 //
 // Usage: yarn tokens:verify
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die, THEMES } from "./transform-core.mjs";
@@ -21,6 +21,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_PATH = join(ROOT, "tokens", "color", "primitives.json");
 const SEM_PATH = join(ROOT, "tokens", "color", "semantic.json");
 const KEYS_PATH = join(ROOT, "src", "generated", "tokenKeys.ts");
+const PATCHES_DIR = join(ROOT, "tokens", "patches");
 
 // The order the transform emits $themes in: Base sits on the leaf itself,
 // then the remaining declared themes in transform-core.mjs's THEMES order.
@@ -67,6 +68,7 @@ function main() {
   checkPaletteGaps(semTree);
   checkShape(semTree);
   checkCounts(primTree, semTree);
+  checkPalettePatches(primTree);
 
   if (failures.length) {
     console.error(`✗ ${failures.length} token invariant violation(s):`);
@@ -238,6 +240,28 @@ function checkCounts(primTree, semTree) {
   }
   if (semCount !== EXPECTED_SEMANTIC_COUNT) {
     fail(6, `semantic.json has ${semCount} roles, expected ${EXPECTED_SEMANTIC_COUNT}. If this is a deliberate role change, update EXPECTED_SEMANTIC_COUNT and ColorSemanticKey together.`);
+  }
+}
+
+// ---------- check 7: palette patches ----------
+//
+// Hand-authored, so nothing regenerates them: every key must still be a
+// primitive, every value a canonical hex, and every entry a real change.
+
+const HEX = /^#[0-9A-F]{6}([0-9A-F]{2})?$/;
+
+function checkPalettePatches(primTree) {
+  const primValueByKey = new Map();
+  for (const { path, node } of walk(primTree)) primValueByKey.set(path.join("."), node.$value);
+
+  for (const file of readdirSync(PATCHES_DIR).filter((f) => f.endsWith(".json"))) {
+    const patch = JSON.parse(readFileSync(join(PATCHES_DIR, file), "utf8"));
+    for (const [key, value] of Object.entries(patch.primitives ?? {})) {
+      const label = `tokens/patches/${file} ${key}`;
+      if (!primValueByKey.has(key)) fail(7, `${label} is not a primitive in primitives.json.`);
+      else if (primValueByKey.get(key) === value) fail(7, `${label} restates the current value ${JSON.stringify(value)} — drop it.`);
+      if (!HEX.test(value)) fail(7, `${label} value ${JSON.stringify(value)} is not an uppercase #RRGGBB or #RRGGBBAA hex.`);
+    }
   }
 }
 

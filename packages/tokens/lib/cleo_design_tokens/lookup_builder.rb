@@ -51,11 +51,15 @@ module CleoDesignTokens
 
     def self.semantic_entry(leaf)
       themes = {}
-      (leaf["$themes"] || {}).each { |theme, override| themes[theme] = override["$value"].freeze }
+      theme_refs = {}
+      (leaf["$themes"] || {}).each do |theme, override|
+        themes[theme] = override["$value"].freeze
+        theme_refs[theme] = override["$ref"]&.freeze
+      end
 
-      # `Data#new` freezes the instance itself; the Hash inside it still
-      # needs its own `.freeze` — freezing is shallow.
-      SemanticEntry.new(leaf["$value"]&.freeze, themes.freeze)
+      # `Data#new` freezes the instance itself; the Hashes inside it still
+      # need their own `.freeze` — freezing is shallow.
+      SemanticEntry.new(leaf["$value"]&.freeze, leaf["$ref"]&.freeze, themes.freeze, theme_refs.freeze)
     end
     private_class_method :semantic_entry
   end

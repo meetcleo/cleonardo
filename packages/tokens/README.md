@@ -70,6 +70,8 @@ packages/tokens/
     color/
       primitives.json     # the palette — resolved hex, no themes
       semantic.json        # the roles — Base on the leaf, overrides under $themes
+    patches/
+      refresh.json         # hand-authored palette patch — see "Palette patches"
   scripts/
     transform.mjs          # CLI driver: reads the dump, writes the files
     transform-core.mjs     # all the logic — parsing, resolution, key derivation
@@ -117,9 +119,24 @@ The token *type* is not in the key — it's in the reader accessor (see [Consume
 
 ## Semantic namespaces
 
-Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The themes are `base`, `chat`, `roast`, `hype` and `refresh`. The first four mirror Cleo's product personalities; `refresh` is the upcoming visual refresh of the whole app, previewed alongside `base` until it replaces it. None of them are display modes: there is no light/dark axis here, and `roast` is already dark.
+Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The four themes — `base`, `chat`, `roast`, `hype` — mirror Cleo's product personalities. They are **not** display modes: there is no light/dark axis here, and `roast` is already dark.
 
-`refresh` has no overrides until Design authors `Refresh/...` variables in Figma, so until then every `refresh` read returns the Base value.
+## Palette patches
+
+A palette patch replaces primitive values wholesale, for a rebrand rather than a personality. `tokens/patches/refresh.json` is the first one: the seven primitives the rebrand changes (`brown.50/100/600/700/800`, `green.700`, `alpha.dark.10`), taken from the Cleonardo 2.0 Figma branch's Rebrand mode (DES-550).
+
+```ts
+CleoDesignTokens.colors.primitives.fetch("brown.800", { palette: "refresh" });                  // => "#192012"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast", { palette: "refresh" }); // => "#F9F9F8"
+```
+
+- **Primitives** return the patched value when the patch has one, otherwise the current value.
+- **Semantic roles** resolve the theme as usual, then follow that value's `$ref` into the patch. Every theme's overrides pick a patch up with no per-role data, and a `$ref`-less palette gap is left as it is.
+- **`palette` defaults to `current`**, the palette as generated, so every existing call is unchanged. An unknown palette raises `UnknownPaletteError`.
+
+Patches are **hand-authored, not generated**, so they live outside `tokens/color/`, where figma-sync would overwrite them. `tokens:verify` (check 7) asserts that every patched key is still a primitive, every value is a canonical uppercase hex, and no entry restates the current value. When the rebrand lands in Figma as a mode on the palette, the patch should move into the generated files.
+
+Only colours live here. The rebrand's radius and font-weight changes are handled in the consuming app.
 
 ## Updating from Figma
 
@@ -162,7 +179,7 @@ Config, not hardcoded, because a second token type arrives later:
 | `Base Colors` | `tokens/color/primitives.json` | `COLOR` | none |
 | `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
 
-The theme segment must be one of the declared `THEMES` in `scripts/transform-core.mjs` (`Base`, `Chat`, `Roast`, `Hype`, `Refresh`), and the transform fails on any other. That list is also the `ColorTheme` union and the canonical `$themes` order, so a theme is available to consumers before it exists in Figma. Adding one means updating `THEMES` there, plus the reader allowlists in `src/CleoDesignTokens.ts` and `lib/cleo_design_tokens/semantic_bucket.rb`.
+The theme segment must be one of the declared `THEMES` in `scripts/transform-core.mjs` (`Base`, `Chat`, `Roast`, `Hype`), and the transform fails on any other. That list is also the `ColorTheme` union and the canonical `$themes` order, so a theme is available to consumers before it exists in Figma. Adding one means updating `THEMES` there, plus the reader allowlists in `src/CleoDesignTokens.ts` and `lib/cleo_design_tokens/semantic_bucket.rb`.
 
 Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type`, `Border`, `Surface Level`, `Image Crops` from the Component Library). Non-`COLOR` variables inside a listed collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables.
 
@@ -218,6 +235,7 @@ The readers (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) 
 ```ruby
 CleoDesignTokens.colors.semantic.fetch("core.content.primary")                  # => "#47201C"
 CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast)   # => "#F8F6F2"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", palette: :refresh) # => "#192012"
 CleoDesignTokens.colors.primitives.fetch("brown.800")                          # => "#47201C"
 ```
 
@@ -227,7 +245,7 @@ Reach for `colors.semantic` by default. A `colors.primitives` call is reaching p
 
 - `ColorPrimitiveKey` — 106 members
 - `ColorSemanticKey` — 473 members
-- `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype' | 'refresh'`
+- `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
 
 ### Ruby — `cleo_design_tokens`
 
@@ -249,7 +267,7 @@ gem "cleo_design_tokens"
 
 The gem is public on RubyGems.org, so Bundler and Dependabot need no registry credentials.
 
-`colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`.
+`colors` returns a frozen `Struct` of `primitives`/`semantic` — lowercase accessors, not `CleoDesignTokens::Colors::Semantic.fetch(...)` module nesting, so the call text stays identical to the TypeScript reader. `PRIMITIVES_LOOKUP`/`SEMANTIC_LOOKUP` are built once at load, into frozen `Hash`es (values frozen too, `SemanticEntry` structs frozen too) — safe to read from multiple threads, no lazy `||=` race. An unknown key raises `CleoDesignTokens::UnknownTokenError` rather than returning `nil`; an unknown `theme:` raises `CleoDesignTokens::UnknownThemeError`, and an unknown `palette:` raises `CleoDesignTokens::UnknownPaletteError`.
 
 ### TypeScript — `@meetcleo/design-tokens`
 
@@ -258,6 +276,7 @@ import CleoDesignTokens from "@meetcleo/design-tokens";
 
 CleoDesignTokens.colors.semantic.fetch("core.content.primary"); // => "#47201C"
 CleoDesignTokens.colors.semantic.fetch("core.content.primary", "roast"); // => "#F8F6F2"
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", "base", { palette: "refresh" }); // => "#192012"
 CleoDesignTokens.colors.primitives.fetch("brown.800"); // => "#47201C"
 ```
 

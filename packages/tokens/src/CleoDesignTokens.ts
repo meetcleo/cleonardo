@@ -1,12 +1,24 @@
 import type { ColorPrimitiveKey, ColorSemanticKey, ColorTheme } from './generated/tokenKeys';
 import primitives from '../tokens/color/primitives.json' with { type: 'json' };
 import semantic from '../tokens/color/semantic.json' with { type: 'json' };
+import refreshPatch from '../tokens/patches/refresh.json' with { type: 'json' };
 
 export class UnknownTokenError extends Error {}
 export class UnknownThemeError extends Error {}
+export class UnknownPaletteError extends Error {}
 export class DuplicateTokenError extends Error {}
 
-const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype', 'refresh']);
+// `current` is the palette as generated from Figma; any other palette is a
+// hand-authored patch over it (tokens/patches/*.json) — only the primitives
+// whose value changes. Semantic roles follow their `$ref` into the patch, so
+// every theme's overrides pick a patch up with no per-role data.
+export type ColorPalette = 'current' | 'refresh';
+
+export interface PaletteOptions {
+  readonly palette?: ColorPalette;
+}
+
+const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype']);
 const SPACING_BASE_UNIT_PX = 4;
 const RELATIVE_UNIT_BASE_PX = 16;
 
@@ -90,10 +102,13 @@ export function buildLookup(tree: unknown): Record<string, string> {
 }
 
 // One semantic role: its Base value (absent when the role only exists under
-// a theme) plus whatever theme overrides genuinely differ from Base.
+// a theme) plus whatever theme overrides genuinely differ from Base, each with
+// the primitive it came from — what a palette patch is applied through.
 export interface SemanticEntry {
   readonly value: string | undefined;
+  readonly ref: string | undefined;
   readonly themes: Readonly<Record<string, string>>;
+  readonly themeRefs: Readonly<Record<string, string | undefined>>;
 }
 
 // Flattens `semantic.json` into a key -> SemanticEntry lookup, one entry per
@@ -109,12 +124,19 @@ export function buildSemanticLookup(tree: unknown): Record<string, SemanticEntry
     }
 
     const themes: Record<string, string> = {};
-    const rawThemes = (leaf.$themes as Record<string, { $value: string }> | undefined) ?? {};
+    const themeRefs: Record<string, string | undefined> = {};
+    const rawThemes = (leaf.$themes as Record<string, { $value: string; $ref?: string }> | undefined) ?? {};
     for (const [theme, override] of Object.entries(rawThemes)) {
       themes[theme] = override.$value;
+      themeRefs[theme] = override.$ref;
     }
 
-    lookup[key] = Object.freeze({ value: typeof leaf.$value === 'string' ? leaf.$value : undefined, themes: Object.freeze(themes) });
+    lookup[key] = Object.freeze({
+      value: typeof leaf.$value === 'string' ? leaf.$value : undefined,
+      ref: typeof leaf.$ref === 'string' ? leaf.$ref : undefined,
+      themes: Object.freeze(themes),
+      themeRefs: Object.freeze(themeRefs),
+    });
     origins[key] = path.join('.');
   });
   return lookup;
@@ -122,25 +144,37 @@ export function buildSemanticLookup(tree: unknown): Record<string, SemanticEntry
 
 // What a caller gets for (role, theme): the theme's override when it has
 // one, otherwise the Base value — mirrors transform-core.mjs's
-// `resolveTheme` exactly. Returns undefined when neither exists, which is
-// what makes `fetch` raise for the Base-less roles.
-function resolveTheme(entry: SemanticEntry, theme: string): string | undefined {
-  const override = entry.themes[theme];
-  if (override !== undefined) return override;
-  return entry.value;
+// `resolveTheme` exactly — plus the primitive that value came from. `value`
+// is undefined when neither exists, which is what makes `fetch` raise for the
+// Base-less roles.
+function resolveTheme(entry: SemanticEntry, theme: string): { value: string | undefined; ref: string | undefined } {
+  if (entry.themes[theme] !== undefined) return { value: entry.themes[theme], ref: entry.themeRefs[theme] };
+  return { value: entry.value, ref: entry.ref };
+}
+
+export type Palettes = Readonly<Record<string, Readonly<Record<string, string>>>>;
+
+function paletteFor(palettes: Palettes, options: PaletteOptions): Readonly<Record<string, string>> {
+  const palette = options.palette ?? 'current';
+  const patch = palettes[palette];
+  if (patch === undefined) {
+    throw new UnknownPaletteError(`unknown palette: ${JSON.stringify(palette)}`);
+  }
+  return patch;
 }
 
 // A bucket wraps one frozen lookup with a single-argument `fetch`. Exposed as
 // a function, rather than baked into module load, so tests can build one
 // over a fixture lookup exactly like the module's own buckets below.
-export function makePrimitiveBucket(lookup: Record<string, string>) {
+export function makePrimitiveBucket(lookup: Record<string, string>, palettes: Palettes = PALETTES) {
   return {
-    fetch(key: ColorPrimitiveKey): string {
+    fetch(key: ColorPrimitiveKey, options: PaletteOptions = {}): string {
+      const patch = paletteFor(palettes, options);
       const value = lookup[key];
       if (value === undefined) {
         throw new UnknownTokenError(`unknown design token: ${JSON.stringify(key)}`);
       }
-      return value;
+      return patch[key] ?? value;
     },
   };
 }
@@ -148,25 +182,26 @@ export function makePrimitiveBucket(lookup: Record<string, string>) {
 // `theme` defaults to `'base'` — `$themes` never carries a `'base'` entry
 // (Base isn't an override of itself), so the default and an explicit
 // `theme: 'base'` resolve identically with no special-casing.
-export function makeSemanticBucket(lookup: Record<string, SemanticEntry>) {
+export function makeSemanticBucket(lookup: Record<string, SemanticEntry>, palettes: Palettes = PALETTES) {
   return {
-    fetch(key: ColorSemanticKey, theme: ColorTheme = 'base'): string {
+    fetch(key: ColorSemanticKey, theme: ColorTheme = 'base', options: PaletteOptions = {}): string {
       if (!THEMES.has(theme)) {
         throw new UnknownThemeError(`unknown theme: ${JSON.stringify(theme)}`);
       }
+      const patch = paletteFor(palettes, options);
 
       const entry = lookup[key];
       if (entry === undefined) {
         throw new UnknownTokenError(`unknown design token: ${JSON.stringify(key)}`);
       }
 
-      const value = resolveTheme(entry, theme);
+      const { value, ref } = resolveTheme(entry, theme);
       if (value === undefined) {
         throw new UnknownTokenError(
           `design token ${JSON.stringify(key)} has no Base value and no override for theme ${JSON.stringify(theme)}`,
         );
       }
-      return value;
+      return (ref !== undefined ? patch[ref] : undefined) ?? value;
     },
   };
 }
@@ -175,6 +210,10 @@ export function makeSemanticBucket(lookup: Record<string, SemanticEntry>) {
 // reads are safe from multiple threads/requests with no init race.
 export const PRIMITIVES_LOOKUP: Record<string, string> = Object.freeze(buildLookup(primitives));
 export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(buildSemanticLookup(semantic));
+export const PALETTES: Palettes = Object.freeze({
+  current: Object.freeze({}),
+  refresh: Object.freeze({ ...refreshPatch.primitives }),
+} satisfies Record<ColorPalette, Readonly<Record<string, string>>>);
 
 // Namespaced by token type (`colors`), then by layer (`primitives`,
 // `semantic`) — no selector argument, no top-level `fetch` defaulting to
@@ -183,7 +222,9 @@ export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(buil
 //
 //   CleoDesignTokens.colors.semantic.fetch('core.content.primary')
 //   CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')
+//   CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast', { palette: 'refresh' })
 //   CleoDesignTokens.colors.primitives.fetch('brown.800')
+//   CleoDesignTokens.colors.primitives.fetch('brown.800', { palette: 'refresh' })
 export const CleoDesignTokens = Object.freeze({
   spacing,
   colors: Object.freeze({

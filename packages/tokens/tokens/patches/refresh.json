@@ -1,0 +1,12 @@
+{
+  "$description": "Rebrand palette patch (DES-550), from the Cleonardo 2.0 Figma branch's Rebrand mode. Hand-authored, not generated: only the primitives whose value changes, read through the `palette: 'refresh'` reader option. Semantic roles pick these up through their $ref. Moves into the generated files once the branch lands in Figma as a mode.",
+  "primitives": {
+    "alpha.dark.10": "#19201214",
+    "brown.50": "#F9F9F8",
+    "brown.100": "#1920121F",
+    "brown.600": "#19201299",
+    "brown.700": "#192012A6",
+    "brown.800": "#192012",
+    "green.700": "#5D7D45"
+  }
+}

@@ -6,8 +6,10 @@ import type { ColorPrimitiveKey, ColorSemanticKey, ColorTheme } from './generate
 import {
   CleoDesignTokens,
   DuplicateTokenError,
+  PALETTES,
   PRIMITIVES_LOOKUP,
   SEMANTIC_LOOKUP,
+  UnknownPaletteError,
   UnknownThemeError,
   UnknownTokenError,
   buildLookup,
@@ -66,10 +68,6 @@ describe('colors.semantic.fetch', () => {
     expect(() => semanticBucket.fetch('brown.800' as ColorSemanticKey)).toThrow(UnknownTokenError);
   });
 
-  it('falls back to Base for refresh, which has no overrides yet', () => {
-    expect(semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'refresh')).toBe('#47201C');
-  });
-
   it('throws on an unknown theme', () => {
     expect(() => semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'nope' as ColorTheme)).toThrow(UnknownThemeError);
   });
@@ -101,6 +99,53 @@ describe('colors.semantic.fetch', () => {
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary')).toBe('#47201C');
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')).toBe('#F8F6F2');
     expect(CleoDesignTokens.colors.primitives.fetch('brown.800' satisfies ColorPrimitiveKey)).toBe('#47201C');
+  });
+});
+
+describe('palettes', () => {
+  const palettes = { current: {}, refresh: { 'brown.800': '#192012', 'brown.50': '#F9F9F8' } };
+  const patchedPrimitives = makePrimitiveBucket(buildLookup(primitivesFixture), palettes);
+  const patchedSemantic = makeSemanticBucket(buildSemanticLookup(semanticFixture), palettes);
+
+  it('patches a primitive and leaves the current palette alone', () => {
+    expect(patchedPrimitives.fetch('brown.800' as ColorPrimitiveKey, { palette: 'refresh' })).toBe('#192012');
+    expect(patchedPrimitives.fetch('brown.800' as ColorPrimitiveKey, { palette: 'current' })).toBe('#47201C');
+    expect(patchedPrimitives.fetch('brown.800' as ColorPrimitiveKey)).toBe('#47201C');
+  });
+
+  it("follows a semantic role's $ref into the patch, per theme", () => {
+    expect(patchedSemantic.fetch('core.content.primary' as ColorSemanticKey, 'base', { palette: 'refresh' })).toBe('#192012');
+    expect(patchedSemantic.fetch('core.content.primary' as ColorSemanticKey, 'roast', { palette: 'refresh' })).toBe('#F9F9F8');
+    expect(patchedSemantic.fetch('core.content.primary' as ColorSemanticKey, 'roast')).toBe('#F8F6F2');
+  });
+
+  it('still raises for an unknown key or a Base-less role under a patch', () => {
+    expect(() => patchedPrimitives.fetch('no.such.token' as ColorPrimitiveKey, { palette: 'refresh' })).toThrow(UnknownTokenError);
+    expect(() => patchedSemantic.fetch('core.border.level0' as ColorSemanticKey, 'base', { palette: 'refresh' })).toThrow(
+      UnknownTokenError,
+    );
+  });
+
+  it('throws on an unknown palette', () => {
+    expect(() => patchedPrimitives.fetch('brown.800' as ColorPrimitiveKey, { palette: 'nope' as never })).toThrow(UnknownPaletteError);
+    expect(() => patchedSemantic.fetch('core.content.primary' as ColorSemanticKey, 'base', { palette: 'nope' as never })).toThrow(
+      UnknownPaletteError,
+    );
+  });
+
+  it('applies the real refresh patch to primitives and the semantic roles that reference them', () => {
+    expect(CleoDesignTokens.colors.primitives.fetch('brown.800', { palette: 'refresh' })).toBe('#192012');
+    expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'base', { palette: 'refresh' })).toBe('#192012');
+    expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast', { palette: 'refresh' })).toBe('#F9F9F8');
+  });
+
+  it('leaves a role with no $ref (a palette gap) unpatched', () => {
+    expect(CleoDesignTokens.colors.semantic.fetch('effects.background.glassMorphism', 'base', { palette: 'refresh' })).toBe('#00000033');
+  });
+
+  it('is frozen', () => {
+    expect(Object.isFrozen(PALETTES)).toBe(true);
+    expect(Object.isFrozen(PALETTES.refresh)).toBe(true);
   });
 });
 
