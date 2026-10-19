@@ -6,7 +6,7 @@ export class UnknownTokenError extends Error {}
 export class UnknownThemeError extends Error {}
 export class DuplicateTokenError extends Error {}
 
-const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype']);
+const THEMES: ReadonlySet<string> = new Set(['base', 'chat', 'roast', 'hype', 'refresh']);
 const SPACING_BASE_UNIT_PX = 4;
 const RELATIVE_UNIT_BASE_PX = 16;
 

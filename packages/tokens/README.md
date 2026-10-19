@@ -117,7 +117,9 @@ The token *type* is not in the key — it's in the reader accessor (see [Consume
 
 ## Semantic namespaces
 
-Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The four themes — `base`, `chat`, `roast`, `hype` — mirror Cleo's product personalities. They are **not** display modes: there is no light/dark axis here, and `roast` is already dark.
+Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The themes are `base`, `chat`, `roast`, `hype` and `refresh`. The first four mirror Cleo's product personalities; `refresh` is the upcoming visual refresh of the whole app, previewed alongside `base` until it replaces it. None of them are display modes: there is no light/dark axis here, and `roast` is already dark.
+
+`refresh` has no overrides until Design authors `Refresh/...` variables in Figma, so until then every `refresh` read returns the Base value.
 
 ## Updating from Figma
 
@@ -159,6 +161,8 @@ Config, not hardcoded, because a second token type arrives later:
 | --- | --- | --- | --- |
 | `Base Colors` | `tokens/color/primitives.json` | `COLOR` | none |
 | `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
+
+The theme segment must be one of the declared `THEMES` in `scripts/transform-core.mjs` (`Base`, `Chat`, `Roast`, `Hype`, `Refresh`), and the transform fails on any other. That list is also the `ColorTheme` union and the canonical `$themes` order, so a theme is available to consumers before it exists in Figma. Adding one means updating `THEMES` there, plus the reader allowlists in `src/CleoDesignTokens.ts` and `lib/cleo_design_tokens/semantic_bucket.rb`.
 
 Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type`, `Border`, `Surface Level`, `Image Crops` from the Component Library). Non-`COLOR` variables inside a listed collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables.
 
@@ -223,7 +227,7 @@ Reach for `colors.semantic` by default. A `colors.primitives` call is reaching p
 
 - `ColorPrimitiveKey` — 106 members
 - `ColorSemanticKey` — 473 members
-- `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
+- `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype' | 'refresh'`
 
 ### Ruby — `cleo_design_tokens`
 

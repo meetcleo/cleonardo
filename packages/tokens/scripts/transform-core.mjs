@@ -18,6 +18,14 @@
 // first segment of the variable name) to the `Modes` collection (where it is a
 // real Figma mode). When that lands, `kind` becomes "mode" and the emitted
 // output is identical.
+//
+// `themes` is the declared theme list, Base first, in canonical `$themes`
+// order. It feeds the ColorTheme union, so a theme exists in the API before
+// Design authors it in Figma (until then every read falls back to Base), and a
+// theme Figma has that isn't declared here fails the transform rather than
+// shipping undeclared.
+export const THEMES = ["Base", "Chat", "Roast", "Hype", "Refresh"];
+
 export const DEFAULT_CONFIG = {
   buckets: [
     {
@@ -30,7 +38,7 @@ export const DEFAULT_CONFIG = {
       collection: "Themes",
       bucket: "semantic",
       types: ["COLOR"],
-      themeAxis: { kind: "nameSegment", defaultTheme: "Base" },
+      themeAxis: { kind: "nameSegment", defaultTheme: "Base", themes: THEMES },
     },
   ],
 };
@@ -241,7 +249,7 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
   const ctx = { dump, primHexByKey, primKeyById, hexIndex, audit };
   // role key -> { order, byTheme: Map<theme, {hex, ref}>, description }
   const roles = new Map();
-  const themeOrder = [];
+  let declaredThemes = null;
   let defaultTheme = null;
 
   for (const { variable, spec } of selected) {
@@ -255,6 +263,10 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
       }
       [theme, ...rolePath] = segments;
       defaultTheme ??= spec.themeAxis.defaultTheme;
+      declaredThemes ??= spec.themeAxis.themes ?? null;
+      if (declaredThemes && !declaredThemes.includes(theme)) {
+        die(`✗ ${variable.name} in ${spec.collection.name} uses theme ${JSON.stringify(theme)}, outside {${declaredThemes.join(", ")}} — declare it in THEMES first`, 2);
+      }
     } else if (spec.themeAxis?.kind === "mode") {
       // The Modes migration: one variable carries every theme as a Figma mode.
       // Not reachable until the config flips; kept so the flip is a config
@@ -265,7 +277,6 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
       rolePath = segments;
       defaultTheme ??= theme;
     }
-    if (!themeOrder.includes(theme)) themeOrder.push(theme);
 
     const key = buildKey(rolePath);
     let role = roles.get(key);
@@ -281,8 +292,7 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
   }
 
   defaultTheme ??= "Base";
-  // Base first, then the remaining themes in the order Figma listed them.
-  const themes = [defaultTheme, ...themeOrder.filter((t) => t !== defaultTheme)];
+  const themes = [defaultTheme, ...(declaredThemes ?? THEMES).filter((t) => t !== defaultTheme)];
 
   const semOut = {};
   for (const [key, role] of roles) {

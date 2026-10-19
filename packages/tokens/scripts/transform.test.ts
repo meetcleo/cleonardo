@@ -168,10 +168,26 @@ describe('buildTokens', () => {
     expect(audit.ignoredByCollection).toEqual({ Modes: 1 });
   });
 
-  it('reports Base first, then themes in dump order', () => {
+  it('reports every declared theme, Base first, whether or not the dump has it', () => {
     const { themes } = buildTokens(dump('valid'));
-    expect(themes[0]).toBe('Base');
-    expect(themes).toEqual(['Base', 'Roast', 'Chat']);
+    expect(themes).toEqual(['Base', 'Chat', 'Roast', 'Hype', 'Refresh']);
+  });
+
+  it('throws on a theme segment that is not declared', () => {
+    const source = dump('valid');
+    source.variables.find((v: { name: string }) => v.name === 'Chat/Core/Content/Primary').name = 'Party/Core/Content/Primary';
+    expect(() => buildTokens(source)).toThrow(/uses theme "Party"/);
+  });
+
+  it('emits a Refresh override under $themes like any other theme', () => {
+    const source = dump('valid');
+    source.variables.find((v: { name: string }) => v.name === 'Chat/Core/Content/Primary').name = 'Refresh/Core/Content/Primary';
+    source.variables.find((v: { name: string }) => v.name === 'Refresh/Core/Content/Primary').valuesByMode['1:0'] = {
+      type: 'VARIABLE_ALIAS',
+      id: 'VariableID:9:6',
+    };
+    const { semOut } = buildTokens(source);
+    expect(semOut.core.content.primary.$themes.refresh).toEqual({ $value: '#F8F6F2', $ref: 'brown.50' });
   });
 });
 

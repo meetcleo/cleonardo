@@ -66,6 +66,10 @@ describe('colors.semantic.fetch', () => {
     expect(() => semanticBucket.fetch('brown.800' as ColorSemanticKey)).toThrow(UnknownTokenError);
   });
 
+  it('falls back to Base for refresh, which has no overrides yet', () => {
+    expect(semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'refresh')).toBe('#47201C');
+  });
+
   it('throws on an unknown theme', () => {
     expect(() => semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'nope' as ColorTheme)).toThrow(UnknownThemeError);
   });

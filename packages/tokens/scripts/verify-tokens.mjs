@@ -15,7 +15,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
+import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die, THEMES } from "./transform-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_PATH = join(ROOT, "tokens", "color", "primitives.json");
@@ -23,16 +23,11 @@ const SEM_PATH = join(ROOT, "tokens", "color", "semantic.json");
 const KEYS_PATH = join(ROOT, "src", "generated", "tokenKeys.ts");
 
 // The order the transform emits $themes in: Base sits on the leaf itself,
-// then the remaining themes in Figma's listed order (transform-core.mjs:285).
-// Hardcoded here as much as it is in the transform — there is one theme axis
-// today, and a new theme changes what "canonical" means, not just this list.
-const THEME_ORDER = ["chat", "roast", "hype"];
-
-// Passed to renderTokenKeysFile for the ColorTheme union. Hardcoded, not
-// derived — correct today, but a new theme arriving via figma-sync fails
-// check 2 for the wrong reason. If that happens, update this list; the fix
-// is not to debug the verifier.
-const TOKEN_KEYS_THEMES = ["Base", "Chat", "Roast", "Hype"];
+// then the remaining declared themes in transform-core.mjs's THEMES order.
+// The same list feeds the ColorTheme union in check 2, so a new theme is one
+// edit there, not one here too.
+const THEME_ORDER = THEMES.slice(1).map((t) => t.toLowerCase());
+const TOKEN_KEYS_THEMES = THEMES;
 
 // Literal counts per the ticket. A change here is a deliberate token-set
 // change (new roles, a new primitive scale), not something the verifier

@@ -55,6 +55,10 @@ RSpec.describe CleoDesignTokens do
       expect { semantic_bucket.fetch("brown.800") }.to raise_error(CleoDesignTokens::UnknownTokenError)
     end
 
+    it "falls back to Base for refresh, which has no overrides yet" do
+      expect(semantic_bucket.fetch("core.content.primary", theme: :refresh)).to eq("#47201C")
+    end
+
     it "raises on an unknown theme" do
       expect { semantic_bucket.fetch("core.content.primary", theme: :nope) }.to raise_error(CleoDesignTokens::UnknownThemeError)
     end

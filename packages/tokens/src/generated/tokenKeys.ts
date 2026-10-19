@@ -590,4 +590,4 @@ export type ColorSemanticKey =
   | 'ui.input.text.error.placeholder'
   | 'ui.input.text.error.value';
 
-export type ColorTheme = 'base' | 'chat' | 'roast' | 'hype';
+export type ColorTheme = 'base' | 'chat' | 'roast' | 'hype' | 'refresh';

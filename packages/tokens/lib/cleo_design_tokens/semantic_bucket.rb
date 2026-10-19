@@ -5,7 +5,7 @@ module CleoDesignTokens
   # (Base isn't an override of itself), so the default and an explicit
   # `theme: :base` resolve identically with no special-casing.
   class SemanticBucket
-    THEMES = %w[base chat roast hype].freeze
+    THEMES = %w[base chat roast hype refresh].freeze
     private_constant :THEMES
 
     def initialize(lookup)
