@@ -105,7 +105,10 @@ Two things to expect:
 
 ## Adding a token type
 
-Nothing changes here — the dump already carries every collection in the file. Adoption is a config
+Nothing changes here — the dump already carries every collection and mode in the file. The transform
+supports `Color Primitives` with Current/Cleo Refresh palette modes and mode-based `Color Roles`
+collections, as well as the legacy names. Palette experiences and semantic themes are separate axes.
+`Themes` remains preferred when both `Themes` and `Modes` exist. Other token types still require a config
 entry in `packages/tokens`, which decides what becomes a token file. Motion tokens live in a
 different Figma file, so those need their own run of this plugin.
 

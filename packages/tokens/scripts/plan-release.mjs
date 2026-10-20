@@ -88,7 +88,8 @@ export function planRelease({ previousTag, committedVersion, primOld, semOld, pr
   const notes = hasColourChange
     ? renderDiffReport({ primDiff, semDiff }) +
       "\n\nA `@theme` entry in \"removed\" means that theme now resolves to Base — the colour " +
-      "isn't gone, the override is."
+      "isn't gone, the override is. Entries marked `@experience:name` belong to that primitive " +
+      "palette; any following `@theme` override resolves against that experience's Base."
     : "No colour changes in this release.";
 
   return { version, hasColourChange, notes };

@@ -15,7 +15,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
+import { walk, sortTree, naturalCompare, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_PATH = join(ROOT, "tokens", "color", "primitives.json");
@@ -72,6 +72,7 @@ function main() {
   checkPaletteGaps(semTree);
   checkShape(semTree);
   checkCounts(primTree, semTree);
+  checkExperiences(primTree, semTree);
 
   if (failures.length) {
     console.error(`✗ ${failures.length} token invariant violation(s):`);
@@ -108,6 +109,11 @@ function canonicalLeaf(node) {
     }
     out.$themes = themes;
   }
+  if (node.$experiences) {
+    out.$experiences = Object.fromEntries(
+      Object.keys(node.$experiences).sort(naturalCompare).map((experience) => [experience, canonicalLeaf(node.$experiences[experience])]),
+    );
+  }
   return out;
 }
 
@@ -142,27 +148,41 @@ function checkTokenKeys(primTree, semTree, keysRaw) {
 
 // ---------- check 3: reference integrity ----------
 
+function* experienceEntries(node) {
+  yield { experience: undefined, entry: node };
+  for (const [experience, entry] of Object.entries(node.$experiences ?? {})) yield { experience, entry };
+}
+
+const experienceLabel = (key, experience) => experience ? `${key}@experience:${experience}` : key;
+
 function checkReferenceIntegrity(primTree, semTree) {
   const primValueByKey = new Map();
-  for (const { path, node } of walk(primTree)) primValueByKey.set(path.join("."), node.$value);
+  for (const { path, node } of walk(primTree)) {
+    for (const { experience, entry } of experienceEntries(node)) {
+      primValueByKey.set(experienceLabel(path.join("."), experience), entry.$value);
+    }
+  }
 
-  function checkRef(label, value, ref) {
+  function checkRef(label, value, ref, experience) {
     if (ref === undefined) return;
-    if (!primValueByKey.has(ref)) {
+    const primitiveKey = experienceLabel(ref, experience);
+    if (!primValueByKey.has(primitiveKey)) {
       fail(3, `${label} $ref ${JSON.stringify(ref)} does not exist in primitives.json (dangling reference).`);
       return;
     }
-    const primValue = primValueByKey.get(ref);
+    const primValue = primValueByKey.get(primitiveKey);
     if (value !== primValue) {
       fail(3, `${label} $value ${JSON.stringify(value)} does not match {${ref}} = ${JSON.stringify(primValue)} (hand-edited hex or re-pointed $ref).`);
     }
   }
 
   for (const { path, node } of walk(semTree)) {
-    const key = path.join(".");
-    checkRef(key, node.$value, node.$ref);
-    for (const [theme, override] of Object.entries(node.$themes ?? {})) {
-      checkRef(`${key}@${theme}`, override.$value, override.$ref);
+    for (const { experience, entry } of experienceEntries(node)) {
+      const key = experienceLabel(path.join("."), experience);
+      checkRef(key, entry.$value, entry.$ref, experience);
+      for (const [theme, override] of Object.entries(entry.$themes ?? {})) {
+        checkRef(`${key}@${theme}`, override.$value, override.$ref, experience);
+      }
     }
   }
 }
@@ -172,22 +192,24 @@ function checkReferenceIntegrity(primTree, semTree) {
 function checkPaletteGaps(semTree) {
   const seenGaps = new Set();
 
-  function checkEntry(label, value, ref) {
+  function checkEntry(label, value, ref, experience) {
     if (value === undefined || ref !== undefined) return; // not a gap
     seenGaps.add(label);
     const expected = PALETTE_GAP_ALLOWLIST[label];
     if (expected === undefined) {
-      fail(4, `${label} has a $value (${JSON.stringify(value)}) and no $ref — an un-allowlisted palette gap. Point it at a primitive, or add it to PALETTE_GAP_ALLOWLIST with the reviewed hex.`);
+      fail(4, `${experienceLabel(label, experience)} has a $value (${JSON.stringify(value)}) and no $ref — an un-allowlisted palette gap. Point it at a primitive, or add it to PALETTE_GAP_ALLOWLIST with the reviewed hex.`);
     } else if (expected !== value) {
-      fail(4, `${label} is allowlisted at ${JSON.stringify(expected)} but its committed value is ${JSON.stringify(value)} — editing an allowlisted gap still fails.`);
+      fail(4, `${experienceLabel(label, experience)} is allowlisted at ${JSON.stringify(expected)} but its committed value is ${JSON.stringify(value)} — editing an allowlisted gap still fails.`);
     }
   }
 
   for (const { path, node } of walk(semTree)) {
     const key = path.join(".");
-    checkEntry(key, node.$value, node.$ref);
-    for (const [theme, override] of Object.entries(node.$themes ?? {})) {
-      checkEntry(`${key}@${theme}`, override.$value, override.$ref);
+    for (const { experience, entry } of experienceEntries(node)) {
+      checkEntry(key, entry.$value, entry.$ref, experience);
+      for (const [theme, override] of Object.entries(entry.$themes ?? {})) {
+        checkEntry(`${key}@${theme}`, override.$value, override.$ref, experience);
+      }
     }
   }
 
@@ -204,24 +226,27 @@ function checkShape(semTree) {
   const seenMissingBase = new Set();
 
   for (const { path, node } of walk(semTree)) {
-    const key = path.join(".");
-    const hasBase = node.$value !== undefined;
+    for (const { experience, entry } of experienceEntries(node)) {
+      const key = path.join(".");
+      const label = experienceLabel(key, experience);
+      const hasBase = entry.$value !== undefined;
 
-    if (!hasBase) {
-      seenMissingBase.add(key);
-      if (!MISSING_BASE_ALLOWLIST.has(key)) {
-        fail(5, `${key} has no Base $value and is not on MISSING_BASE_ALLOWLIST — every semantic leaf must resolve a Base value unless Figma defines it only under a non-Base theme.`);
+      if (!hasBase) {
+        seenMissingBase.add(key);
+        if (!MISSING_BASE_ALLOWLIST.has(key)) {
+          fail(5, `${label} has no Base $value and is not on MISSING_BASE_ALLOWLIST — every semantic leaf must resolve a Base value unless Figma defines it only under a non-Base theme.`);
+        }
       }
-    }
 
-    for (const [theme, override] of Object.entries(node.$themes ?? {})) {
-      if (!THEME_ORDER.includes(theme)) {
-        fail(5, `${key}@${theme} uses a theme outside {${THEME_ORDER.join(", ")}}.`);
-        continue;
-      }
-      if (hasBase && override.$value === node.$value && override.$ref === node.$ref) {
-        const refPart = override.$ref !== undefined ? ` {${override.$ref}}` : "";
-        fail(5, `${key}@${theme} duplicates Base ($value ${JSON.stringify(override.$value)}${refPart}) — the transform drops overrides equal to Base, so one on disk is a hand-edit.`);
+      for (const [theme, override] of Object.entries(entry.$themes ?? {})) {
+        if (!THEME_ORDER.includes(theme)) {
+          fail(5, `${label}@${theme} uses a theme outside {${THEME_ORDER.join(", ")}}.`);
+          continue;
+        }
+        if (hasBase && override.$value === entry.$value && override.$ref === entry.$ref) {
+          const refPart = override.$ref !== undefined ? ` {${override.$ref}}` : "";
+          fail(5, `${label}@${theme} duplicates Base ($value ${JSON.stringify(override.$value)}${refPart}) — the transform drops overrides equal to Base, so one on disk is a hand-edit.`);
+        }
       }
     }
   }
@@ -229,6 +254,31 @@ function checkShape(semTree) {
   for (const key of MISSING_BASE_ALLOWLIST) {
     if (!seenMissingBase.has(key)) {
       fail(5, `MISSING_BASE_ALLOWLIST entry ${JSON.stringify(key)} is stale — it now has a Base $value, or no longer exists. Remove it.`);
+    }
+  }
+}
+
+// ---------- check 7: experience coverage ----------
+
+function checkExperiences(primTree, semTree) {
+  const primitiveLeaves = [...walk(primTree)];
+  const expected = Object.keys(primitiveLeaves[0]?.node.$experiences ?? {}).sort();
+  for (const { path, node } of [...primitiveLeaves, ...walk(semTree)]) {
+    const actual = Object.keys(node.$experiences ?? {}).sort();
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      fail(7, `${path.join(".")} has inconsistent experience snapshots; expected ${expected.join(", ") || "none"}.`);
+    }
+    for (const [experience, entry] of Object.entries(node.$experiences ?? {})) {
+      if (entry.$experiences || (entry.$value === undefined && !Object.keys(entry.$themes ?? {}).length)) {
+        fail(7, `${experienceLabel(path.join("."), experience)} must be a complete snapshot without nested experiences.`);
+      }
+    }
+  }
+  for (const { path, node } of primitiveLeaves) {
+    for (const [experience, entry] of Object.entries(node.$experiences ?? {})) {
+      if (typeof entry.$value !== "string" || entry.$themes || entry.$experiences) {
+        fail(7, `${experienceLabel(path.join("."), experience)} must contain a primitive $value without themes or nested experiences.`);
+      }
     }
   }
 }

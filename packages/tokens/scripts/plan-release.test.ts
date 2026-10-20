@@ -90,6 +90,20 @@ describe('planRelease', () => {
     expect(result.notes).toContain('+ brown.800 = #47201C');
   });
 
+  it('bumps minor for a Refresh-only change while Current stays unchanged', () => {
+    const result = planRelease({
+      previousTag: 'tokens-v0.2.0',
+      committedVersion: '0.1.0',
+      primOld: { brown: { 800: { ...leaf('#47201C'), $experiences: { cleoRefresh: { $value: '#112233' } } } } },
+      primNew: { brown: { 800: { ...leaf('#47201C'), $experiences: { cleoRefresh: { $value: '#445566' } } } } },
+      semOld: {},
+      semNew: {},
+    });
+    expect(result.version).toBe('0.3.0');
+    expect(result.notes).toContain('~ brown.800@experience:cleoRefresh: #112233 -> #445566');
+    expect(result.notes).not.toContain('~ brown.800:');
+  });
+
   it('bumps minor and lists a changed value', () => {
     const result = planRelease({
       previousTag: 'tokens-v0.2.0',

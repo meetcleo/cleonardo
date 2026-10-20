@@ -11,7 +11,8 @@
 // Outputs: tokens/color/{primitives,semantic}.json   (committed)
 //          src/generated/tokenKeys.ts                (committed; not written under --check)
 //
-// Leaf shape. Primitives are `{ $type, $value }` — a resolved hex, nothing else.
+// Leaf shape. Primitives carry a resolved Current $value. Additional palette
+// modes are complete snapshots under $experiences on primitives and semantics.
 // Semantic roles carry Base on the leaf and only genuine overrides beneath
 // `$themes`:
 //
@@ -67,21 +68,14 @@ function run() {
     die(`Missing input: ${IN_DUMP}\nRun the Figma plugin (COREEXP-323) to produce it, or drop a dump there and re-run.`);
   }
 
-  const { primOut, semOut, themes, audit } = buildTokens(JSON.parse(readFileSync(IN_DUMP, "utf8")));
+  const { primOut, semOut, themes, audit, experienceAudits } = buildTokens(JSON.parse(readFileSync(IN_DUMP, "utf8")));
 
   // ---------- validation ----------
 
-  reportFatal(audit.danglingIds, "alias(es) pointing at a variable id absent from the dump", (d) => `${d.path} -> ${d.id} (from ${d.collection})`,
-    "Refusing to write. The dump must include every collection its aliases reach into.");
-
-  reportFatal(audit.deadRefs, "dead reference(s) — alias target isn't a primitive", (d) => `${d.path} -> ${d.target} (in ${d.collection})`,
-    "Refusing to write. Point the alias at a variable in the primitives collection.");
-
-  reportFatal(audit.semanticAliases, "semantic→semantic alias(es) — resolution is single-hop", (d) => `${d.path} -> ${d.target}`,
-    "Refusing to write. Point the alias at a primitive, not another themed role.");
-
-  reportFatal(audit.ambiguousHex, "ambiguous hex recovery — 2+ primitives share the hex", (a) => `${a.path} (${a.hex}) matches: ${a.candidates.join(", ")}`,
-    'Refusing to write. A missing $ref must only ever mean "genuine palette gap" — disambiguate in Figma.');
+  for (const [experience, paletteAudit] of Object.entries(experienceAudits ?? { current: audit })) {
+    if (experienceAudits) console.error(`Validating experience: ${experience}`);
+    validateAudit(paletteAudit);
+  }
 
   const keyUnions = { ...buildKeyUnions(primOut, semOut), themes };
 
@@ -107,26 +101,9 @@ function run() {
     console.error(`theme overrides: ${overrides.map(([t, n]) => `${t} ${n}`).join(", ")}`);
   }
 
-  if (audit.missingBase.length) {
-    console.error(`\n! ${audit.missingBase.length} role(s) missing from the Base theme — Figma-side gap, not a transform bug:`);
-    for (const m of audit.missingBase) console.error(`  ! ${m.path} (present in: ${m.themes.join(", ")})`);
-    console.error(`  These emit no $value, so a themeless fetch raises. Add them to Base in Figma to fix.`);
-  }
-  if (audit.paletteGaps.length) {
-    console.error(`\npalette gaps (no matching primitive, so no $ref):`);
-    for (const g of audit.paletteGaps) console.error(`  ! ${g.path} = ${g.hex}`);
-  }
-  if (audit.recoveredByHex.length) {
-    console.error(`\nrecovered by exact-hex match (Figma held a literal, not an alias):`);
-    for (const r of audit.recoveredByHex) console.error(`  ↺ ${r.path} (${r.hex}) -> {${r.target}}`);
-  }
-  const skipped = Object.entries(audit.skippedByType);
-  if (skipped.length) {
-    console.error(`\nskipped, wrong type for its bucket: ${skipped.map(([k, n]) => `${k} ${n}`).join(", ")}`);
-  }
-  const ignored = Object.entries(audit.ignoredByCollection);
-  if (ignored.length) {
-    console.error(`ignored, collection not in config: ${ignored.map(([k, n]) => `${k} ${n}`).join(", ")}`);
+  for (const [experience, paletteAudit] of Object.entries(experienceAudits ?? { current: audit })) {
+    if (experienceAudits) console.error(`\nExperience: ${experience}`);
+    reportWarnings(paletteAudit);
   }
 
   // ---------- removal gate ----------
@@ -160,3 +137,40 @@ function reportFatal(entries, headline, formatter, remedy) {
   die(remedy, 2);
 }
 
+function validateAudit(audit) {
+  reportFatal(audit.danglingIds, "alias(es) pointing at a variable id absent from the dump", (d) => `${d.path} -> ${d.id} (from ${d.collection})`,
+    "Refusing to write. The dump must include every collection its aliases reach into.");
+
+  reportFatal(audit.deadRefs, "dead reference(s) — alias target isn't a primitive", (d) => `${d.path} -> ${d.target} (in ${d.collection})`,
+    "Refusing to write. Point the alias at a variable in the primitives collection.");
+
+  reportFatal(audit.semanticAliases, "semantic→semantic alias(es) — resolution is single-hop", (d) => `${d.path} -> ${d.target}`,
+    "Refusing to write. Point the alias at a primitive, not another themed role.");
+
+  reportFatal(audit.ambiguousHex, "ambiguous hex recovery — 2+ primitives share the hex", (a) => `${a.path} (${a.hex}) matches: ${a.candidates.join(", ")}`,
+    'Refusing to write. A missing $ref must only ever mean "genuine palette gap" — disambiguate in Figma.');
+}
+
+function reportWarnings(audit) {
+  if (audit.missingBase.length) {
+    console.error(`\n! ${audit.missingBase.length} role(s) missing from the Base theme — Figma-side gap, not a transform bug:`);
+    for (const m of audit.missingBase) console.error(`  ! ${m.path} (present in: ${m.themes.join(", ")})`);
+    console.error(`  These emit no $value, so a themeless fetch raises. Add them to Base in Figma to fix.`);
+  }
+  if (audit.paletteGaps.length) {
+    console.error(`\npalette gaps (no matching primitive, so no $ref):`);
+    for (const g of audit.paletteGaps) console.error(`  ! ${g.path} = ${g.hex}`);
+  }
+  if (audit.recoveredByHex.length) {
+    console.error(`\nrecovered by exact-hex match (Figma held a literal, not an alias):`);
+    for (const r of audit.recoveredByHex) console.error(`  ↺ ${r.path} (${r.hex}) -> {${r.target}}`);
+  }
+  const skipped = Object.entries(audit.skippedByType);
+  if (skipped.length) {
+    console.error(`\nskipped, wrong type for its bucket: ${skipped.map(([k, n]) => `${k} ${n}`).join(", ")}`);
+  }
+  const ignored = Object.entries(audit.ignoredByCollection);
+  if (ignored.length) {
+    console.error(`ignored, collection not in config: ${ignored.map(([k, n]) => `${k} ${n}`).join(", ")}`);
+  }
+}

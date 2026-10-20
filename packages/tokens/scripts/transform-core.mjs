@@ -9,19 +9,14 @@
 
 // ---------- config ----------
 
-// Which Figma collections become which output file. Collections absent from
-// this list are ignored outright (`Modes`, plus Spacing/Radius/Type/Border/
-// Surface Level/Image Crops from the Component Library).
-//
-// `themeAxis` is deliberately a config value, not a branch in the code: design
-// is migrating these roles from the `Themes` collection (where the theme is the
-// first segment of the variable name) to the `Modes` collection (where it is a
-// real Figma mode). When that lands, `kind` becomes "mode" and the emitted
-// output is identical.
+// Sources are tried in order so a file carrying both Themes and its Modes
+// migration keeps exporting Themes until the legacy collection is removed.
+// Unselected collections (including component-specific aliases) are ignored.
 export const DEFAULT_CONFIG = {
   buckets: [
     {
       collection: "Base Colors",
+      alternatives: [{ collection: "Color Primitives" }],
       bucket: "primitives",
       types: ["COLOR"],
       themeAxis: null,
@@ -31,6 +26,10 @@ export const DEFAULT_CONFIG = {
       bucket: "semantic",
       types: ["COLOR"],
       themeAxis: { kind: "nameSegment", defaultTheme: "Base" },
+      alternatives: [
+        { collection: "Color Roles", themeAxis: { kind: "mode", defaultTheme: "Base" } },
+        { collection: "Modes", themeAxis: { kind: "mode", defaultTheme: "Base" } },
+      ],
     },
   ],
 };
@@ -91,11 +90,17 @@ export function parseDump(raw, config = DEFAULT_CONFIG) {
 
   const bucketByCollectionId = new Map();
   for (const spec of config.buckets) {
-    const collection = (raw.collections ?? []).find((c) => c.name === spec.collection);
+    const sources = [spec, ...(spec.alternatives ?? []).map((source) => ({ ...spec, ...source }))];
+    const source = sources.find((s) => (raw.collections ?? []).some((c) => c.name === s.collection));
+    const matches = (raw.collections ?? []).filter((c) => c.name === source?.collection);
+    const collection = matches[0];
     if (!collection) {
-      die(`✗ dump has no collection named ${JSON.stringify(spec.collection)} — found: ${[...collectionsById.values()].map((c) => c.name).join(", ")}`, 2);
+      die(`✗ dump has no collection named ${JSON.stringify(spec.collection)} (alternatives: ${sources.slice(1).map((s) => s.collection).join(", ") || "none"}) — found: ${[...collectionsById.values()].map((c) => c.name).join(", ")}`, 2);
     }
-    bucketByCollectionId.set(collection.id, { ...spec, collection });
+    if (matches.length > 1) {
+      die(`✗ dump has multiple collections named ${JSON.stringify(collection.name)} — cannot choose a token source`, 2);
+    }
+    bucketByCollectionId.set(collection.id, { ...source, collection });
   }
   return { raw, collectionsById, variablesById, bucketByCollectionId };
 }
@@ -133,8 +138,7 @@ function setPath(root, path, value) {
   cursor[path.at(-1)] = value;
 }
 
-function modeValue(variable, spec) {
-  const modeId = spec.collection.defaultModeId;
+function modeValue(variable, spec, modeId = spec.collection.defaultModeId) {
   const value = variable.valuesByMode?.[modeId];
   if (value === undefined) {
     die(`✗ ${variable.name} has no value for mode ${modeId} in ${spec.collection.name}`, 2);
@@ -162,8 +166,8 @@ export function newAudit() {
 // Resolves one variable's colour to a hex plus, where it came from an alias, the
 // primitive fetch key it points at. Single-hop only: an alias points at a
 // primitive, never at another themed role.
-function resolveColour({ variable, spec }, { dump, primHexByKey, primKeyById, hexIndex, audit }, label) {
-  const value = modeValue(variable, spec);
+function resolveColour({ variable, spec, modeId }, { dump, primHexByKey, primKeyById, hexIndex, audit }, label) {
+  const value = modeValue(variable, spec, modeId);
 
   if (isAlias(value)) {
     const target = dump.variablesById.get(value.id);
@@ -204,6 +208,44 @@ function resolveColour({ variable, spec }, { dump, primHexByKey, primKeyById, he
 
 export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
   const dump = parseDump(rawDump, config);
+  const primitiveSpec = [...dump.bucketByCollectionId.values()].find((spec) => spec.bucket === "primitives");
+  const modes = primitiveSpec.collection.modes;
+  if (modes.length === 1) return buildPaletteTokens(rawDump, config, modes[0].modeId);
+
+  const current = modes.find((mode) => mode.name === "Current");
+  if (!current) die(`✗ ${primitiveSpec.collection.name} has multiple palette modes but no "Current" mode`, 2);
+  const experiences = modes.map((mode) => normaliseSegment(mode.name));
+  if (new Set(experiences).size !== experiences.length) {
+    die(`✗ ${primitiveSpec.collection.name} has duplicate experience mode names after normalisation`, 2);
+  }
+
+  // Each snapshot resolves aliases and literal recovery against its own palette.
+  // Theme overrides are relative to that snapshot's Base, never to Current.
+  const result = buildPaletteTokens(rawDump, config, current.modeId);
+  result.experienceAudits = { current: result.audit };
+  for (const mode of modes) {
+    if (mode.modeId === current.modeId) continue;
+    const experience = normaliseSegment(mode.name);
+    const palette = buildPaletteTokens(rawDump, config, mode.modeId);
+    result.experienceAudits[experience] = palette.audit;
+    for (const bucket of ["primOut", "semOut"]) {
+      const snapshots = new Map([...walk(palette[bucket])].map(({ path, node }) => [path.join("."), node]));
+      for (const { path, node } of walk(result[bucket])) {
+        const snapshot = { ...snapshots.get(path.join(".")) };
+        delete snapshot.$type;
+        delete snapshot.$description;
+        node.$experiences ??= {};
+        node.$experiences[experience] = snapshot;
+      }
+    }
+  }
+  result.primOut = sortTree(result.primOut);
+  result.semOut = sortTree(result.semOut);
+  return result;
+}
+
+function buildPaletteTokens(rawDump, config, primitiveModeId) {
+  const dump = parseDump(rawDump, config);
   const audit = newAudit();
   const selected = selectVariables(dump, audit);
 
@@ -224,7 +266,7 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
     }
     primKeyOrigin.set(key, variable.name);
 
-    const hex = rgbaToHex(modeValue(variable, spec));
+    const hex = rgbaToHex(modeValue(variable, spec, primitiveModeId));
     const leaf = { $type: "color", $value: hex };
     if (variable.description) leaf.$description = variable.description;
     setPath(primOut, key.split("."), leaf);
@@ -248,24 +290,33 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
     if (spec.bucket !== "semantic") continue;
     const segments = variable.name.split("/");
 
-    let theme, rolePath;
+    let entries, rolePath;
     if (spec.themeAxis?.kind === "nameSegment") {
       if (segments.length < 2) {
         die(`✗ ${variable.name} in ${spec.collection.name} has no role path after its theme segment`, 2);
       }
-      [theme, ...rolePath] = segments;
+      const [theme, ...path] = segments;
+      rolePath = path;
+      entries = [{ name: theme, modeId: spec.collection.defaultModeId }];
       defaultTheme ??= spec.themeAxis.defaultTheme;
     } else if (spec.themeAxis?.kind === "mode") {
-      // The Modes migration: one variable carries every theme as a Figma mode.
-      // Not reachable until the config flips; kept so the flip is a config
-      // change rather than a rewrite.
-      die(`✗ theme axis "mode" is not implemented yet — ${spec.collection.name}`, 2);
+      entries = spec.collection.modes;
+      const baseTheme = spec.themeAxis.defaultTheme;
+      if (!entries.some((mode) => mode.name === baseTheme)) {
+        die(`✗ ${spec.collection.name} has no ${JSON.stringify(baseTheme)} mode`, 2);
+      }
+      const names = entries.map((mode) => mode.name.toLowerCase());
+      if (new Set(names).size !== names.length) {
+        die(`✗ ${spec.collection.name} has duplicate theme mode names`, 2);
+      }
+      rolePath = segments;
+      defaultTheme ??= baseTheme;
     } else {
-      theme = spec.themeAxis?.defaultTheme ?? "Base";
+      const theme = spec.themeAxis?.defaultTheme ?? "Base";
+      entries = [{ name: theme, modeId: spec.collection.defaultModeId }];
       rolePath = segments;
       defaultTheme ??= theme;
     }
-    if (!themeOrder.includes(theme)) themeOrder.push(theme);
 
     const key = buildKey(rolePath);
     let role = roles.get(key);
@@ -273,10 +324,13 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
       role = { order: roles.size, byTheme: new Map(), origin: variable.name };
       roles.set(key, role);
     }
-    if (role.byTheme.has(theme)) {
-      die(`✗ duplicate token key ${JSON.stringify(key)} for theme ${JSON.stringify(theme)} in ${spec.collection.name}: defined at both ${role.origin} and ${variable.name}`, 2);
+    for (const { name: theme, modeId } of entries) {
+      if (!themeOrder.includes(theme)) themeOrder.push(theme);
+      if (role.byTheme.has(theme)) {
+        die(`✗ duplicate token key ${JSON.stringify(key)} for theme ${JSON.stringify(theme)} in ${spec.collection.name}: defined at both ${role.origin} and ${variable.name}`, 2);
+      }
+      role.byTheme.set(theme, resolveColour({ variable, spec, modeId }, ctx, `${spec.bucket}.${key}@${theme.toLowerCase()}`));
     }
-    role.byTheme.set(theme, resolveColour({ variable, spec }, ctx, `${spec.bucket}.${key}@${theme.toLowerCase()}`));
     if (variable.description && !role.description) role.description = variable.description;
   }
 
@@ -343,12 +397,18 @@ export function naturalCompare(a, b) {
   return left.length - right.length;
 }
 
-/** Rebuild every group with its keys in canonical order. Leaves are returned untouched: their
- *  `$type` / `$value` / `$ref` / `$themes` order is set by the code that builds them, and
- *  `$themes` follows the configured theme order — both deterministic already, and both more
- *  readable than alphabetical. */
+/** Rebuild groups and experience names in canonical order. Leaf fields retain their build
+ *  order, and $themes follows the configured theme order. */
 export function sortTree(node) {
-  if (isLeaf(node)) return node;
+  if (isLeaf(node)) {
+    if (!node.$experiences) return node;
+    return {
+      ...node,
+      $experiences: Object.fromEntries(
+        Object.entries(node.$experiences).sort(([a], [b]) => naturalCompare(a, b)),
+      ),
+    };
+  }
   const out = {};
   for (const key of Object.keys(node).sort(naturalCompare)) out[key] = sortTree(node[key]);
   return out;
@@ -384,11 +444,17 @@ export function resolveTheme(leaf, theme) {
 // of the compared value: a re-point at an identical hex is a real intent change.
 export function flatten(tree) {
   const out = new Map();
-  for (const { path, node } of walk(tree)) {
-    const key = path.join(".");
+  function addEntry(key, node) {
     out.set(key, describe(node.$value, node.$ref));
     for (const [theme, override] of Object.entries(node.$themes ?? {})) {
       out.set(`${key}@${theme}`, describe(override.$value, override.$ref));
+    }
+  }
+  for (const { path, node } of walk(tree)) {
+    const key = path.join(".");
+    addEntry(key, node);
+    for (const [experience, snapshot] of Object.entries(node.$experiences ?? {})) {
+      addEntry(`${key}@experience:${experience}`, snapshot);
     }
   }
   return out;

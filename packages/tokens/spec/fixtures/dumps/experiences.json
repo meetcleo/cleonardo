@@ -1,0 +1,138 @@
+{
+  "$schema": "cleo-figma-dump/1",
+  "file": {
+    "name": "Cleonardo 2.0"
+  },
+  "collections": [
+    {
+      "id": "palette",
+      "name": "Color Primitives",
+      "source": "local",
+      "defaultModeId": "refresh",
+      "modes": [
+        {
+          "modeId": "value",
+          "name": "Current"
+        },
+        {
+          "modeId": "refresh",
+          "name": "Cleo Refresh"
+        }
+      ]
+    },
+    {
+      "id": "roles",
+      "name": "Color Roles",
+      "source": "local",
+      "defaultModeId": "roast",
+      "modes": [
+        {
+          "modeId": "roast",
+          "name": "Roast"
+        },
+        {
+          "modeId": "base",
+          "name": "Base"
+        },
+        {
+          "modeId": "chat",
+          "name": "Chat"
+        },
+        {
+          "modeId": "hype",
+          "name": "Hype"
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "brown800",
+      "name": "brown/800",
+      "collectionId": "palette",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": {
+          "r": 0.2784313725490196,
+          "g": 0.12549019607843137,
+          "b": 0.10980392156862745,
+          "a": 1
+        },
+        "refresh": {
+          "r": 0.06666666666666667,
+          "g": 0.13333333333333333,
+          "b": 0.2,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "brown50",
+      "name": "brown/50",
+      "collectionId": "palette",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": {
+          "r": 0.9725490196078431,
+          "g": 0.9647058823529412,
+          "b": 0.9490196078431372,
+          "a": 1
+        },
+        "refresh": {
+          "r": 0.06666666666666667,
+          "g": 0.13333333333333333,
+          "b": 0.2,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "primary",
+      "name": "content/primary",
+      "collectionId": "roles",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "base": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown800"
+        },
+        "chat": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown800"
+        },
+        "roast": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown50"
+        },
+        "hype": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown50"
+        }
+      }
+    },
+    {
+      "id": "secondary",
+      "name": "content/secondary",
+      "collectionId": "roles",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "base": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown50"
+        },
+        "chat": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown50"
+        },
+        "roast": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown800"
+        },
+        "hype": {
+          "type": "VARIABLE_ALIAS",
+          "id": "brown50"
+        }
+      }
+    }
+  ]
+}
