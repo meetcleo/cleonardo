@@ -157,12 +157,15 @@ Config, not hardcoded, because a second token type arrives later:
 
 | Figma collection | Output | Types | Theme axis |
 | --- | --- | --- | --- |
-| `Base Colors` | `tokens/color/primitives.json` | `COLOR` | none |
+| `Base Colors` (fallback: `Color Primitives`) | `tokens/color/primitives.json` | `COLOR` | none |
 | `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
+| `Color Roles` (fallback: `Modes`) | `tokens/color/semantic.json` | `COLOR` | Figma modes named `Base`, `Chat`, `Roast`, `Hype` |
 
-Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type`, `Border`, `Surface Level`, `Image Crops` from the Component Library). Non-`COLOR` variables inside a listed collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables.
+Each bucket selects the first available source: `Base Colors` before `Color Primitives`, and `Themes` before `Color Roles` before `Modes`. This keeps the original Colour Modes and Themes file exporting `Themes` while both its legacy and mode-based collections coexist. Unselected collections are **ignored**, including component-specific colour collections and spacing, radius, typography and border-width collections. Non-`COLOR` variables inside a selected collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables. Multiple collections with the selected name are rejected as ambiguous.
 
-Design is migrating these roles from `Themes` to the `Modes` collection, where the theme is a real Figma mode rather than a name segment. When that lands, `themeAxis.kind` becomes `"mode"` and the emitted output is identical — a config change, not a rewrite.
+For mode-based collections, every mode is resolved independently. The `Base` mode supplies the leaf value even if Figma's default mode is different; overrides are emitted only when the value or primitive reference differs. A missing `Base` mode, duplicate theme names (case-insensitive), or a missing value for any declared mode fails validation.
+
+Variable paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`, not `core.content.primary`. Supporting Cleonardo 2.0's format does not make its 104 roles a drop-in replacement for the existing 473-role vocabulary. The removal guard still blocks a sync that drops existing keys; reconcile those paths and coverage before replacing the published tokens. This format support does not add experiment selection to either reader.
 
 ### Ordering
 
