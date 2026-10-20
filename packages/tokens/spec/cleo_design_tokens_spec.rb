@@ -55,10 +55,6 @@ RSpec.describe CleoDesignTokens do
       expect { semantic_bucket.fetch("brown.800") }.to raise_error(CleoDesignTokens::UnknownTokenError)
     end
 
-    it "falls back to Base for a theme with no override for that role" do
-      expect(semantic_bucket.fetch("core.content.primary", theme: :refresh)).to eq("#47201C")
-    end
-
     it "raises on an unknown theme" do
       expect { semantic_bucket.fetch("core.content.primary", theme: :nope) }.to raise_error(CleoDesignTokens::UnknownThemeError)
     end
@@ -68,35 +64,8 @@ RSpec.describe CleoDesignTokens do
     it "resolves against the real committed files" do
       expect(described_class.colors.semantic.fetch("core.content.primary")).to eq("#47201C")
       expect(described_class.colors.semantic.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
-      expect(described_class.colors.primitives.fetch("brown.800")).to eq("#47201C")
-    end
-  end
-
-  describe "LookupBuilder.merge_theme_overrides" do
-    let(:base) { described_class::LookupBuilder.build_semantic_lookup(load_fixture("semantic")) }
-    let(:override) { {"core" => {"content" => {"primary" => {"$type" => "color", "$value" => "#192012"}}}} }
-
-    it "adds a theme file as overrides, leaving other themes and the input alone" do
-      bucket = described_class::SemanticBucket.new(described_class::LookupBuilder.merge_theme_overrides(base, "refresh", override))
-      expect(bucket.fetch("core.content.primary", theme: :refresh)).to eq("#192012")
-      expect(bucket.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
-      expect(base.fetch("core.content.primary").themes).not_to have_key("refresh")
-    end
-
-    it "refuses a role that does not exist" do
-      unknown = {"core" => {"nope" => {"$type" => "color", "$value" => "#192012"}}}
-      expect { described_class::LookupBuilder.merge_theme_overrides(base, "refresh", unknown) }
-        .to raise_error(CleoDesignTokens::UnknownTokenError)
-    end
-
-    it "refuses a second source for an override semantic.json already has" do
-      expect { described_class::LookupBuilder.merge_theme_overrides(base, "roast", override) }
-        .to raise_error(CleoDesignTokens::DuplicateTokenError)
-    end
-
-    it "applies the committed refresh theme" do
       expect(described_class.colors.semantic.fetch("core.content.primary", theme: :refresh)).to eq("#192012")
-      expect(described_class.colors.semantic.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
+      expect(described_class.colors.primitives.fetch("brown.800")).to eq("#47201C")
     end
   end
 

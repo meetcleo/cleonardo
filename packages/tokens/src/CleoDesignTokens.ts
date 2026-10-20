@@ -1,7 +1,7 @@
 import type { ColorPrimitiveKey, ColorSemanticKey, ColorTheme } from './generated/tokenKeys';
 import primitives from '../tokens/color/primitives.json' with { type: 'json' };
 import semantic from '../tokens/color/semantic.json' with { type: 'json' };
-import refreshTheme from '../tokens/themes/refresh.json' with { type: 'json' };
+import refresh from '../tokens/themes/refresh.json' with { type: 'json' };
 
 export class UnknownTokenError extends Error {}
 export class UnknownThemeError extends Error {}
@@ -121,25 +121,18 @@ export function buildSemanticLookup(tree: unknown): Record<string, SemanticEntry
   return lookup;
 }
 
-// Folds a hand-authored theme file (tokens/themes/<theme>.json — role ->
-// override) into a semantic lookup, exactly as if Figma had emitted those
-// overrides under `$themes`. A role the file names must already exist, and
-// must not have that theme from Figma as well: two sources, one silently
-// winning, is the failure this refuses.
-export function mergeThemeOverrides(lookup: Record<string, SemanticEntry>, theme: string, tree: unknown): Record<string, SemanticEntry> {
-  const merged = { ...lookup };
+// `refresh` isn't in Figma yet, so its overrides come from a hand-authored
+// tokens/themes/refresh.json rather than semantic.json's `$themes`.
+function addThemeOverrides(lookup: Record<string, SemanticEntry>, theme: string, tree: unknown): Record<string, SemanticEntry> {
   walk(tree, [], (path, leaf) => {
     const key = path.join('.');
-    const entry = merged[key];
+    const entry = lookup[key];
     if (entry === undefined) {
       throw new UnknownTokenError(`${theme} theme overrides unknown design token ${JSON.stringify(key)}`);
     }
-    if (entry.themes[theme] !== undefined) {
-      throw new DuplicateTokenError(`design token ${JSON.stringify(key)} has a ${theme} override in both semantic.json and its theme file`);
-    }
-    merged[key] = Object.freeze({ value: entry.value, themes: Object.freeze({ ...entry.themes, [theme]: leaf.$value as string }) });
+    lookup[key] = Object.freeze({ ...entry, themes: Object.freeze({ ...entry.themes, [theme]: leaf.$value as string }) });
   });
-  return merged;
+  return lookup;
 }
 
 // What a caller gets for (role, theme): the theme's override when it has
@@ -197,7 +190,7 @@ export function makeSemanticBucket(lookup: Record<string, SemanticEntry>) {
 // reads are safe from multiple threads/requests with no init race.
 export const PRIMITIVES_LOOKUP: Record<string, string> = Object.freeze(buildLookup(primitives));
 export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(
-  mergeThemeOverrides(buildSemanticLookup(semantic), 'refresh', refreshTheme),
+  addThemeOverrides(buildSemanticLookup(semantic), 'refresh', refresh),
 );
 
 // Namespaced by token type (`colors`), then by layer (`primitives`,

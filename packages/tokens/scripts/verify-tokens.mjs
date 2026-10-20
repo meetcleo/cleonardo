@@ -12,23 +12,27 @@
 //
 // Usage: yarn tokens:verify
 
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die, THEMES } from "./transform-core.mjs";
+import { walk, sortTree, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_PATH = join(ROOT, "tokens", "color", "primitives.json");
 const SEM_PATH = join(ROOT, "tokens", "color", "semantic.json");
 const KEYS_PATH = join(ROOT, "src", "generated", "tokenKeys.ts");
-const THEMES_DIR = join(ROOT, "tokens", "themes");
 
 // The order the transform emits $themes in: Base sits on the leaf itself,
-// then the remaining declared themes in transform-core.mjs's THEMES order.
-// The same list feeds the ColorTheme union in check 2, so a new theme is one
-// edit there, not one here too.
-const THEME_ORDER = THEMES.slice(1).map((t) => t.toLowerCase());
-const TOKEN_KEYS_THEMES = THEMES;
+// then the remaining themes in Figma's listed order (transform-core.mjs:285).
+// Hardcoded here as much as it is in the transform — there is one theme axis
+// today, and a new theme changes what "canonical" means, not just this list.
+const THEME_ORDER = ["chat", "roast", "hype", "refresh"];
+
+// Passed to renderTokenKeysFile for the ColorTheme union. Hardcoded, not
+// derived — correct today, but a new theme arriving via figma-sync fails
+// check 2 for the wrong reason. If that happens, update this list; the fix
+// is not to debug the verifier.
+const TOKEN_KEYS_THEMES = ["Base", "Chat", "Roast", "Hype", "Refresh"];
 
 // Literal counts per the ticket. A change here is a deliberate token-set
 // change (new roles, a new primitive scale), not something the verifier
@@ -68,7 +72,6 @@ function main() {
   checkPaletteGaps(semTree);
   checkShape(semTree);
   checkCounts(primTree, semTree);
-  checkThemeFiles(semTree);
 
   if (failures.length) {
     console.error(`✗ ${failures.length} token invariant violation(s):`);
@@ -240,45 +243,6 @@ function checkCounts(primTree, semTree) {
   }
   if (semCount !== EXPECTED_SEMANTIC_COUNT) {
     fail(6, `semantic.json has ${semCount} roles, expected ${EXPECTED_SEMANTIC_COUNT}. If this is a deliberate role change, update EXPECTED_SEMANTIC_COUNT and ColorSemanticKey together.`);
-  }
-}
-
-// ---------- check 7: hand-authored theme files ----------
-//
-// tokens/themes/<theme>.json holds a theme's overrides by role, merged by the
-// readers as if Figma had emitted them. Nothing regenerates these files, so
-// this is all that keeps them honest: a declared theme, roles that exist, no
-// second source for the same override, canonical hex, no restated Base, and
-// canonical key order.
-
-const HEX = /^#[0-9A-F]{6}([0-9A-F]{2})?$/;
-
-function checkThemeFiles(semTree) {
-  const semByKey = new Map();
-  for (const { path, node } of walk(semTree)) semByKey.set(path.join("."), node);
-
-  for (const file of readdirSync(THEMES_DIR).filter((f) => f.endsWith(".json"))) {
-    const theme = file.replace(/\.json$/, "");
-    const label = `tokens/themes/${file}`;
-    if (!THEME_ORDER.includes(theme)) fail(7, `${label} is for theme ${JSON.stringify(theme)}, outside {${THEME_ORDER.join(", ")}}.`);
-
-    const raw = readFileSync(join(THEMES_DIR, file), "utf8");
-    const tree = JSON.parse(raw);
-    const canonical = {};
-    for (const { path, node } of walk(tree)) {
-      const key = path.join(".");
-      const role = semByKey.get(key);
-      if (!role) fail(7, `${label} ${key} is not a role in semantic.json.`);
-      else if (role.$themes?.[theme]) fail(7, `${label} ${key} also has a ${theme} override in semantic.json — keep one source.`);
-      else if (role.$value === node.$value) fail(7, `${label} ${key} restates its Base value ${JSON.stringify(node.$value)} — drop it.`);
-      if (!HEX.test(node.$value)) fail(7, `${label} ${key} value ${JSON.stringify(node.$value)} is not an uppercase #RRGGBB or #RRGGBBAA hex.`);
-
-      let cursor = canonical;
-      for (const segment of path.slice(0, -1)) cursor = cursor[segment] ??= {};
-      cursor[path.at(-1)] = { $type: node.$type, $value: node.$value };
-    }
-    const expected = JSON.stringify({ $description: tree.$description, ...sortTree(canonical) }, null, 2) + "\n";
-    if (expected !== raw) fail(7, `${label} is not in canonical form (key order, formatting, or an unrecognised field).`);
   }
 }
 

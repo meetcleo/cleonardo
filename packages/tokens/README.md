@@ -70,8 +70,6 @@ packages/tokens/
     color/
       primitives.json     # the palette — resolved hex, no themes
       semantic.json        # the roles — Base on the leaf, overrides under $themes
-    themes/
-      refresh.json         # hand-authored theme overrides — see "Hand-authored themes"
   scripts/
     transform.mjs          # CLI driver: reads the dump, writes the files
     transform-core.mjs     # all the logic — parsing, resolution, key derivation
@@ -119,23 +117,9 @@ The token *type* is not in the key — it's in the reader accessor (see [Consume
 
 ## Semantic namespaces
 
-Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The themes are `base`, `chat`, `roast`, `hype` and `refresh`. The first four mirror Cleo's product personalities; `refresh` is the upcoming visual refresh of the whole app, previewed alongside `base` until it replaces it. None of them are display modes: there is no light/dark axis here, and `roast` is already dark.
+Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The four themes — `base`, `chat`, `roast`, `hype` — mirror Cleo's product personalities. They are **not** display modes: there is no light/dark axis here, and `roast` is already dark.
 
-### Hand-authored themes
-
-A theme can also be a file: `tokens/themes/<theme>.json` holds that theme's overrides by role, in the same nested shape as `semantic.json`, with each leaf being `{ "$type": "color", "$value": "#…" }`. Both readers merge it into the lookup as if Figma had emitted those overrides under `$themes`, so `fetch(key, "refresh")` behaves like any other theme, and a role the file doesn't name resolves to its Base value.
-
-`tokens/themes/refresh.json` is the first one. It was seeded from the DES-550 rebrand spec, which changes seven primitives (`brown.50/100/600/700/800`, `green.700`, `alpha.dark.10`): every Base role that referenced one of them got the new value, which comes to 119 roles. It's extended role by role from here. Only colours live here; the rebrand's radius and font changes are handled in the consuming app.
-
-These files are **hand-authored, not generated**, so they live outside `tokens/color/`, where figma-sync would overwrite them. `tokens:verify` check 7 asserts the following for each file:
-- it's named for a declared theme;
-- every role exists in `semantic.json`;
-- no role also has that theme's override in `semantic.json` (there must be only one source);
-- every value is a canonical uppercase hex;
-- no entry restates the Base value;
-- the file is in canonical key order.
-
-`refresh` overrides only Base. A `roast`, `chat` or `hype` read still returns that theme's current values. To add a theme file: declare the theme in `THEMES` (see below), add `tokens/themes/<theme>.json`, and load it in both readers next to `refresh`.
+`refresh` is the upcoming rebrand. It isn't in Figma yet, so its overrides live in a hand-authored `tokens/themes/refresh.json` (same shape as `semantic.json`) instead of under `$themes`. A role it doesn't override resolves to Base.
 
 ## Updating from Figma
 
@@ -177,8 +161,6 @@ Config, not hardcoded, because a second token type arrives later:
 | --- | --- | --- | --- |
 | `Base Colors` | `tokens/color/primitives.json` | `COLOR` | none |
 | `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
-
-The theme segment must be one of the declared `THEMES` in `scripts/transform-core.mjs` (`Base`, `Chat`, `Roast`, `Hype`, `Refresh`), and the transform fails on any other. That list is also the `ColorTheme` union and the canonical `$themes` order, so a theme is available to consumers before it exists in Figma. Adding one means updating `THEMES` there, plus the reader allowlists in `src/CleoDesignTokens.ts` and `lib/cleo_design_tokens/semantic_bucket.rb`.
 
 Collections not listed are **ignored** (`Modes`, plus `Spacing`, `Radius`, `Type`, `Border`, `Surface Level`, `Image Crops` from the Component Library). Non-`COLOR` variables inside a listed collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables.
 

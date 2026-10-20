@@ -49,25 +49,15 @@ module CleoDesignTokens
     end
     private_class_method :flatten_tree
 
-    # Folds a hand-authored theme file (tokens/themes/<theme>.json — role ->
-    # override) into a semantic lookup, exactly as if Figma had emitted those
-    # overrides under `$themes`. A role the file names must already exist,
-    # and must not have that theme from Figma as well.
-    def self.merge_theme_overrides(lookup, theme, tree)
-      merged = lookup.dup
+    # `refresh` isn't in Figma yet, so its overrides come from a hand-authored
+    # tokens/themes/refresh.json rather than semantic.json's `$themes`.
+    def self.add_theme_overrides(lookup, theme, tree)
       TreeWalker.walk(tree) do |path, leaf|
         key = path.join(".")
-        entry = merged.fetch(key) do
-          raise UnknownTokenError, "#{theme} theme overrides unknown design token #{key.inspect}"
-        end
-        if entry.themes.key?(theme)
-          raise DuplicateTokenError,
-                "design token #{key.inspect} has a #{theme} override in both semantic.json and its theme file"
-        end
-
-        merged[key] = SemanticEntry.new(entry.value, entry.themes.merge(theme => leaf["$value"].freeze).freeze)
+        entry = lookup.fetch(key) { raise UnknownTokenError, "#{theme} theme overrides unknown design token #{key.inspect}" }
+        lookup[key] = SemanticEntry.new(entry.value, entry.themes.merge(theme => leaf["$value"].freeze).freeze)
       end
-      merged
+      lookup
     end
 
     def self.semantic_entry(leaf)

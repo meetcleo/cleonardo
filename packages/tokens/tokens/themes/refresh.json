@@ -1,5 +1,4 @@
 {
-  "$description": "The refresh theme's overrides of Base, by semantic role. Hand-authored, not generated from Figma: extend it role by role. Seeded from the DES-550 rebrand spec, which changes seven primitives (brown.50/100/600/700/800, green.700, alpha.dark.10), by giving every Base role that referenced one of them its new value. A role absent here resolves to its Base value.",
   "core": {
     "background": {
       "primary": {

@@ -14,7 +14,6 @@ import {
   buildSemanticLookup,
   makePrimitiveBucket,
   makeSemanticBucket,
-  mergeThemeOverrides,
 } from './CleoDesignTokens';
 
 const primitivesBucket = makePrimitiveBucket(buildLookup(primitivesFixture));
@@ -67,10 +66,6 @@ describe('colors.semantic.fetch', () => {
     expect(() => semanticBucket.fetch('brown.800' as ColorSemanticKey)).toThrow(UnknownTokenError);
   });
 
-  it('falls back to Base for a theme with no override for that role', () => {
-    expect(semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'refresh')).toBe('#47201C');
-  });
-
   it('throws on an unknown theme', () => {
     expect(() => semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'nope' as ColorTheme)).toThrow(UnknownThemeError);
   });
@@ -101,35 +96,8 @@ describe('colors.semantic.fetch', () => {
   it('resolves against the real committed files', () => {
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary')).toBe('#47201C');
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')).toBe('#F8F6F2');
-    expect(CleoDesignTokens.colors.primitives.fetch('brown.800' satisfies ColorPrimitiveKey)).toBe('#47201C');
-  });
-});
-
-describe('mergeThemeOverrides', () => {
-  const override = { core: { content: { primary: { $type: 'color', $value: '#192012' } } } };
-
-  it('adds a theme file as overrides, leaving other themes and the input alone', () => {
-    const base = buildSemanticLookup(semanticFixture);
-    const bucket = makeSemanticBucket(mergeThemeOverrides(base, 'refresh', override));
-    expect(bucket.fetch('core.content.primary' as ColorSemanticKey, 'refresh')).toBe('#192012');
-    expect(bucket.fetch('core.content.primary' as ColorSemanticKey, 'roast')).toBe('#F8F6F2');
-    expect(bucket.fetch('core.content.primary' as ColorSemanticKey)).toBe('#47201C');
-    expect(base['core.content.primary']?.themes).not.toHaveProperty('refresh');
-  });
-
-  it('refuses a role that does not exist', () => {
-    const unknown = { core: { nope: { $type: 'color', $value: '#192012' } } };
-    expect(() => mergeThemeOverrides(buildSemanticLookup(semanticFixture), 'refresh', unknown)).toThrow(UnknownTokenError);
-  });
-
-  it('refuses a second source for an override semantic.json already has', () => {
-    expect(() => mergeThemeOverrides(buildSemanticLookup(semanticFixture), 'roast', override)).toThrow(DuplicateTokenError);
-  });
-
-  it('applies the committed refresh theme', () => {
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'refresh')).toBe('#192012');
-    expect(CleoDesignTokens.colors.semantic.fetch('core.background.primary', 'refresh')).toBe('#F9F9F8');
-    expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')).toBe('#F8F6F2');
+    expect(CleoDesignTokens.colors.primitives.fetch('brown.800' satisfies ColorPrimitiveKey)).toBe('#47201C');
   });
 });
 

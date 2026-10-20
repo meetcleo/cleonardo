@@ -20,7 +20,7 @@ module CleoDesignTokens
   TOKENS_DIR = File.expand_path("../tokens/color", __dir__)
   PRIMITIVES_PATH = File.join(TOKENS_DIR, "primitives.json")
   SEMANTIC_PATH = File.join(TOKENS_DIR, "semantic.json")
-  REFRESH_THEME_PATH = File.expand_path("../tokens/themes/refresh.json", __dir__)
+  REFRESH_PATH = File.expand_path("../tokens/themes/refresh.json", __dir__)
   SPACING_BASE_UNIT_PX = 4
   RELATIVE_UNIT_BASE_PX = 16
   private_constant :SPACING_BASE_UNIT_PX, :RELATIVE_UNIT_BASE_PX
@@ -29,10 +29,10 @@ module CleoDesignTokens
   # concurrent access. Frozen from the moment the gem loads, so every reader
   # in every thread sees the same immutable lookup.
   PRIMITIVES_LOOKUP = LookupBuilder.build_lookup(JSON.parse(File.read(PRIMITIVES_PATH))).freeze
-  SEMANTIC_LOOKUP = LookupBuilder.merge_theme_overrides(
+  SEMANTIC_LOOKUP = LookupBuilder.add_theme_overrides(
     LookupBuilder.build_semantic_lookup(JSON.parse(File.read(SEMANTIC_PATH))),
     "refresh",
-    JSON.parse(File.read(REFRESH_THEME_PATH))
+    JSON.parse(File.read(REFRESH_PATH))
   ).freeze
 
   # Namespaced by token type (`colors`), then by layer (`primitives`,

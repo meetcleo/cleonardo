@@ -83,7 +83,8 @@ function run() {
   reportFatal(audit.ambiguousHex, "ambiguous hex recovery — 2+ primitives share the hex", (a) => `${a.path} (${a.hex}) matches: ${a.candidates.join(", ")}`,
     'Refusing to write. A missing $ref must only ever mean "genuine palette gap" — disambiguate in Figma.');
 
-  const keyUnions = { ...buildKeyUnions(primOut, semOut), themes };
+  // Refresh comes from tokens/themes/refresh.json, not the dump, but stays in ColorTheme.
+  const keyUnions = { ...buildKeyUnions(primOut, semOut), themes: themes.includes("Refresh") ? themes : [...themes, "Refresh"] };
 
   // ---------- diff vs. current on-disk ----------
 
