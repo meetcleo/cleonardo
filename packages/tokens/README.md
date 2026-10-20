@@ -36,7 +36,7 @@ Only `px`, `rem`, and `em` are supported units; another unit raises a clear erro
 
 Two files, both keyed by lowerCamel dot paths. Every `$value` is a fully-resolved hex string, so consumers never follow a reference.
 
-`tokens/color/primitives.json` — the palette. A leaf carries a value and nothing else:
+`tokens/color/primitives.json` — the palette. A single-palette leaf carries a value:
 
 ```json
 "brown": { "800": { "$type": "color", "$value": "#47201C" } }
@@ -61,6 +61,26 @@ Two files, both keyed by lowerCamel dot paths. Every `$value` is a fully-resolve
 - **No `$value` on the leaf at all** means the role exists in some themes but not Base — a Figma-side gap, reported by the transform rather than papered over. A themeless read raises.
 
 The theme is an **axis**, not part of the key: `core.content.primary` is one role with per-theme values, not four keys. That's why 1880 leaf entries collapse to 473 roles plus 336 overrides.
+
+### Primitive experiences
+
+When the primitive collection has multiple modes, `Current` supplies the existing leaf values, regardless of which mode Figma marks as its default. Other modes are normalised to lowerCamel names (`Cleo Refresh` → `cleoRefresh`) and stored as complete snapshots under `$experiences`:
+
+```json
+"brown": { "50": {
+  "$type": "color",
+  "$value": "#F8F6F2",
+  "$experiences": { "cleoRefresh": { "$value": "#F9F9F8" } }
+} }
+```
+
+Semantic aliases are resolved separately against each primitive palette. Each semantic `$experiences.cleoRefresh` snapshot contains its own Base `$value` / `$ref` and any `$themes` overrides relative to **that experience's Base**. For example, `background.primary` can resolve to `#F8F6F2` in Current and `#F9F9F8` in Refresh while both reference `brown.50`. A missing theme override in Refresh falls back to Refresh's Base; snapshots must not be merged with Current's theme overrides.
+
+All additional experiences are emitted on every primitive and semantic leaf, including unchanged values. An experience is independent of the Base/Chat/Roast/Hype theme axis. Multiple primitive modes require `Current`; colliding normalised experience names and missing per-mode primitive values fail validation. Single-palette dumps retain their existing output shape.
+
+Diffs and release notes identify snapshots as `brown.50@experience:cleoRefresh` and themed semantic entries as `background.primary@experience:cleoRefresh@roast`. The removal guard covers dropped experiences as well as roles and theme overrides. The verifier checks references against the corresponding experience palette and requires matching experience coverage on all leaves.
+
+The current TypeScript and Ruby readers continue reading Current's existing fields. This transform support preserves the alternate data; runtime experience selection (`configure`) belongs to a later change. Token fetch keys and their generated unions remain experience-free.
 
 ## Layout
 
@@ -157,13 +177,13 @@ Config, not hardcoded, because a second token type arrives later:
 
 | Figma collection | Output | Types | Theme axis |
 | --- | --- | --- | --- |
-| `Base Colors` (fallback: `Color Primitives`) | `tokens/color/primitives.json` | `COLOR` | none |
+| `Base Colors` (fallback: `Color Primitives`) | `tokens/color/primitives.json` | `COLOR` | none; primitive modes select the experience palette |
 | `Themes` | `tokens/color/semantic.json` | `COLOR` | first name segment, default `Base` |
 | `Color Roles` (fallback: `Modes`) | `tokens/color/semantic.json` | `COLOR` | Figma modes named `Base`, `Chat`, `Roast`, `Hype` |
 
 Each bucket selects the first available source: `Base Colors` before `Color Primitives`, and `Themes` before `Color Roles` before `Modes`. This keeps the original Colour Modes and Themes file exporting `Themes` while both its legacy and mode-based collections coexist. Unselected collections are **ignored**, including component-specific colour collections and spacing, radius, typography and border-width collections. Non-`COLOR` variables inside a selected collection are **skipped and counted**, not errors — `Themes` carries 18 `FLOAT` variables. Multiple collections with the selected name are rejected as ambiguous.
 
-For mode-based collections, every mode is resolved independently. The `Base` mode supplies the leaf value even if Figma's default mode is different; overrides are emitted only when the value or primitive reference differs. A missing `Base` mode, duplicate theme names (case-insensitive), or a missing value for any declared mode fails validation.
+For mode-based semantic collections, every mode is resolved independently, for each primitive experience. The `Base` mode supplies each snapshot's leaf value even if Figma's default mode is different; overrides are emitted only when the value or primitive reference differs. A missing `Base` mode, duplicate theme names (case-insensitive), or a missing value for any declared mode fails validation.
 
 Variable paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`, not `core.content.primary`. Supporting Cleonardo 2.0's format does not make its 104 roles a drop-in replacement for the existing 473-role vocabulary. The removal guard still blocks a sync that drops existing keys; reconcile those paths and coverage before replacing the published tokens. This format support does not add experiment selection to either reader.
 
@@ -171,7 +191,7 @@ Variable paths are preserved apart from casing normalisation: `content/primary` 
 
 Keys are written in a **canonical** order — alphabetical by group, numeric-aware within a group, so palette scales read `50, 100, … 1000` rather than `100, 1000, …, 50`. The order does not depend on the dump.
 
-That matters because the dump carries Figma's own variable order. Ordering used to be inherited from it, which made output stable for identical input but not canonical across inputs: a designer reordering variables in Figma produced a whole-file diff with no value changes, burying the real ones. Leaves keep their authored key order (`$type`, `$value`, `$ref`, `$themes`) and `$themes` follows the configured theme order — both already deterministic, and both easier to read than alphabetical.
+That matters because the dump carries Figma's own variable order. Ordering used to be inherited from it, which made output stable for identical input but not canonical across inputs: a designer reordering variables in Figma produced a whole-file diff with no value changes, burying the real ones. Leaves keep their authored key order (`$type`, `$value`, `$ref`, `$themes`, `$experiences`); `$themes` follows the configured theme order and `$experiences` uses numeric-aware name order.
 
 ### Change policy
 

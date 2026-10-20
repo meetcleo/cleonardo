@@ -208,6 +208,44 @@ function resolveColour({ variable, spec, modeId }, { dump, primHexByKey, primKey
 
 export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
   const dump = parseDump(rawDump, config);
+  const primitiveSpec = [...dump.bucketByCollectionId.values()].find((spec) => spec.bucket === "primitives");
+  const modes = primitiveSpec.collection.modes;
+  if (modes.length === 1) return buildPaletteTokens(rawDump, config, modes[0].modeId);
+
+  const current = modes.find((mode) => mode.name === "Current");
+  if (!current) die(`✗ ${primitiveSpec.collection.name} has multiple palette modes but no "Current" mode`, 2);
+  const experiences = modes.map((mode) => normaliseSegment(mode.name));
+  if (new Set(experiences).size !== experiences.length) {
+    die(`✗ ${primitiveSpec.collection.name} has duplicate experience mode names after normalisation`, 2);
+  }
+
+  // Each snapshot resolves aliases and literal recovery against its own palette.
+  // Theme overrides are relative to that snapshot's Base, never to Current.
+  const result = buildPaletteTokens(rawDump, config, current.modeId);
+  result.experienceAudits = { current: result.audit };
+  for (const mode of modes) {
+    if (mode.modeId === current.modeId) continue;
+    const experience = normaliseSegment(mode.name);
+    const palette = buildPaletteTokens(rawDump, config, mode.modeId);
+    result.experienceAudits[experience] = palette.audit;
+    for (const bucket of ["primOut", "semOut"]) {
+      const snapshots = new Map([...walk(palette[bucket])].map(({ path, node }) => [path.join("."), node]));
+      for (const { path, node } of walk(result[bucket])) {
+        const snapshot = { ...snapshots.get(path.join(".")) };
+        delete snapshot.$type;
+        delete snapshot.$description;
+        node.$experiences ??= {};
+        node.$experiences[experience] = snapshot;
+      }
+    }
+  }
+  result.primOut = sortTree(result.primOut);
+  result.semOut = sortTree(result.semOut);
+  return result;
+}
+
+function buildPaletteTokens(rawDump, config, primitiveModeId) {
+  const dump = parseDump(rawDump, config);
   const audit = newAudit();
   const selected = selectVariables(dump, audit);
 
@@ -228,7 +266,7 @@ export function buildTokens(rawDump, config = DEFAULT_CONFIG) {
     }
     primKeyOrigin.set(key, variable.name);
 
-    const hex = rgbaToHex(modeValue(variable, spec));
+    const hex = rgbaToHex(modeValue(variable, spec, primitiveModeId));
     const leaf = { $type: "color", $value: hex };
     if (variable.description) leaf.$description = variable.description;
     setPath(primOut, key.split("."), leaf);
@@ -359,12 +397,18 @@ export function naturalCompare(a, b) {
   return left.length - right.length;
 }
 
-/** Rebuild every group with its keys in canonical order. Leaves are returned untouched: their
- *  `$type` / `$value` / `$ref` / `$themes` order is set by the code that builds them, and
- *  `$themes` follows the configured theme order — both deterministic already, and both more
- *  readable than alphabetical. */
+/** Rebuild groups and experience names in canonical order. Leaf fields retain their build
+ *  order, and $themes follows the configured theme order. */
 export function sortTree(node) {
-  if (isLeaf(node)) return node;
+  if (isLeaf(node)) {
+    if (!node.$experiences) return node;
+    return {
+      ...node,
+      $experiences: Object.fromEntries(
+        Object.entries(node.$experiences).sort(([a], [b]) => naturalCompare(a, b)),
+      ),
+    };
+  }
   const out = {};
   for (const key of Object.keys(node).sort(naturalCompare)) out[key] = sortTree(node[key]);
   return out;
@@ -400,11 +444,17 @@ export function resolveTheme(leaf, theme) {
 // of the compared value: a re-point at an identical hex is a real intent change.
 export function flatten(tree) {
   const out = new Map();
-  for (const { path, node } of walk(tree)) {
-    const key = path.join(".");
+  function addEntry(key, node) {
     out.set(key, describe(node.$value, node.$ref));
     for (const [theme, override] of Object.entries(node.$themes ?? {})) {
       out.set(`${key}@${theme}`, describe(override.$value, override.$ref));
+    }
+  }
+  for (const { path, node } of walk(tree)) {
+    const key = path.join(".");
+    addEntry(key, node);
+    for (const [experience, snapshot] of Object.entries(node.$experiences ?? {})) {
+      addEntry(`${key}@experience:${experience}`, snapshot);
     }
   }
   return out;

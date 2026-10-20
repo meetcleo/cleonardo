@@ -175,6 +175,173 @@ describe('buildTokens', () => {
   });
 });
 
+describe('primitive experiences × semantic themes', () => {
+  it('preserves Current and Refresh independently of the default primitive mode', () => {
+    const { primOut, semOut, experienceAudits } = buildTokens(dump('experiences'));
+    expect(primOut.brown['800']).toEqual({
+      $type: 'color', $value: '#47201C', $experiences: { cleoRefresh: { $value: '#112233' } },
+    });
+    expect(semOut.content.primary.$value).toBe('#47201C');
+    expect(semOut.content.primary.$themes.roast.$value).toBe('#F8F6F2');
+    expect(semOut.content.primary.$experiences.cleoRefresh).toEqual({
+      $value: '#112233', $ref: 'brown.800',
+      $themes: {
+        roast: { $value: '#112233', $ref: 'brown.50' },
+        hype: { $value: '#112233', $ref: 'brown.50' },
+      },
+    });
+    expect(Object.keys(experienceAudits)).toEqual(['current', 'cleoRefresh']);
+  });
+
+  it('resolves every experience × theme pair against its own primitive palette', () => {
+    const result = buildTokens(dump('experiences'));
+    const semantics = result.semOut.content.primary;
+    for (const theme of ['base', 'chat', 'roast', 'hype']) {
+      for (const snapshot of [semantics, semantics.$experiences.cleoRefresh]) {
+        const value = resolveTheme(snapshot, theme);
+        const primitive = value.$ref === 'brown.800' ? result.primOut.brown['800'] : result.primOut.brown['50'];
+        const palette = snapshot === semantics ? primitive : primitive.$experiences.cleoRefresh;
+        expect(value.$value).toBe(palette.$value);
+      }
+    }
+  });
+
+  it('does not inherit a Current theme override when Refresh resolves to its own Base', () => {
+    const source = dump('experiences');
+    source.variables[1].valuesByMode.refresh = source.variables[1].valuesByMode.value;
+    source.variables[2].valuesByMode.chat = source.variables[0].valuesByMode.refresh;
+    const role = buildTokens(source).semOut.content.primary;
+    expect(role.$themes.chat).toEqual({ $value: '#112233' });
+    const refresh = role.$experiences.cleoRefresh;
+    expect(refresh.$themes).not.toHaveProperty('chat');
+    expect(resolveTheme(refresh, 'chat')).toEqual({ $value: '#112233', $ref: 'brown.800' });
+  });
+
+  it('rejects ambiguous and missing Current experience modes', () => {
+    const source = dump('experiences');
+    source.collections[0].modes[0].name = 'Legacy';
+    expect(() => buildTokens(source)).toThrow(/no "Current" mode/);
+    source.collections[0].modes[0].name = 'Current';
+    source.collections[0].modes.push({ modeId: 'other', name: 'cleoRefresh' });
+    expect(() => buildTokens(source)).toThrow(/duplicate experience mode names/);
+  });
+
+  it('rejects a primitive missing its Refresh value', () => {
+    const source = dump('experiences');
+    delete source.variables[0].valuesByMode.refresh;
+    expect(() => buildTokens(source)).toThrow(/brown\/800 has no value for mode refresh/);
+  });
+
+  it('includes Refresh-only changes and removals in the diff without duplicating token keys', () => {
+    const before = buildTokens(dump('experiences'));
+    const source = dump('experiences');
+    source.variables[0].valuesByMode.refresh.r = 1;
+    const after = buildTokens(source);
+    expect([...diffFlat(flatten(before.primOut), flatten(after.primOut)).changed.keys()])
+      .toEqual(['brown.800@experience:cleoRefresh']);
+    expect(diffFlat(flatten(before.semOut), flatten(after.semOut)).changed.has('content.primary@experience:cleoRefresh')).toBe(true);
+    const removed = diffFlat(flatten(before.primOut), flatten(buildTokens(dump('modes')).primOut));
+    expect([...removed.removed.keys()]).toEqual(['brown.50@experience:cleoRefresh', 'brown.800@experience:cleoRefresh']);
+    expect(buildKeyUnions(before.primOut, before.semOut)).toEqual(buildKeyUnions(after.primOut, after.semOut));
+  });
+
+  it('writes both experiences and blocks removing one through the CLI', () => {
+    const dir = tempProject('experiences');
+    expect(runCli(dir).exitCode).toBe(0);
+    const file = join(dir, 'tokens/color/semantic.json');
+    const original = readFileSync(file, 'utf8');
+    expect(JSON.parse(original).content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
+    expect(runCli(dir).exitCode).toBe(0);
+    expect(readFileSync(file, 'utf8')).toBe(original);
+    cpSync(join(DUMPS, 'modes.json'), join(dir, 'figma-exports/figma-dump.json'));
+    expect(runCli(dir).exitCode).toBe(1);
+    expect(readFileSync(file, 'utf8')).toBe(original);
+  });
+
+  it('fails the CLI for ambiguity present only in the Refresh palette', () => {
+    const dir = tempProject('experiences');
+    const source = dump('experiences');
+    for (const variable of source.variables.filter((v: { collectionId: string }) => v.collectionId === 'palette')) {
+      variable.valuesByMode.refresh = source.variables[0].valuesByMode.value;
+    }
+    source.variables[2].valuesByMode.base = source.variables[0].valuesByMode.value;
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const result = runCli(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toContain('Validating experience: cleoRefresh');
+    expect(existsSync(join(dir, 'tokens/color/primitives.json'))).toBe(false);
+  });
+
+  it('keeps output stable when primitive modes are reordered', () => {
+    const source = dump('experiences');
+    const expected = buildTokens(source);
+    source.collections[0].modes.reverse();
+    expect(buildTokens(source).primOut).toEqual(expected.primOut);
+    expect(buildTokens(source).semOut).toEqual(expected.semOut);
+  });
+});
+
+describe('experience snapshot verification', () => {
+  function generatedProject() {
+    const dir = tempProject('full');
+    cpSync(join(HERE, 'verify-tokens.mjs'), join(dir, 'scripts/verify-tokens.mjs'));
+    const source = dump('full');
+    const palette = source.collections.find((c: { name: string }) => c.name === 'Base Colors');
+    palette.modes = [{ modeId: palette.defaultModeId, name: 'Current' }, { modeId: 'refresh', name: 'Cleo Refresh' }];
+    for (const variable of source.variables.filter((v: { collectionId: string }) => v.collectionId === palette.id)) {
+      variable.valuesByMode.refresh = { ...variable.valuesByMode[palette.defaultModeId] };
+      if (variable.name.toLowerCase() === 'brown/800') {
+        variable.valuesByMode.refresh = { r: 18 / 255, g: 52 / 255, b: 86 / 255, a: 1 };
+      }
+    }
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    expect(runCli(dir).exitCode).toBe(0);
+    return dir;
+  }
+
+  function verify(dir: string) {
+    const result = spawnSync('node', [join(dir, 'scripts/verify-tokens.mjs')], { encoding: 'utf8' });
+    return { exitCode: result.status, output: result.stderr };
+  }
+
+  it('accepts generated experience snapshots with the existing vocabulary and known gaps', () => {
+    expect(verify(generatedProject()).exitCode).toBe(0);
+  });
+
+  it('rejects a mismatched hex in a Refresh theme override', () => {
+    const dir = generatedProject();
+    const file = join(dir, 'tokens/color/semantic.json');
+    const tree = JSON.parse(readFileSync(file, 'utf8'));
+    tree.core.content.primary.$experiences.cleoRefresh.$themes.roast.$value = '#FFFFFF';
+    writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
+    const result = verify(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toContain('core.content.primary@experience:cleoRefresh@roast $value');
+  });
+
+  it('rejects an incomplete palette snapshot instead of falling back to Current', () => {
+    const dir = generatedProject();
+    const file = join(dir, 'tokens/color/primitives.json');
+    const tree = JSON.parse(readFileSync(file, 'utf8'));
+    delete tree.brown['800'].$experiences;
+    writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
+    const result = verify(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toContain('brown.800 has inconsistent experience snapshots');
+  });
+
+  it('rejects an unknown theme inside Refresh', () => {
+    const dir = generatedProject();
+    const file = join(dir, 'tokens/color/semantic.json');
+    const tree = JSON.parse(readFileSync(file, 'utf8'));
+    tree.core.content.primary.$experiences.cleoRefresh.$themes.unknown = { $value: '#123456', $ref: 'brown.800' };
+    writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
+    const result = verify(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toContain('core.content.primary@experience:cleoRefresh@unknown uses a theme outside');
+  });
+});
+
 describe('mode-based colour collections', () => {
   it('resolves every mode, using Base even when the collection defaults to Roast', () => {
     const { primOut, semOut, themes, audit } = buildTokens(dump('modes'));
