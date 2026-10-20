@@ -46,6 +46,10 @@ describe('colors.semantic.fetch', () => {
     expect(semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'hype')).toBe('#47201C');
   });
 
+  it('falls back to Base for refresh until Figma gives it overrides', () => {
+    expect(semanticBucket.fetch('core.content.primary' as ColorSemanticKey, 'refresh')).toBe('#47201C');
+  });
+
   it('raises on a themeless read of a role with no Base value', () => {
     expect(() => semanticBucket.fetch('core.border.level0' as ColorSemanticKey)).toThrow(UnknownTokenError);
   });
@@ -96,7 +100,6 @@ describe('colors.semantic.fetch', () => {
   it('resolves against the real committed files', () => {
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary')).toBe('#47201C');
     expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'roast')).toBe('#F8F6F2');
-    expect(CleoDesignTokens.colors.semantic.fetch('core.content.primary', 'refresh')).toBe('#192012');
     expect(CleoDesignTokens.colors.primitives.fetch('brown.800' satisfies ColorPrimitiveKey)).toBe('#47201C');
   });
 });

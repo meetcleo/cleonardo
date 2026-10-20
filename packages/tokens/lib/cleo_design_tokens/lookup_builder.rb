@@ -49,17 +49,6 @@ module CleoDesignTokens
     end
     private_class_method :flatten_tree
 
-    # `refresh` isn't in Figma yet, so its overrides come from a hand-authored
-    # tokens/themes/refresh.json rather than semantic.json's `$themes`.
-    def self.add_theme_overrides(lookup, theme, tree)
-      TreeWalker.walk(tree) do |path, leaf|
-        key = path.join(".")
-        entry = lookup.fetch(key) { raise UnknownTokenError, "#{theme} theme overrides unknown design token #{key.inspect}" }
-        lookup[key] = SemanticEntry.new(entry.value, entry.themes.merge(theme => leaf["$value"].freeze).freeze)
-      end
-      lookup
-    end
-
     def self.semantic_entry(leaf)
       themes = {}
       (leaf["$themes"] || {}).each { |theme, override| themes[theme] = override["$value"].freeze }

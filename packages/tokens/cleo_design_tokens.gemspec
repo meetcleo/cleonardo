@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   # too — not data, but `version.rb` reads it as the version's single
   # source of truth, so it has to be present in an installed gem as well
   # as this source checkout.
-  spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + Dir["tokens/themes/*.json"] + ["package.json"]
+  spec.files = Dir["lib/**/*.rb"] + Dir["tokens/color/*.json"] + ["package.json"]
   spec.require_paths = ["lib"]
 
   # The release workflow is the only intended publisher. Restrict pushes to the public registry.

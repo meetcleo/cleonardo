@@ -117,9 +117,9 @@ The token *type* is not in the key — it's in the reader accessor (see [Consume
 
 ## Semantic namespaces
 
-Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The four themes — `base`, `chat`, `roast`, `hype` — mirror Cleo's product personalities. They are **not** display modes: there is no light/dark axis here, and `roast` is already dark.
+Top-level groups are `core`, `extension`, `effects`, `feature`, `surface` and `ui`. The themes are `base`, `chat`, `roast`, `hype` and `refresh`. The first four mirror Cleo's product personalities; `refresh` is the upcoming rebrand, previewed alongside `base` until it replaces it. None are display modes: there is no light/dark axis here, and `roast` is already dark.
 
-`refresh` is the upcoming rebrand. It isn't in Figma yet, so its overrides live in a hand-authored `tokens/themes/refresh.json` (same shape as `semantic.json`) instead of under `$themes`. A role it doesn't override resolves to Base.
+`refresh` comes from Figma like the others, as `Refresh/...` variables in the `Themes` collection, listed after `Hype`. Until those land, every `refresh` read resolves to Base.
 
 ## Updating from Figma
 

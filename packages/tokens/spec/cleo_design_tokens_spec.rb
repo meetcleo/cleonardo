@@ -35,6 +35,10 @@ RSpec.describe CleoDesignTokens do
       expect(semantic_bucket.fetch("core.content.primary", theme: :hype)).to eq("#47201C")
     end
 
+    it "falls back to Base for refresh until Figma gives it overrides" do
+      expect(semantic_bucket.fetch("core.content.primary", theme: :refresh)).to eq("#47201C")
+    end
+
     it "raises on a themeless read of a role with no Base value" do
       expect { semantic_bucket.fetch("core.border.level0") }.to raise_error(CleoDesignTokens::UnknownTokenError)
     end
@@ -64,7 +68,6 @@ RSpec.describe CleoDesignTokens do
     it "resolves against the real committed files" do
       expect(described_class.colors.semantic.fetch("core.content.primary")).to eq("#47201C")
       expect(described_class.colors.semantic.fetch("core.content.primary", theme: :roast)).to eq("#F8F6F2")
-      expect(described_class.colors.semantic.fetch("core.content.primary", theme: :refresh)).to eq("#192012")
       expect(described_class.colors.primitives.fetch("brown.800")).to eq("#47201C")
     end
   end

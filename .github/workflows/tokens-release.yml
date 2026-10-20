@@ -21,7 +21,6 @@ on:
     # though it's in the npm files list too: a docs-only edit doesn't warrant cutting a release.
     paths:
       - 'packages/tokens/tokens/color/**'
-      - 'packages/tokens/tokens/themes/**'
       - 'packages/tokens/lib/**'
       - 'packages/tokens/src/**'
       - 'packages/tokens/package.json'
