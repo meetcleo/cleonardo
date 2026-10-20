@@ -36,6 +36,7 @@ function tempProject(fixture: string) {
   mkdirSync(join(dir, 'figma-exports'), { recursive: true });
   cpSync(TRANSFORM_SCRIPT, join(dir, 'scripts', 'transform.mjs'));
   cpSync(join(HERE, 'transform-core.mjs'), join(dir, 'scripts', 'transform-core.mjs'));
+  cpSync(join(HERE, 'semantic-contract.json'), join(dir, 'scripts', 'semantic-contract.json'));
   cpSync(join(DUMPS, `${fixture}.json`), join(dir, 'figma-exports', 'figma-dump.json'));
   return dir;
 }
@@ -339,6 +340,134 @@ describe('experience snapshot verification', () => {
     const result = verify(dir);
     expect(result.exitCode).toBe(2);
     expect(result.output).toContain('core.content.primary@experience:cleoRefresh@unknown uses a theme outside');
+  });
+});
+
+describe('Color Roles vocabulary migration', () => {
+  function migrationProject() {
+    const dir = tempProject('full');
+    expect(runCli(dir).exitCode).toBe(0);
+    cpSync(join(HERE, 'verify-tokens.mjs'), join(dir, 'scripts/verify-tokens.mjs'));
+    const legacy = dump('full');
+    const palette = legacy.collections.find((c: { name: string }) => c.name === 'Base Colors');
+    const primitives = legacy.variables.filter((v: { collectionId: string }) => v.collectionId === palette.id);
+    palette.name = 'Color Primitives';
+    palette.modes = [{ modeId: palette.defaultModeId, name: 'Current' }, { modeId: 'refresh', name: 'Cleo Refresh' }];
+    for (const primitive of primitives) {
+      primitive.valuesByMode.refresh = { ...primitive.valuesByMode[palette.defaultModeId] };
+      if (primitive.name.toLowerCase() === 'brown/800') primitive.valuesByMode.refresh = { r: 17 / 255, g: 34 / 255, b: 51 / 255, a: 1 };
+    }
+    const modern = dump('experiences');
+    modern.collections[1].modes.sort((a: { name: string }, b: { name: string }) =>
+      ['Base', 'Chat', 'Roast', 'Hype'].indexOf(a.name) - ['Base', 'Chat', 'Roast', 'Hype'].indexOf(b.name));
+    const ids = new Map(modern.variables.filter((v: { collectionId: string }) => v.collectionId === 'palette')
+      .map((v: { id: string; name: string }) => [v.id, primitives.find((p: { name: string }) => p.name.toLowerCase() === v.name).id]));
+    const roles = modern.variables.filter((v: { collectionId: string }) => v.collectionId === 'roles');
+    for (const role of roles) {
+      role.description = `Token: core.${role.name.replaceAll('/', '.')}`;
+      for (const value of Object.values(role.valuesByMode) as { id: string }[]) value.id = ids.get(value.id);
+    }
+    const source = { ...modern, collections: [palette, modern.collections[1]], variables: [...primitives, ...roles] };
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const previous = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    return { dir, source, previous };
+  }
+
+  it('maps renamed roles and retains every existing Current key and value through the real CLI', () => {
+    const { dir, previous } = migrationProject();
+    const result = runCli(dir);
+    expect(result.exitCode, result.output.slice(-1500)).toBe(0);
+    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const oldLeaves = [...walk(previous)];
+    const newLeaves = [...walk(tree)];
+    expect(newLeaves).toHaveLength(473);
+    for (let i = 0; i < oldLeaves.length; i++) {
+      const { $experiences, ...current } = newLeaves[i].node;
+      expect(current).toEqual(oldLeaves[i].node);
+      expect($experiences).toHaveProperty('cleoRefresh');
+    }
+    expect(tree).not.toHaveProperty('content');
+    expect(tree.core.content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
+    const fallback = newLeaves.find(({ path, node }) => path.join('.') !== 'core.content.primary' && node.$ref === 'brown.800');
+    expect(fallback.node.$experiences.cleoRefresh.$value).toBe('#112233');
+    const verified = spawnSync('node', [join(dir, 'scripts/verify-tokens.mjs')], { encoding: 'utf8' });
+    expect(verified.status, verified.stderr).toBe(0);
+    const first = readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8');
+    expect(runCli(dir).exitCode).toBe(0);
+    expect(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8')).toBe(first);
+  });
+
+  it('keeps released Current values when the new semantic definitions differ', () => {
+    const { dir, source, previous } = migrationProject();
+    const roles = source.variables.filter((v: { collectionId: string }) => v.collectionId === 'roles');
+    roles[0].valuesByMode.base = { ...roles[1].valuesByMode.base };
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const result = runCli(dir);
+    expect(result.exitCode, result.output.slice(-1500)).toBe(0);
+    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    expect(tree.core.content.primary.$value).toBe(previous.core.content.primary.$value);
+    expect(tree.core.content.primary.$experiences.cleoRefresh.$ref).toBe('brown.50');
+    expect(result.output).toContain('preserved Current');
+  });
+
+  it.each(['missing', 'unknown', 'duplicate'])('rejects %s compatibility mappings without writing', (kind) => {
+    const { dir, source } = migrationProject();
+    const roles = source.variables.filter((v: { collectionId: string }) => v.collectionId === 'roles');
+    if (kind === 'missing') delete roles[0].description;
+    if (kind === 'unknown') roles[0].description = 'Token: unknown.role';
+    if (kind === 'duplicate') {
+      roles[1].name = 'background/primary';
+      roles[1].description = roles[0].description;
+    }
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const file = join(dir, 'tokens/color/semantic.json');
+    const before = readFileSync(file, 'utf8');
+    const result = runCli(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toMatch(/mapping/);
+    expect(readFileSync(file, 'utf8')).toBe(before);
+  });
+
+  it('rejects a Current primitive change during the experience migration', () => {
+    const { dir, source } = migrationProject();
+    const palette = source.collections[0];
+    source.variables[0].valuesByMode[palette.defaultModeId].r = 1;
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const result = runCli(dir);
+    expect(result.exitCode).toBe(2);
+    expect(result.output).toContain('Current primitive');
+  });
+
+  it('preserves an additional role whose copied description shares a canonical mapping', () => {
+    const { dir, source } = migrationProject();
+    const roles = source.variables.filter((v: { collectionId: string }) => v.collectionId === 'roles');
+    roles[1].name = 'background/navbar';
+    roles[1].description = roles[0].description;
+    writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
+    const result = runCli(dir);
+    expect(result.exitCode, result.output.slice(-1500)).toBe(0);
+    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    expect([...walk(tree)]).toHaveLength(474);
+    expect(tree.background.navbar.$experiences.cleoRefresh).toBeDefined();
+    expect(tree.core.content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
+    const verified = spawnSync('node', [join(dir, 'scripts/verify-tokens.mjs')], { encoding: 'utf8' });
+    expect(verified.status, verified.stderr).toBe(0);
+    const first = readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8');
+    expect(runCli(dir).exitCode).toBe(0);
+    expect(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8')).toBe(first);
+  });
+
+  it('still requires every published key when an addition keeps the overall count unchanged', () => {
+    const { dir } = migrationProject();
+    expect(runCli(dir).exitCode).toBe(0);
+    const file = join(dir, 'tokens/color/semantic.json');
+    const tree = JSON.parse(readFileSync(file, 'utf8'));
+    tree.core.content.newPrimary = tree.core.content.primary;
+    delete tree.core.content.primary;
+    writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
+    const verified = spawnSync('node', [join(dir, 'scripts/verify-tokens.mjs')], { encoding: 'utf8' });
+    expect(verified.status).toBe(2);
+    expect(verified.stderr).toContain('missing required published key "core.content.primary"');
   });
 });
 

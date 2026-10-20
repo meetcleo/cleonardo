@@ -375,6 +375,87 @@ function buildPaletteTokens(rawDump, config, primitiveModeId) {
   return { primOut: sortTree(primOut), semOut: sortTree(semOut), themes, audit };
 }
 
+// Color Roles is a partial replacement for the published vocabulary. Its Token:
+// descriptions explicitly identify the existing keys; missing legacy roles still
+// need to resolve for released clients. Current remains the compatibility baseline.
+export function preserveSemanticVocabulary(result, previousPrimitives, previousSemantic) {
+  const primitives = new Map([...walk(result.primOut)].map(({ path, node }) => [path.join("."), node]));
+  const previous = new Map([...walk(previousSemantic)].map(({ path, node }) => [path.join("."), node]));
+  if (!previous.size) return;
+
+  for (const { path, node } of walk(previousPrimitives)) {
+    const key = path.join(".");
+    if (primitives.get(key)?.$value !== node.$value) {
+      die(`✗ Current primitive ${JSON.stringify(key)} changed during the Color Roles migration — migrate Current palette changes separately`, 2);
+    }
+  }
+
+  const mappings = new Map();
+  const additions = new Map();
+  const candidates = new Map();
+  let preservedCurrent = 0;
+  for (const { path, node } of walk(result.semOut)) {
+    const source = path.join(".");
+    const target = previous.has(source) ? source : node.$description?.match(/^Token:\s*(\S+)\s*$/)?.[1] ?? source;
+    if (!previous.has(target)) {
+      die(`✗ Color Roles mapping for ${JSON.stringify(source)} must identify an existing key via a "Token: <key>" description; got ${JSON.stringify(target)}`, 2);
+    }
+    if (!candidates.has(target)) candidates.set(target, []);
+    candidates.get(target).push({ source, node });
+  }
+  for (const [target, roles] of candidates) {
+    const canonical = roles.filter(({ source }) => source.split(".").at(-1) === target.split(".").at(-1));
+    if (roles.length > 1 && canonical.length !== 1) {
+      die(`✗ ambiguous Color Roles mapping for ${JSON.stringify(target)}`, 2);
+    }
+    const selected = roles.length === 1 ? roles[0] : canonical[0];
+    mappings.set(target, selected.node);
+    for (const role of roles) {
+      if (role !== selected) additions.set(role.source, role.node);
+    }
+    for (const theme of result.themes) {
+      const before = resolveTheme(previous.get(target), theme.toLowerCase());
+      const after = resolveTheme(selected.node, theme.toLowerCase());
+      if (before?.$value !== after?.$value || before?.$ref !== after?.$ref) preservedCurrent++;
+    }
+  }
+
+  function rebind(entry, experience) {
+    if (entry.$value === undefined) return undefined;
+    const value = entry.$ref === undefined ? entry.$value : primitives.get(entry.$ref)?.$experiences?.[experience]?.$value;
+    if (value === undefined) {
+      die(`✗ retained semantic reference ${JSON.stringify(entry.$ref)} has no primitive value for experience ${JSON.stringify(experience)}`, 2);
+    }
+    return { $value: value, ...(entry.$ref === undefined ? {} : { $ref: entry.$ref }) };
+  }
+
+  function project(node, experience) {
+    const snapshot = rebind(node, experience) ?? {};
+    const overrides = {};
+    for (const [theme, entry] of Object.entries(node.$themes ?? {})) {
+      const value = rebind(entry, experience);
+      if (value.$value !== snapshot.$value || value.$ref !== snapshot.$ref) overrides[theme] = value;
+    }
+    if (Object.keys(overrides).length) snapshot.$themes = overrides;
+    return snapshot;
+  }
+
+  const semOut = {};
+  const experiences = Object.keys(result.experienceAudits).filter((experience) => experience !== "current");
+  for (const [key, node] of previous) {
+    const current = { ...node };
+    delete current.$experiences;
+    current.$experiences = Object.fromEntries(experiences.map((experience) => [
+      experience,
+      mappings.get(key)?.$experiences?.[experience] ?? project(node, experience),
+    ]));
+    setPath(semOut, key.split("."), current);
+  }
+  for (const [key, node] of additions) setPath(semOut, key.split("."), node);
+  result.semOut = sortTree(semOut);
+  result.compatibility = { mapped: mappings.size, retained: previous.size - mappings.size, added: additions.size, preservedCurrent };
+}
+
 // ---------- canonical ordering ----------
 //
 // Key order used to be inherited from the dump, which is Figma's own variable order. That made

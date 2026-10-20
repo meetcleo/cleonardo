@@ -34,11 +34,10 @@ const THEME_ORDER = ["chat", "roast", "hype"];
 // is not to debug the verifier.
 const TOKEN_KEYS_THEMES = ["Base", "Chat", "Roast", "Hype"];
 
-// Literal counts per the ticket. A change here is a deliberate token-set
-// change (new roles, a new primitive scale), not something the verifier
-// should infer — update alongside ColorPrimitiveKey / ColorSemanticKey.
+// Primitive count remains fixed. The semantic contract protects every published
+// key individually while permitting new roles from the replacement vocabulary.
 const EXPECTED_PRIMITIVE_COUNT = 106;
-const EXPECTED_SEMANTIC_COUNT = 473;
+const REQUIRED_SEMANTIC_KEYS = JSON.parse(readFileSync(join(ROOT, "scripts", "semantic-contract.json"), "utf8"));
 
 // Semantic entries with a $value and no $ref: a genuine palette gap, not a
 // hand-edit missing its reference. Pins the hex too, so editing an
@@ -84,7 +83,7 @@ function main() {
     );
   }
 
-  console.error(`✓ ${EXPECTED_PRIMITIVE_COUNT} primitives, ${EXPECTED_SEMANTIC_COUNT} semantic roles — invariants hold.`);
+  console.error(`✓ ${EXPECTED_PRIMITIVE_COUNT} primitives, ${[...walk(semTree)].length} semantic roles — invariants hold.`);
   console.error(`  palette-gap allowlist: ${Object.keys(PALETTE_GAP_ALLOWLIST).join(", ")}`);
   console.error(`  missing-Base allowlist: ${[...MISSING_BASE_ALLOWLIST].join(", ")}`);
 }
@@ -287,12 +286,12 @@ function checkExperiences(primTree, semTree) {
 
 function checkCounts(primTree, semTree) {
   const primCount = [...walk(primTree)].length;
-  const semCount = [...walk(semTree)].length;
   if (primCount !== EXPECTED_PRIMITIVE_COUNT) {
     fail(6, `primitives.json has ${primCount} leaves, expected ${EXPECTED_PRIMITIVE_COUNT}. If this is a deliberate palette change, update EXPECTED_PRIMITIVE_COUNT and ColorPrimitiveKey together.`);
   }
-  if (semCount !== EXPECTED_SEMANTIC_COUNT) {
-    fail(6, `semantic.json has ${semCount} roles, expected ${EXPECTED_SEMANTIC_COUNT}. If this is a deliberate role change, update EXPECTED_SEMANTIC_COUNT and ColorSemanticKey together.`);
+  const semanticKeys = new Set([...walk(semTree)].map(({ path }) => path.join(".")));
+  for (const key of REQUIRED_SEMANTIC_KEYS) {
+    if (!semanticKeys.has(key)) fail(6, `semantic.json is missing required published key ${JSON.stringify(key)}.`);
   }
 }
 
