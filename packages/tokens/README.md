@@ -80,7 +80,7 @@ All additional experiences are emitted on every primitive and semantic leaf, inc
 
 Diffs and release notes identify snapshots as `brown.50@experience:cleoRefresh` and themed semantic entries as `background.primary@experience:cleoRefresh@roast`. The removal guard covers dropped experiences as well as roles and theme overrides. The verifier checks references against the corresponding experience palette and requires matching experience coverage on all leaves.
 
-The current TypeScript and Ruby readers continue reading Current's existing fields. This transform support preserves the alternate data; runtime experience selection (`configure`) belongs to a later change. Token fetch keys and their generated unions remain experience-free.
+The TypeScript reader defaults to Current and supports experience selection through `configure` (below). The Ruby reader continues reading Current's existing fields. Token fetch keys and their generated unions remain experience-free.
 
 ## Layout
 
@@ -241,6 +241,28 @@ Editing an allowlisted token, or letting an allowlist entry go stale (the gap ge
 **`ruby-test` covers the Ruby reader** (`cleo_design_tokens`, COREEXP-264) — `bundle exec rspec` against its own spec suite. Independent of `verify`: it doesn't touch `tokens/color` or `src/generated`, so it has no layer 1, and `figma-sync.yml` has no equivalent step, since a sync PR never touches `lib/` or `spec/`.
 
 ## Consumers
+
+### Configuring the NPM experience
+
+```ts
+import { CleoDesignTokens } from '@meetcleo/design-tokens';
+
+const { fetch: fetchSemantic } = CleoDesignTokens.colors.semantic;
+
+CleoDesignTokens.configure({ experience: 'refresh' });
+fetchSemantic('core.content.primary'); // Reads $experiences.cleoRefresh
+fetchSemantic('core.content.primary', 'roast'); // Refresh's Roast override or Refresh Base
+
+CleoDesignTokens.configure({ experience: 'current' }); // Reset on logout/account switching
+```
+
+`experience` accepts `'current'` (the default) or `'refresh'`. The public `refresh` name selects the Figma `Cleo Refresh` snapshots stored as `cleoRefresh`. The application owns experiment bucketing; the package receives the chosen experience. Configuration is synchronous and applies to subsequent primitive and semantic fetches, including functions destructured before configuration. Spacing is unaffected.
+
+Refresh requires synced snapshots on every primitive and semantic role in the installed package. Unsupported experiences, missing snapshots or incomplete values throw `UnknownExperienceError`. Both palettes are validated before switching, so a failed configuration leaves the previous selection intact. Successfully built palettes are cached, and resetting to Current restores the original values. The exported `PRIMITIVES_LOOKUP` and `SEMANTIC_LOOKUP` constants remain Current-only snapshots.
+
+Already-resolved hex strings do not change. The mobile app must configure after resolving its bucket and then rebuild its `colorRoles` / theme-provider value. Configuration does not trigger React renders. App-init integration is a separate change.
+
+This configuration is shared by all callers of the loaded NPM module instance. It is intended for the mobile app's active user; concurrent server users need scoped readers. The RubyGem has no global configure API in this change.
 
 The readers (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) are the canonical way to read a value — never import `tokens/color/*.json` directly. They're namespaced by token type, then by layer, with the theme passed alongside the key:
 
