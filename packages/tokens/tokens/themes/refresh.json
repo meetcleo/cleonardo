@@ -1,0 +1,583 @@
+{
+  "$description": "The refresh theme's overrides of Base, by semantic role. Hand-authored, not generated from Figma: extend it role by role. Seeded from the DES-550 rebrand spec, which changes seven primitives (brown.50/100/600/700/800, green.700, alpha.dark.10), by giving every Base role that referenced one of them its new value. A role absent here resolves to its Base value.",
+  "core": {
+    "background": {
+      "primary": {
+        "$type": "color",
+        "$value": "#F9F9F8"
+      },
+      "primaryInverse": {
+        "$type": "color",
+        "$value": "#192012"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "#1920121F"
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "#1920121F"
+      },
+      "opaqueLight": {
+        "$type": "color",
+        "$value": "#19201214"
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "#192012"
+      }
+    },
+    "content": {
+      "primary": {
+        "$type": "color",
+        "$value": "#192012"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "#192012A6"
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "#19201299"
+      }
+    }
+  },
+  "effects": {
+    "border": {
+      "shimmerStart": {
+        "$type": "color",
+        "$value": "#192012"
+      }
+    }
+  },
+  "extension": {
+    "background": {
+      "accentDark": {
+        "$type": "color",
+        "$value": "#192012"
+      },
+      "accentLight": {
+        "$type": "color",
+        "$value": "#1920121F"
+      },
+      "accentMid": {
+        "$type": "color",
+        "$value": "#192012A6"
+      },
+      "dataVisSecondary": {
+        "$type": "color",
+        "$value": "#192012"
+      },
+      "dataVisTertiary": {
+        "$type": "color",
+        "$value": "#19201299"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "#F9F9F8"
+      },
+      "overlayLight": {
+        "$type": "color",
+        "$value": "#19201214"
+      },
+      "positiveMid": {
+        "$type": "color",
+        "$value": "#5D7D45"
+      },
+      "skeletonMid": {
+        "$type": "color",
+        "$value": "#19201214"
+      }
+    },
+    "border": {
+      "accentLight": {
+        "$type": "color",
+        "$value": "#1920121F"
+      },
+      "disabledOnDark": {
+        "$type": "color",
+        "$value": "#19201299"
+      }
+    },
+    "content": {
+      "positiveMid": {
+        "$type": "color",
+        "$value": "#5D7D45"
+      },
+      "userInput": {
+        "$type": "color",
+        "$value": "#192012"
+      }
+    }
+  },
+  "surface": {
+    "background": {
+      "level0": {
+        "$type": "color",
+        "$value": "#F9F9F8"
+      },
+      "level2": {
+        "$type": "color",
+        "$value": "#F9F9F8"
+      }
+    },
+    "border": {
+      "level0": {
+        "$type": "color",
+        "$value": "#19201214"
+      },
+      "level1": {
+        "$type": "color",
+        "$value": "#19201214"
+      },
+      "level2": {
+        "$type": "color",
+        "$value": "#19201214"
+      },
+      "level3": {
+        "$type": "color",
+        "$value": "#19201214"
+      }
+    }
+  },
+  "ui": {
+    "buttons": {
+      "destructive": {
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        }
+      },
+      "primary": {
+        "background": {
+          "default": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#F9F9F8"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        }
+      },
+      "primaryDark": {
+        "content": {
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "iconForeground": {
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        }
+      },
+      "secondary": {
+        "background": {
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        }
+      },
+      "secondaryDark": {
+        "border": {
+          "disabled": {
+            "$type": "color",
+            "$value": "#19201299"
+          }
+        }
+      },
+      "tertiary": {
+        "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#1920121F"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#1920121F"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#F9F9F8"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#1920121F"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201299"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201299"
+          }
+        }
+      },
+      "tertiaryDark": {
+        "background": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        }
+      },
+      "textButton": {
+        "border": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012A6"
+          }
+        },
+        "content": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "iconBackground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#19201214"
+          }
+        },
+        "iconForeground": {
+          "complete": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "default": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "loading": {
+            "$type": "color",
+            "$value": "#192012A6"
+          },
+          "onPress": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        }
+      }
+    },
+    "input": {
+      "text": {
+        "active": {
+          "border": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "hint": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "iconForeground": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "label": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "complete": {
+          "border": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "hint": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "iconForeground": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "label": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "default": {
+          "border": {
+            "$type": "color",
+            "$value": "#19201214"
+          },
+          "hint": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "iconForeground": {
+            "$type": "color",
+            "$value": "#192012"
+          },
+          "label": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        },
+        "error": {
+          "label": {
+            "$type": "color",
+            "$value": "#19201299"
+          },
+          "value": {
+            "$type": "color",
+            "$value": "#192012"
+          }
+        }
+      }
+    }
+  }
+}

@@ -49,17 +49,34 @@ module CleoDesignTokens
     end
     private_class_method :flatten_tree
 
+    # Folds a hand-authored theme file (tokens/themes/<theme>.json — role ->
+    # override) into a semantic lookup, exactly as if Figma had emitted those
+    # overrides under `$themes`. A role the file names must already exist,
+    # and must not have that theme from Figma as well.
+    def self.merge_theme_overrides(lookup, theme, tree)
+      merged = lookup.dup
+      TreeWalker.walk(tree) do |path, leaf|
+        key = path.join(".")
+        entry = merged.fetch(key) do
+          raise UnknownTokenError, "#{theme} theme overrides unknown design token #{key.inspect}"
+        end
+        if entry.themes.key?(theme)
+          raise DuplicateTokenError,
+                "design token #{key.inspect} has a #{theme} override in both semantic.json and its theme file"
+        end
+
+        merged[key] = SemanticEntry.new(entry.value, entry.themes.merge(theme => leaf["$value"].freeze).freeze)
+      end
+      merged
+    end
+
     def self.semantic_entry(leaf)
       themes = {}
-      theme_refs = {}
-      (leaf["$themes"] || {}).each do |theme, override|
-        themes[theme] = override["$value"].freeze
-        theme_refs[theme] = override["$ref"]&.freeze
-      end
+      (leaf["$themes"] || {}).each { |theme, override| themes[theme] = override["$value"].freeze }
 
-      # `Data#new` freezes the instance itself; the Hashes inside it still
-      # need their own `.freeze` — freezing is shallow.
-      SemanticEntry.new(leaf["$value"]&.freeze, leaf["$ref"]&.freeze, themes.freeze, theme_refs.freeze)
+      # `Data#new` freezes the instance itself; the Hash inside it still
+      # needs its own `.freeze` — freezing is shallow.
+      SemanticEntry.new(leaf["$value"]&.freeze, themes.freeze)
     end
     private_class_method :semantic_entry
   end

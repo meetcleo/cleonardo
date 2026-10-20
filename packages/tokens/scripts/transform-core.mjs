@@ -24,7 +24,7 @@
 // Design authors it in Figma (until then every read falls back to Base), and a
 // theme Figma has that isn't declared here fails the transform rather than
 // shipping undeclared.
-export const THEMES = ["Base", "Chat", "Roast", "Hype"];
+export const THEMES = ["Base", "Chat", "Roast", "Hype", "Refresh"];
 
 export const DEFAULT_CONFIG = {
   buckets: [

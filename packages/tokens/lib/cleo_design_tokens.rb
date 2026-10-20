@@ -15,13 +15,12 @@ require_relative "cleo_design_tokens/semantic_bucket"
 #
 #   CleoDesignTokens.colors.semantic.fetch("core.content.primary")                # => "#47201C"
 #   CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast) # => "#F8F6F2"
-#   CleoDesignTokens.colors.semantic.fetch("core.content.primary", palette: :refresh) # => "#192012"
 #   CleoDesignTokens.colors.primitives.fetch("brown.800")                        # => "#47201C"
 module CleoDesignTokens
   TOKENS_DIR = File.expand_path("../tokens/color", __dir__)
   PRIMITIVES_PATH = File.join(TOKENS_DIR, "primitives.json")
   SEMANTIC_PATH = File.join(TOKENS_DIR, "semantic.json")
-  REFRESH_PATCH_PATH = File.expand_path("../tokens/patches/refresh.json", __dir__)
+  REFRESH_THEME_PATH = File.expand_path("../tokens/themes/refresh.json", __dir__)
   SPACING_BASE_UNIT_PX = 4
   RELATIVE_UNIT_BASE_PX = 16
   private_constant :SPACING_BASE_UNIT_PX, :RELATIVE_UNIT_BASE_PX
@@ -30,11 +29,11 @@ module CleoDesignTokens
   # concurrent access. Frozen from the moment the gem loads, so every reader
   # in every thread sees the same immutable lookup.
   PRIMITIVES_LOOKUP = LookupBuilder.build_lookup(JSON.parse(File.read(PRIMITIVES_PATH))).freeze
-  SEMANTIC_LOOKUP = LookupBuilder.build_semantic_lookup(JSON.parse(File.read(SEMANTIC_PATH))).freeze
-  PALETTES = {
-    "current" => {}.freeze,
-    "refresh" => JSON.parse(File.read(REFRESH_PATCH_PATH)).fetch("primitives").transform_values(&:freeze).freeze
-  }.freeze
+  SEMANTIC_LOOKUP = LookupBuilder.merge_theme_overrides(
+    LookupBuilder.build_semantic_lookup(JSON.parse(File.read(SEMANTIC_PATH))),
+    "refresh",
+    JSON.parse(File.read(REFRESH_THEME_PATH))
+  ).freeze
 
   # Namespaced by token type (`colors`), then by layer (`primitives`,
   # `semantic`) — lowercase accessors, not `CleoDesignTokens::Colors::
