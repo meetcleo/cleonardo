@@ -185,7 +185,17 @@ Each bucket selects the first available source: `Base Colors` before `Color Prim
 
 For mode-based semantic collections, every mode is resolved independently, for each primitive experience. The `Base` mode supplies each snapshot's leaf value even if Figma's default mode is different; overrides are emitted only when the value or primitive reference differs. A missing `Base` mode, duplicate theme names (case-insensitive), or a missing value for any declared mode fails validation.
 
-Variable paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`, not `core.content.primary`. Supporting Cleonardo 2.0's format does not make its 104 roles a drop-in replacement for the existing 473-role vocabulary. The removal guard still blocks a sync that drops existing keys; reconcile those paths and coverage before replacing the published tokens. This format support does not add experiment selection to either reader.
+Without an existing output baseline, paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`. When syncing a multi-experience `Color Roles` collection into the published vocabulary, the CLI applies the compatibility rules below. This format support does not add experiment selection to either reader.
+
+### Migrating Color Roles without breaking published keys
+
+The `Color Roles` collection covers only part of the existing vocabulary. When committed semantic output exists and the primitive collection has multiple experiences, the CLI keeps every existing Current semantic leaf and uses each new role's `Token: <published.key>` description to map its alternate snapshots onto that published key. An authored path that already exists uses that key directly. Missing or unknown mappings fail before writing.
+
+If several roles share a copied description, exactly one must have the same final name segment as the target key. That role supplies the mapped Refresh value; the others retain their authored paths as additional keys. Other ambiguous mappings fail. In the Cleonardo 2.0 export, `background.primary` and `background.dataVisPrimary` supply the canonical mappings, while `background.navbar` and `background.dataVisSenary` are additional roles. The transform reports mapped, retained and additional role counts, plus any new semantic definitions that differ from the preserved Current values.
+
+For legacy roles absent from `Color Roles`, the transform preserves Current and resolves their existing primitive references against each alternate palette. Reference-free literals remain literal, and theme overrides are recomputed relative to each experience's Base. A Current primitive change during this migration fails explicitly so the control palette cannot change accidentally. Current palette changes must be migrated separately.
+
+The verifier requires every published key listed in `scripts/semantic-contract.json` and permits additional roles. It still validates all references, experiences, known gaps, canonical formatting and generated key unions. The normal removal guard remains enabled, including for alternate experiences; `--allow-removals` does not bypass the verifier's published-key contract.
 
 ### Ordering
 

@@ -41,7 +41,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildTokens, flatten, diffFlat, buildKeyUnions, renderTokenKeysFile, renderDiffReport, die } from "./transform-core.mjs";
+import { buildTokens, parseDump, preserveSemanticVocabulary, walk, flatten, diffFlat, buildKeyUnions, renderTokenKeysFile, renderDiffReport, die } from "./transform-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const IN_DUMP = join(ROOT, "figma-exports", "figma-dump.json");
@@ -68,14 +68,23 @@ function run() {
     die(`Missing input: ${IN_DUMP}\nRun the Figma plugin (COREEXP-323) to produce it, or drop a dump there and re-run.`);
   }
 
-  const { primOut, semOut, themes, audit, experienceAudits } = buildTokens(JSON.parse(readFileSync(IN_DUMP, "utf8")));
+  const rawDump = JSON.parse(readFileSync(IN_DUMP, "utf8"));
+  const result = buildTokens(rawDump);
+  const previousPrimitives = existsSync(OUT_PRIM) ? JSON.parse(readFileSync(OUT_PRIM, "utf8")) : {};
+  const previousSemantic = existsSync(OUT_SEM) ? JSON.parse(readFileSync(OUT_SEM, "utf8")) : {};
+  const semanticSource = [...parseDump(rawDump).bucketByCollectionId.values()].find((spec) => spec.bucket === "semantic");
 
   // ---------- validation ----------
 
-  for (const [experience, paletteAudit] of Object.entries(experienceAudits ?? { current: audit })) {
-    if (experienceAudits) console.error(`Validating experience: ${experience}`);
+  for (const [experience, paletteAudit] of Object.entries(result.experienceAudits ?? { current: result.audit })) {
+    if (result.experienceAudits) console.error(`Validating experience: ${experience}`);
     validateAudit(paletteAudit);
   }
+
+  if (semanticSource.collection.name === "Color Roles" && result.experienceAudits) {
+    preserveSemanticVocabulary(result, previousPrimitives, previousSemantic);
+  }
+  const { primOut, semOut, themes, audit, experienceAudits, compatibility } = result;
 
   const keyUnions = { ...buildKeyUnions(primOut, semOut), themes };
 
@@ -83,8 +92,8 @@ function run() {
 
   const primNew = flatten(primOut);
   const semNew = flatten(semOut);
-  const primOld = existsSync(OUT_PRIM) ? flatten(JSON.parse(readFileSync(OUT_PRIM, "utf8"))) : new Map();
-  const semOld = existsSync(OUT_SEM) ? flatten(JSON.parse(readFileSync(OUT_SEM, "utf8"))) : new Map();
+  const primOld = flatten(previousPrimitives);
+  const semOld = flatten(previousSemantic);
 
   const primDiff = diffFlat(primOld, primNew);
   const semDiff = diffFlat(semOld, semNew);
@@ -94,8 +103,11 @@ function run() {
   console.error(renderDiffReport({ primDiff, semDiff }));
 
   console.error(
-    `\n${audit.primitiveCount} primitives, ${audit.semanticRoleCount} semantic roles, themes: ${themes.join(", ")}`,
+    `\n${audit.primitiveCount} primitives, ${[...walk(semOut)].length} semantic roles, themes: ${themes.join(", ")}`,
   );
+  if (compatibility) {
+    console.error(`Compatibility: ${compatibility.mapped} mapped roles, ${compatibility.retained} retained roles, ${compatibility.added} new roles; preserved Current for ${compatibility.preservedCurrent} differing theme entries.`);
+  }
   const overrides = Object.entries(audit.themeOverrides);
   if (overrides.length) {
     console.error(`theme overrides: ${overrides.map(([t, n]) => `${t} ${n}`).join(", ")}`);

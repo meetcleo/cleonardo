@@ -126,7 +126,7 @@ describe('PRIMITIVES_LOOKUP / SEMANTIC_LOOKUP', () => {
 
   it('are non-empty, sized to the real files', () => {
     expect(Object.keys(PRIMITIVES_LOOKUP)).toHaveLength(106);
-    expect(Object.keys(SEMANTIC_LOOKUP)).toHaveLength(473);
+    expect(Object.keys(SEMANTIC_LOOKUP).length).toBeGreaterThanOrEqual(473);
   });
 });
 
