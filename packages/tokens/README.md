@@ -80,7 +80,7 @@ All additional experiences are emitted on every primitive and semantic leaf, inc
 
 Diffs and release notes identify snapshots as `brown.50@experience:cleoRefresh` and themed semantic entries as `background.primary@experience:cleoRefresh@roast`. The removal guard covers dropped experiences as well as roles and theme overrides. The verifier checks references against the corresponding experience palette and requires matching experience coverage on all leaves.
 
-The TypeScript reader defaults to Current and supports experience selection through `configure` (below). The Ruby reader continues reading Current's existing fields. Token fetch keys and their generated unions remain experience-free.
+Readers default to Current. Runtime experience selection is documented under Consumers; token fetch keys and their generated unions remain experience-free.
 
 ## Layout
 
@@ -105,7 +105,8 @@ packages/tokens/
       semantic_entry.rb              # one role's Base value + theme overrides
       bucket.rb                      # colors.primitives — one lookup, one `fetch`
       semantic_bucket.rb             # colors.semantic — adds the `theme:` axis
-      errors.rb                      # UnknownTokenError, UnknownThemeError, DuplicateTokenError
+      configuration.rb               # fiber-local experience selection and shared immutable palette cache
+      errors.rb                      # token, theme, experience and collision errors
   src/
     CleoDesignTokens.ts    # TypeScript reader
     generated/
@@ -262,7 +263,7 @@ Refresh requires synced snapshots on every primitive and semantic role in the in
 
 Already-resolved hex strings do not change. The mobile app must configure after resolving its bucket and then rebuild its `colorRoles` / theme-provider value. Configuration does not trigger React renders. App-init integration is a separate change.
 
-This configuration is shared by all callers of the loaded NPM module instance. It is intended for the mobile app's active user; concurrent server users need scoped readers. The RubyGem has no global configure API in this change.
+This configuration is shared by all callers of the loaded NPM module instance. It is intended for the mobile app's active user; concurrent server users can use the RubyGem's scoped configuration below.
 
 The readers (TypeScript: `@meetcleo/design-tokens`; Ruby: `cleo_design_tokens`) are the canonical way to read a value — never import `tokens/color/*.json` directly. They're namespaced by token type, then by layer, with the theme passed alongside the key:
 
@@ -273,6 +274,31 @@ CleoDesignTokens.colors.primitives.fetch("brown.800")                          #
 ```
 
 Reach for `colors.semantic` by default. A `colors.primitives` call is reaching past the semantic layer into the raw palette — legitimate in a theme adapter that re-exports a palette tier, a smell anywhere else, and usually a sign that a semantic role is missing.
+
+### Configuring the Ruby experience
+
+```ruby
+CleoDesignTokens.configure(experience: :refresh)
+CleoDesignTokens.colors.semantic.fetch("core.content.primary")
+CleoDesignTokens.colors.semantic.fetch("core.content.primary", theme: :roast)
+CleoDesignTokens.configure(experience: :current)
+```
+
+Symbols and strings are accepted for `current` and `refresh`; public `refresh` selects the stored `cleoRefresh` snapshots. Both primitive and semantic fetches read the selection at call time, including previously captured bucket objects and `Method` objects. Theme fallback stays inside the selected experience. Already-resolved hex strings and spacing values do not change; the exported lookup constants remain frozen Current snapshots.
+
+The selection belongs to the current thread/fiber, **not the whole Ruby process**. New threads and fibers start on Current. For requests and jobs, use the block form once around rendering:
+
+```ruby
+experience = bucket == :b_side ? :refresh : :current
+
+CleoDesignTokens.configure(experience: experience) do
+  render_user_colours
+end
+```
+
+The block returns its result and restores the previous selection on normal exit or exceptions, including nested scopes. Without a block, configuration persists in the current fiber until reset; use the block form for pooled request/job workers so the next user starts with the previous default. Application experiment bucketing and request/job middleware are separate integration work.
+
+Selecting Refresh requires complete synced snapshots in the installed gem. Invalid experiences or missing/incomplete values raise `CleoDesignTokens::UnknownExperienceError` before changing either bucket. Successfully built palettes are immutable and shared through a mutex-protected cache; each caller's active selection remains isolated. The API works with Current-only data until Refresh is selected, at which point unavailable snapshots fail clearly.
 
 `src/generated/tokenKeys.ts` type-checks the arguments on the TypeScript side and is generated, never hand-edited:
 

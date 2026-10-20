@@ -8,6 +8,7 @@ require_relative "cleo_design_tokens/version"
 require_relative "cleo_design_tokens/lookup_builder"
 require_relative "cleo_design_tokens/bucket"
 require_relative "cleo_design_tokens/semantic_bucket"
+require_relative "cleo_design_tokens/configuration"
 
 # Reads Cleo's canonical colour design tokens (packages/tokens/tokens/color)
 # into two frozen lookups, namespaced by token type then layer, with the
@@ -27,8 +28,13 @@ module CleoDesignTokens
   # Built at load, into constants — not `@lookup ||=`, which would race under
   # concurrent access. Frozen from the moment the gem loads, so every reader
   # in every thread sees the same immutable lookup.
-  PRIMITIVES_LOOKUP = LookupBuilder.build_lookup(JSON.parse(File.read(PRIMITIVES_PATH))).freeze
-  SEMANTIC_LOOKUP = LookupBuilder.build_semantic_lookup(JSON.parse(File.read(SEMANTIC_PATH))).freeze
+  CONFIGURATION = Configuration.new(
+    primitives: JSON.parse(File.read(PRIMITIVES_PATH)),
+    semantic: JSON.parse(File.read(SEMANTIC_PATH)),
+  )
+  private_constant :CONFIGURATION
+  PRIMITIVES_LOOKUP = CONFIGURATION.default_palette.primitives
+  SEMANTIC_LOOKUP = CONFIGURATION.default_palette.semantic
 
   # Namespaced by token type (`colors`), then by layer (`primitives`,
   # `semantic`) — lowercase accessors, not `CleoDesignTokens::Colors::
@@ -40,10 +46,17 @@ module CleoDesignTokens
   # no `.primitives` method. Plural `Colors`, not `Color` — an instance
   # holds both buckets for the `colors` token type, not a single colour.
   Colors = Data.define(:primitives, :semantic)
-  COLORS = Colors.new(primitives: Bucket.new(PRIMITIVES_LOOKUP), semantic: SemanticBucket.new(SEMANTIC_LOOKUP))
+  COLORS = Colors.new(
+    primitives: Bucket.new(-> { CONFIGURATION.palette.primitives }),
+    semantic: SemanticBucket.new(-> { CONFIGURATION.palette.semantic }),
+  )
 
   def self.colors
     COLORS
+  end
+
+  def self.configure(experience:, &block)
+    CONFIGURATION.configure(experience: experience, &block)
   end
 
   # Spacing is code-owned, not generated from Figma. Without a unit it is a

@@ -16,7 +16,8 @@ module CleoDesignTokens
       theme = theme.to_s
       raise UnknownThemeError, "unknown theme: #{theme.inspect}" unless THEMES.include?(theme)
 
-      entry = @lookup.fetch(key) { raise UnknownTokenError, "unknown design token: #{key.inspect}" }
+      lookup = @lookup.respond_to?(:call) ? @lookup.call : @lookup
+      entry = lookup.fetch(key) { raise UnknownTokenError, "unknown design token: #{key.inspect}" }
       value = resolve(entry, theme)
       if value.nil?
         raise UnknownTokenError,
