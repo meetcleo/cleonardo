@@ -125,7 +125,24 @@ export interface SemanticEntry {
 // Flattens `semantic.json` into a key -> SemanticEntry lookup, one entry per
 // role — the theme axis lives inside the entry, not in the key, so this has
 // the same entries as ColorSemanticKey, not one per role-theme pair.
-export function buildSemanticLookup(tree: unknown, experience: ColorExperience = 'current'): Record<string, SemanticEntry> {
+export function buildSemanticLookup(tree: unknown, experience: ColorExperience = 'current', primitiveLookup?: Readonly<Record<string, string>>): Record<string, SemanticEntry> {
+  const schema = (tree as Record<string, unknown> | null)?.$schema;
+  if (schema !== undefined && schema !== 'cleo-semantic-references/1') {
+    throw new UnknownExperienceError(`unsupported semantic schema: ${String(schema)}`);
+  }
+  const references = schema === 'cleo-semantic-references/1';
+  // Resolve once per palette; public fetches keep reading immutable hex lookups.
+  const resolve = (binding: Record<string, unknown>, key: string): unknown => {
+    if (!references) return binding.$value;
+    if (binding.$ref !== undefined) {
+      const ref = binding.$ref;
+      if (typeof ref !== 'string' || !primitiveLookup || !Object.prototype.hasOwnProperty.call(primitiveLookup, ref) || binding.$value !== undefined) {
+        throw new UnknownExperienceError(`invalid primitive reference for ${JSON.stringify(key)} in experience ${JSON.stringify(experience)}`);
+      }
+      return primitiveLookup[ref];
+    }
+    return binding.$value;
+  };
   const lookup: Record<string, SemanticEntry> = {};
   const origins: Record<string, string> = {};
   walk(tree, [], (path, leaf) => {
@@ -134,20 +151,28 @@ export function buildSemanticLookup(tree: unknown, experience: ColorExperience =
       throw new DuplicateTokenError(`duplicate design token ${JSON.stringify(key)}: defined at both ${origins[key]} and ${path.join('.')}`);
     }
 
-    const snapshot = experienceLeaf(leaf, experience, key);
+    const snapshots = leaf.$experiences as Record<string, unknown> | undefined;
+    if (references && snapshots !== undefined && (snapshots === null || typeof snapshots !== 'object' || Array.isArray(snapshots))) {
+      throw new UnknownExperienceError(`invalid semantic experiences for ${JSON.stringify(key)}`);
+    }
+    const snapshot = references && (experience === 'current' || !Object.prototype.hasOwnProperty.call(snapshots ?? {}, 'cleoRefresh'))
+      ? leaf : experienceLeaf(leaf, experience, key);
     const themes: Record<string, string> = {};
-    const rawThemes = (snapshot.$themes as Record<string, { $value: string }> | undefined) ?? {};
+    const rawThemes = (snapshot.$themes as Record<string, Record<string, unknown>> | undefined) ?? {};
+    if (typeof rawThemes !== 'object' || Array.isArray(rawThemes)) throw new UnknownExperienceError(`invalid themes for ${JSON.stringify(key)}`);
     for (const [theme, override] of Object.entries(rawThemes)) {
-      if (typeof override?.$value !== 'string') {
+      const value = override && typeof override === 'object' ? resolve(override, key) : undefined;
+      if (typeof value !== 'string') {
         throw new UnknownExperienceError(`design token ${JSON.stringify(key)} has no value for theme ${JSON.stringify(theme)} in experience ${JSON.stringify(experience)}`);
       }
-      themes[theme] = override.$value;
+      themes[theme] = value;
     }
 
-    if ((snapshot.$value !== undefined && typeof snapshot.$value !== 'string') || (snapshot.$value === undefined && Object.keys(themes).length === 0)) {
+    const value = resolve(snapshot, key);
+    if ((value !== undefined && typeof value !== 'string') || (value === undefined && Object.keys(themes).length === 0)) {
       throw new UnknownExperienceError(`design token ${JSON.stringify(key)} has no semantic values for experience ${JSON.stringify(experience)}`);
     }
-    lookup[key] = Object.freeze({ value: typeof snapshot.$value === 'string' ? snapshot.$value : undefined, themes: Object.freeze(themes) });
+    lookup[key] = Object.freeze({ value: typeof value === 'string' ? value : undefined, themes: Object.freeze(themes) });
     origins[key] = path.join('.');
   });
   return lookup;
@@ -209,7 +234,7 @@ export function makeSemanticBucket(lookup: LookupSource<SemanticEntry>) {
 // These exported lookups remain immutable snapshots of Current. Public fetch
 // functions read activePalette at call time so captured functions stay current.
 export const PRIMITIVES_LOOKUP: Record<string, string> = Object.freeze(buildLookup(primitives));
-export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(buildSemanticLookup(semantic));
+export const SEMANTIC_LOOKUP: Record<string, SemanticEntry> = Object.freeze(buildSemanticLookup(semantic, 'current', PRIMITIVES_LOOKUP));
 
 interface Palette {
   readonly primitives: Readonly<Record<string, string>>;
@@ -232,10 +257,13 @@ function configure(options: ConfigureOptions): void {
 
   // Build both buckets before publishing the selection. A missing snapshot
   // leaves the previous palette active, including for captured fetch functions.
-  refreshPalette ??= Object.freeze({
-    primitives: Object.freeze(buildLookup(primitives, 'refresh')),
-    semantic: Object.freeze(buildSemanticLookup(semantic, 'refresh')),
-  });
+  if (!refreshPalette) {
+    const primitiveLookup = Object.freeze(buildLookup(primitives, 'refresh'));
+    refreshPalette = Object.freeze({
+      primitives: primitiveLookup,
+      semantic: Object.freeze(buildSemanticLookup(semantic, 'refresh', primitiveLookup)),
+    });
+  }
   activePalette = refreshPalette;
 }
 

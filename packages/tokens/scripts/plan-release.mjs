@@ -27,6 +27,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { flatten, diffFlat, diffIsEmpty, renderDiffReport } from "./transform-core.mjs";
 
+import { expandSemanticTokens } from "./semantic-format.mjs";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_REL = "packages/tokens/tokens/color/primitives.json";
 const SEM_REL = "packages/tokens/tokens/color/semantic.json";
@@ -67,6 +69,8 @@ export function compareVersions(left, right) {
  *  (there's nothing to diff against), the manifest version ships, and the notes say so
  *  rather than listing every token as "added". */
 export function planRelease({ previousTag, committedVersion, primOld, semOld, primNew, semNew }) {
+  semOld = expandSemanticTokens(primOld, semOld);
+  semNew = expandSemanticTokens(primNew, semNew);
   if (!previousTag) {
     return {
       version: committedVersion,

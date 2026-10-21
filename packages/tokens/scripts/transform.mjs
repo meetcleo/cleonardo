@@ -11,23 +11,11 @@
 // Outputs: tokens/color/{primitives,semantic}.json   (committed)
 //          src/generated/tokenKeys.ts                (committed; not written under --check)
 //
-// Leaf shape. Primitives carry a resolved Current $value. Additional palette
-// modes are complete snapshots under $experiences on primitives and semantics.
-// Semantic roles carry Base on the leaf and only genuine overrides beneath
-// `$themes`:
-//
-//   "primary": {
-//     "$type": "color",
-//     "$value": "#47201C",
-//     "$ref": "brown.800",
-//     "$themes": { "roast": { "$value": "#F8F6F2", "$ref": "brown.50" } }
-//   }
-//
-// `$value` is always fully resolved, so consumers never follow a reference.
-// `$ref` is the primitive it came from, as a primitives fetch key; no `$ref`
-// means a genuine palette gap. A theme absent from `$themes` resolves to Base.
-// A role with no `$value` at all exists in some themes but not Base — a
-// Figma-side gap, reported rather than papered over.
+// Primitive leaves store resolved values for each experience. Semantic files use
+// cleo-semantic-references/1: shared $ref bindings, literal $value palette gaps,
+// $themes overrides, and complete $experiences snapshots only where bindings differ.
+// Resolution and diffing use expanded snapshots; only the written JSON is compact.
+// Missing both $ref and $value on a semantic Base is a real Figma-side gap.
 //
 // Policy:
 //   * Adds and value changes apply automatically.
@@ -42,6 +30,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTokens, parseDump, preserveSemanticVocabulary, walk, flatten, diffFlat, buildKeyUnions, renderTokenKeysFile, renderDiffReport, die } from "./transform-core.mjs";
+
+import { compactSemanticTokens, expandSemanticTokens } from "./semantic-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const IN_DUMP = join(ROOT, "figma-exports", "figma-dump.json");
@@ -71,7 +61,7 @@ function run() {
   const rawDump = JSON.parse(readFileSync(IN_DUMP, "utf8"));
   const result = buildTokens(rawDump);
   const previousPrimitives = existsSync(OUT_PRIM) ? JSON.parse(readFileSync(OUT_PRIM, "utf8")) : {};
-  const previousSemantic = existsSync(OUT_SEM) ? JSON.parse(readFileSync(OUT_SEM, "utf8")) : {};
+  const previousSemantic = expandSemanticTokens(previousPrimitives, existsSync(OUT_SEM) ? JSON.parse(readFileSync(OUT_SEM, "utf8")) : {});
   const semanticSource = [...parseDump(rawDump).bucketByCollectionId.values()].find((spec) => spec.bucket === "semantic");
 
   // ---------- validation ----------
@@ -87,6 +77,7 @@ function run() {
   const { primOut, semOut, themes, audit, experienceAudits, compatibility } = result;
 
   const keyUnions = { ...buildKeyUnions(primOut, semOut), themes };
+  const compactSemantic = compactSemanticTokens(primOut, semOut);
 
   // ---------- diff vs. current on-disk ----------
 
@@ -137,7 +128,7 @@ function run() {
   mkdirSync(dirname(OUT_PRIM), { recursive: true });
   mkdirSync(dirname(OUT_KEYS), { recursive: true });
   writeFileSync(OUT_PRIM, JSON.stringify(primOut, null, 2) + "\n");
-  writeFileSync(OUT_SEM, JSON.stringify(semOut, null, 2) + "\n");
+  writeFileSync(OUT_SEM, JSON.stringify(compactSemantic, null, 2) + "\n");
   writeFileSync(OUT_KEYS, renderTokenKeysFile(keyUnions));
   console.error(`\n✓ wrote tokens/color/primitives.json, tokens/color/semantic.json and src/generated/tokenKeys.ts`);
 }

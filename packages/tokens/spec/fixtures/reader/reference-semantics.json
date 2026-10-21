@@ -1,0 +1,29 @@
+{
+  "$schema": "cleo-semantic-references/1",
+  "core": {
+    "content": {
+      "primary": {
+        "$type": "color",
+        "$ref": "brown.800",
+        "$themes": { "roast": { "$ref": "brown.50" } }
+      },
+      "secondary": {
+        "$type": "color",
+        "$ref": "brown.50",
+        "$themes": { "roast": { "$ref": "brown.800" } },
+        "$experiences": { "cleoRefresh": { "$ref": "brown.800" } }
+      }
+    },
+    "border": {
+      "level0": {
+        "$type": "color",
+        "$themes": { "chat": { "$ref": "brown.50" } }
+      }
+    }
+  },
+  "effects": {
+    "background": {
+      "glassMorphism": { "$type": "color", "$value": "#00000033" }
+    }
+  }
+}

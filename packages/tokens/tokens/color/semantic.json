@@ -1,137 +1,140 @@
 {
+  "$schema": "cleo-semantic-references/1",
+  "background": {
+    "dataVisSenary": {
+      "$type": "color",
+      "$ref": "brown.1000",
+      "$description": "Token: extension.background.dataVisPrimary",
+      "$themes": {
+        "chat": {
+          "$ref": "orange.200"
+        },
+        "roast": {
+          "$ref": "red.900"
+        },
+        "hype": {
+          "$ref": "teal.100"
+        }
+      }
+    },
+    "navbar": {
+      "$type": "color",
+      "$ref": "brown.50",
+      "$description": "Token: core.background.primary",
+      "$themes": {
+        "roast": {
+          "$ref": "brown.900"
+        }
+      }
+    }
+  },
   "core": {
     "background": {
       "baseDark": {
         "$type": "color",
-        "$value": "#0E0605",
         "$ref": "monotone.black"
       },
       "baseLight": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white",
         "$themes": {
           "roast": {
-            "$value": "#3C0800",
             "$ref": "red.1000"
           }
         }
       },
       "primary": {
         "$type": "color",
-        "$value": "#F8F6F2",
         "$ref": "brown.50",
         "$themes": {
           "roast": {
-            "$value": "#291210",
             "$ref": "brown.900"
           }
         }
       },
       "primaryInverse": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "hype": {
-            "$value": "#354F4B",
             "$ref": "teal.800"
           }
         }
       },
       "secondary": {
         "$type": "color",
-        "$value": "#F0EDEA",
         "$ref": "brown.100",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "roast": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "hype": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
       },
       "secondaryInverse": {
         "$type": "color",
-        "$value": "#291210",
         "$ref": "brown.900",
         "$themes": {
           "hype": {
-            "$value": "#041F1A",
             "$ref": "teal.1000"
           }
         }
       },
       "tertiary": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200",
         "$themes": {
           "chat": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           },
           "roast": {
-            "$value": "#5B3935",
             "$ref": "brown.700"
           },
           "hype": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           }
         }
       },
       "tertiaryInverse": {
         "$type": "color",
-        "$value": "#1B0C0B",
         "$ref": "brown.1000",
         "$themes": {
           "hype": {
-            "$value": "#041F1A",
             "$ref": "teal.1000"
           }
         }
       },
       "transparent": {
         "$type": "color",
-        "$value": "#FFFEFB00",
         "$ref": "alpha.light.0"
       }
     },
     "border": {
       "default": {
         "$type": "color",
-        "$value": "#F0EDEA",
         "$ref": "brown.100",
         "$themes": {
           "chat": {
-            "$value": "#846A67",
             "$ref": "brown.500"
           },
           "roast": {
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "hype": {
-            "$value": "#698C84",
             "$ref": "teal.500"
           }
         }
       },
       "focused": {
         "$type": "color",
-        "$value": "#846A67",
         "$ref": "brown.500",
         "$themes": {
           "hype": {
-            "$value": "#587871",
             "$ref": "teal.600"
           }
         }
@@ -140,7 +143,6 @@
         "$type": "color",
         "$themes": {
           "chat": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           }
         }
@@ -149,7 +151,6 @@
         "$type": "color",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
@@ -158,164 +159,133 @@
         "$type": "color",
         "$themes": {
           "chat": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           }
         }
       },
       "opaque": {
         "$type": "color",
-        "$value": "#0E060540",
         "$ref": "alpha.dark.25",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         }
       },
       "opaqueInverse": {
         "$type": "color",
-        "$value": "#FFFEFB40",
         "$ref": "alpha.light.25",
         "$themes": {
           "roast": {
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           }
         }
       },
       "opaqueInverseLight": {
         "$type": "color",
-        "$value": "#FFFEFB1A",
         "$ref": "alpha.light.10",
         "$themes": {
           "roast": {
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           }
         }
       },
       "opaqueLight": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB1A",
             "$ref": "alpha.light.10"
           }
         }
       },
       "selected": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "hype": {
-            "$value": "#354F4B",
             "$ref": "teal.800"
           }
         }
       },
       "selectedInverse": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white"
       },
       "transparent": {
         "$type": "color",
-        "$value": "#FFFEFB00",
         "$ref": "alpha.light.0"
       }
     },
     "content": {
       "primary": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "roast": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           },
           "hype": {
-            "$value": "#354F4B",
             "$ref": "teal.800"
           }
         }
       },
       "primaryInverse": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white",
         "$themes": {
           "chat": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           },
           "hype": {
-            "$value": "#DAF0E5",
             "$ref": "teal.50"
           }
         }
       },
       "secondary": {
         "$type": "color",
-        "$value": "#5B3935",
         "$ref": "brown.700",
         "$themes": {
           "roast": {
-            "$value": "#DED9D4",
             "$ref": "brown.200"
           },
           "hype": {
-            "$value": "#46635E",
             "$ref": "teal.700"
           }
         }
       },
       "secondaryInverse": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200",
         "$themes": {
           "hype": {
-            "$value": "#9DC9BD",
             "$ref": "teal.200"
           }
         }
       },
       "tertiary": {
         "$type": "color",
-        "$value": "#6F514E",
         "$ref": "brown.600",
         "$themes": {
           "chat": {
-            "$value": "#846A67",
             "$ref": "brown.500"
           },
           "roast": {
-            "$value": "#C9BEBA",
             "$ref": "brown.300"
           },
           "hype": {
-            "$value": "#587871",
             "$ref": "teal.600"
           }
         }
       },
       "tertiaryInverse": {
         "$type": "color",
-        "$value": "#AC9B98",
         "$ref": "brown.400",
         "$themes": {
           "roast": {
-            "$value": "#C9BEBA",
             "$ref": "brown.300"
           },
           "hype": {
-            "$value": "#8CB5AA",
             "$ref": "teal.300"
           }
         }
@@ -330,15 +300,12 @@
       },
       "livingGradient": {
         "$type": "color",
-        "$value": "#FFC8A2",
         "$ref": "orange.100",
         "$themes": {
           "roast": {
-            "$value": "#A52D1A",
             "$ref": "red.800"
           },
           "hype": {
-            "$value": "#BCDDD1",
             "$ref": "teal.100"
           }
         }
@@ -347,48 +314,38 @@
     "border": {
       "shimmerAlpha2": {
         "$type": "color",
-        "$value": "#FFFEFB00",
         "$ref": "alpha.light.0"
       },
       "shimmerEnd": {
         "$type": "color",
-        "$value": "#AC9B98",
         "$ref": "brown.400",
         "$themes": {
           "chat": {
-            "$value": "#FAEFC5",
             "$ref": "yellow.50"
           },
           "roast": {
-            "$value": "#FFC3B6",
             "$ref": "red.100"
           },
           "hype": {
-            "$value": "#E6F2C9",
             "$ref": "green.50"
           }
         }
       },
       "shimmerMiddle": {
         "$type": "color",
-        "$value": "#FFFEFB00",
         "$ref": "alpha.light.0"
       },
       "shimmerStart": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "chat": {
-            "$value": "#FFAD73",
             "$ref": "orange.200"
           },
           "roast": {
-            "$value": "#A52D1A",
             "$ref": "red.800"
           },
           "hype": {
-            "$value": "#C8E585",
             "$ref": "green.200"
           }
         }
@@ -399,724 +356,680 @@
     "background": {
       "accentDark": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "chat": {
-            "$value": "#1B0C0B",
             "$ref": "brown.1000"
           },
           "roast": {
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "hype": {
-            "$value": "#041F1A",
             "$ref": "teal.1000"
           }
         }
       },
       "accentLight": {
         "$type": "color",
-        "$value": "#F0EDEA",
         "$ref": "brown.100",
         "$themes": {
           "chat": {
-            "$value": "#FFC8A2",
             "$ref": "orange.100"
           },
           "roast": {
-            "$value": "#47201C",
             "$ref": "brown.800"
           },
           "hype": {
-            "$value": "#BCDDD1",
             "$ref": "teal.100"
           }
         }
       },
       "accentMid": {
         "$type": "color",
-        "$value": "#5B3935",
         "$ref": "brown.700",
         "$themes": {
           "chat": {
-            "$value": "#47201C",
             "$ref": "brown.800"
           },
           "roast": {
-            "$value": "#A52D1A",
             "$ref": "red.800"
           },
           "hype": {
-            "$value": "#354F4B",
             "$ref": "teal.800"
           }
         }
       },
       "categoryPrimary": {
         "$type": "color",
-        "$value": "#BFBFED",
         "$ref": "purple.100"
       },
       "categoryQuaternary": {
         "$type": "color",
-        "$value": "#C3EAFB",
         "$ref": "blue.100",
         "$themes": {
           "chat": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           },
           "roast": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           },
           "hype": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           }
         }
       },
       "categorySecondary": {
         "$type": "color",
-        "$value": "#FFC8A2",
         "$ref": "orange.100",
         "$themes": {
           "chat": {
-            "$value": "#D7ECA7",
             "$ref": "green.100"
           },
           "roast": {
-            "$value": "#D7ECA7",
             "$ref": "green.100"
           },
           "hype": {
-            "$value": "#D7ECA7",
             "$ref": "green.100"
           }
         }
       },
       "categoryTertiary": {
         "$type": "color",
-        "$value": "#BCDDD1",
         "$ref": "teal.100"
       },
       "dataVisPrimary": {
         "$type": "color",
-        "$value": "#1B0C0B",
-        "$ref": "brown.1000"
+        "$ref": "brown.1000",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "brown.1000",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.1000"
+              },
+              "roast": {
+                "$ref": "red.50"
+              },
+              "hype": {
+                "$ref": "teal.1000"
+              }
+            }
+          }
+        }
       },
       "dataVisQuaternary": {
         "$type": "color",
-        "$value": "#AC9B98",
-        "$ref": "brown.400"
+        "$ref": "brown.400",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "brown.400",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.400"
+              },
+              "roast": {
+                "$ref": "red.700"
+              },
+              "hype": {
+                "$ref": "teal.400"
+              }
+            }
+          }
+        }
       },
       "dataVisQuinary": {
         "$type": "color",
-        "$value": "#C9BEBA",
-        "$ref": "brown.300"
+        "$ref": "brown.300",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "brown.300",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.300"
+              },
+              "roast": {
+                "$ref": "red.800"
+              },
+              "hype": {
+                "$ref": "teal.200"
+              }
+            }
+          }
+        }
       },
       "dataVisSecondary": {
         "$type": "color",
-        "$value": "#47201C",
-        "$ref": "brown.800"
+        "$ref": "brown.800",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "brown.800",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.800"
+              },
+              "roast": {
+                "$ref": "red.300"
+              },
+              "hype": {
+                "$ref": "teal.800"
+              }
+            }
+          }
+        }
       },
       "dataVisTertiary": {
         "$type": "color",
-        "$value": "#6F514E",
-        "$ref": "brown.600"
+        "$ref": "brown.600",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "brown.600",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.600"
+              },
+              "roast": {
+                "$ref": "red.500"
+              },
+              "hype": {
+                "$ref": "teal.600"
+              }
+            }
+          }
+        }
       },
       "disabled": {
         "$type": "color",
-        "$value": "#F8F6F2",
         "$ref": "brown.50"
       },
       "disabledControls": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200"
       },
       "disabledInverse": {
         "$type": "color",
-        "$value": "#291210",
         "$ref": "brown.900"
       },
       "negativeDark": {
         "$type": "color",
-        "$value": "#3C0800",
         "$ref": "red.1000"
       },
       "negativeLight": {
         "$type": "color",
-        "$value": "#FFC3B6",
         "$ref": "red.100"
       },
       "negativeMid": {
         "$type": "color",
-        "$value": "#B4422F",
         "$ref": "red.700"
       },
       "overlay": {
         "$type": "color",
-        "$value": "#0E060580",
         "$ref": "alpha.dark.50",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "roast": {
-            "$value": "#0E06050D",
             "$ref": "alpha.dark.5"
           },
           "hype": {
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         }
       },
       "overlayInverse": {
         "$type": "color",
-        "$value": "#FFFEFB40",
         "$ref": "alpha.light.25",
         "$themes": {
           "chat": {
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "hype": {
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           }
         }
       },
       "overlayLight": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           },
           "roast": {
-            "$value": "#FFFEFB0D",
             "$ref": "alpha.light.5"
           },
           "hype": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           }
         }
       },
       "overlayLightInverse": {
         "$type": "color",
-        "$value": "#FFFEFBBF",
         "$ref": "alpha.light.75",
         "$themes": {
           "chat": {
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "roast": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           },
           "hype": {
-            "$value": "#0E060533",
             "$ref": "alpha.dark.20"
           }
         }
       },
       "positiveDark": {
         "$type": "color",
-        "$value": "#101F02",
         "$ref": "green.1000",
         "$themes": {
           "hype": {
-            "$value": "#E6F2C9",
             "$ref": "green.50"
           }
         }
       },
       "positiveLight": {
         "$type": "color",
-        "$value": "#D7ECA7",
         "$ref": "green.100",
         "$themes": {
           "chat": {
-            "$value": "#E6F2C9",
             "$ref": "green.50"
           },
           "hype": {
-            "$value": "#101F02",
             "$ref": "green.1000"
           }
         }
       },
       "positiveMid": {
         "$type": "color",
-        "$value": "#51623A",
         "$ref": "green.700",
         "$themes": {
           "hype": {
-            "$value": "#C8E585",
             "$ref": "green.200"
           }
         }
       },
       "skeletonDark": {
         "$type": "color",
-        "$value": "#0E060526",
         "$ref": "alpha.dark.15",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20"
           }
         }
       },
       "skeletonDarkInverse": {
         "$type": "color",
-        "$value": "#FFFEFB26",
         "$ref": "alpha.light.15",
         "$themes": {
           "roast": {
-            "$value": "#0E060533",
             "$ref": "alpha.dark.20"
           }
         }
       },
       "skeletonLight": {
         "$type": "color",
-        "$value": "#0E06050D",
         "$ref": "alpha.dark.5",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB1A",
             "$ref": "alpha.light.10"
           }
         }
       },
       "skeletonLightInverse": {
         "$type": "color",
-        "$value": "#FFFEFB0D",
         "$ref": "alpha.light.5",
         "$themes": {
           "roast": {
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           }
         }
       },
       "skeletonMid": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB26",
             "$ref": "alpha.light.15"
           }
         }
       },
       "skeletonMidInverse": {
         "$type": "color",
-        "$value": "#FFFEFB1A",
         "$ref": "alpha.light.10",
         "$themes": {
           "roast": {
-            "$value": "#0E060526",
             "$ref": "alpha.dark.15"
           }
         }
       },
       "waitingDark": {
         "$type": "color",
-        "$value": "#210B3E",
         "$ref": "purple.1000",
         "$themes": {
           "chat": {
-            "$value": "#271300",
             "$ref": "orange.1000"
           },
           "roast": {
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "hype": {
-            "$value": "#041F1A",
             "$ref": "teal.1000"
           }
         }
       },
       "waitingLight": {
         "$type": "color",
-        "$value": "#BFBFED",
         "$ref": "purple.100",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "roast": {
-            "$value": "#F0EDEA",
             "$ref": "brown.100"
           },
           "hype": {
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
       },
       "waitingMid": {
         "$type": "color",
-        "$value": "#4B3A6F",
         "$ref": "purple.700",
         "$themes": {
           "chat": {
-            "$value": "#FFAD73",
             "$ref": "orange.200"
           },
           "roast": {
-            "$value": "#FFC3B6",
             "$ref": "red.100"
           },
           "hype": {
-            "$value": "#9DC9BD",
             "$ref": "teal.200"
           }
         }
       },
       "warningDark": {
         "$type": "color",
-        "$value": "#1F1700",
         "$ref": "yellow.1000"
       },
       "warningLight": {
         "$type": "color",
-        "$value": "#FBDE8B",
         "$ref": "yellow.100"
       },
       "warningMid": {
         "$type": "color",
-        "$value": "#866512",
         "$ref": "yellow.700"
       }
     },
     "border": {
       "accentDark": {
         "$type": "color",
-        "$value": "#291210",
         "$ref": "brown.900"
       },
       "accentLight": {
         "$type": "color",
-        "$value": "#F0EDEA",
         "$ref": "brown.100"
       },
       "accentMid": {
         "$type": "color",
-        "$value": "#AC9B98",
         "$ref": "brown.400"
       },
       "disabledOnDark": {
         "$type": "color",
-        "$value": "#6F514E",
         "$ref": "brown.600"
       },
       "disabledOnLight": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200"
       },
       "focused": {
         "$type": "color",
-        "$value": "#C9BEBA",
         "$ref": "brown.300"
       },
       "negativeDark": {
         "$type": "color",
-        "$value": "#6D1709",
         "$ref": "red.900"
       },
       "negativeLight": {
         "$type": "color",
-        "$value": "#FFC3B6",
         "$ref": "red.100"
       },
       "negativeMid": {
         "$type": "color",
-        "$value": "#E1816D",
         "$ref": "red.400"
       },
       "positiveDark": {
         "$type": "color",
-        "$value": "#28371A",
         "$ref": "green.900"
       },
       "positiveLight": {
         "$type": "color",
-        "$value": "#D7ECA7",
         "$ref": "green.100"
       },
       "positiveMid": {
         "$type": "color",
-        "$value": "#98B167",
         "$ref": "green.400"
       },
       "waitingDark": {
         "$type": "color",
-        "$value": "#301F47",
         "$ref": "purple.900"
       },
       "waitingLight": {
         "$type": "color",
-        "$value": "#BFBFED",
         "$ref": "purple.100"
       },
       "waitingMid": {
         "$type": "color",
-        "$value": "#7771B0",
         "$ref": "purple.400"
       },
       "warningDark": {
         "$type": "color",
-        "$value": "#422E00",
         "$ref": "yellow.900"
       },
       "warningLight": {
         "$type": "color",
-        "$value": "#FBDE8B",
         "$ref": "yellow.100"
       },
       "warningMid": {
         "$type": "color",
-        "$value": "#CCA338",
         "$ref": "yellow.400"
       }
     },
     "content": {
       "accentDark": {
         "$type": "color",
-        "$value": "#1B0C0B",
         "$ref": "brown.1000",
         "$themes": {
           "roast": {
-            "$value": "#DED9D4",
             "$ref": "brown.200"
           }
         }
       },
       "accentLight": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200",
         "$themes": {
           "chat": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           },
           "roast": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           },
           "hype": {
-            "$value": "#F8F6F2",
             "$ref": "brown.50"
           }
         }
       },
       "accentMid": {
         "$type": "color",
-        "$value": "#846A67",
         "$ref": "brown.500",
         "$themes": {
           "chat": {
-            "$value": "#FFAD73",
             "$ref": "orange.200"
           },
           "roast": {
-            "$value": "#FFAD73",
             "$ref": "orange.200"
           },
           "hype": {
-            "$value": "#98B167",
             "$ref": "green.400"
           }
         }
       },
       "categoryPrimary": {
         "$type": "color",
-        "$value": "#4B3A6F",
         "$ref": "purple.700",
         "$themes": {
           "chat": {
-            "$value": "#5A4C84",
             "$ref": "purple.600"
           },
           "roast": {
-            "$value": "#5A4C84",
             "$ref": "purple.600"
           },
           "hype": {
-            "$value": "#5A4C84",
             "$ref": "purple.600"
           }
         }
       },
       "categoryQuaternary": {
         "$type": "color",
-        "$value": "#42657C",
         "$ref": "blue.700",
         "$themes": {
           "chat": {
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "roast": {
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "hype": {
-            "$value": "#6F514E",
             "$ref": "brown.600"
           }
         }
       },
       "categorySecondary": {
         "$type": "color",
-        "$value": "#905013",
         "$ref": "orange.700",
         "$themes": {
           "chat": {
-            "$value": "#51623A",
             "$ref": "green.700"
           },
           "roast": {
-            "$value": "#51623A",
             "$ref": "green.700"
           },
           "hype": {
-            "$value": "#51623A",
             "$ref": "green.700"
           }
         }
       },
       "categoryTertiary": {
         "$type": "color",
-        "$value": "#46635E",
         "$ref": "teal.700"
       },
       "disabled": {
         "$type": "color",
-        "$value": "#846A67",
         "$ref": "brown.500"
       },
       "negativeDark": {
         "$type": "color",
-        "$value": "#3C0800",
         "$ref": "red.1000"
       },
       "negativeLight": {
         "$type": "color",
-        "$value": "#FFC3B6",
         "$ref": "red.100"
       },
       "negativeMid": {
         "$type": "color",
-        "$value": "#B4422F",
-        "$ref": "red.700"
+        "$ref": "red.700",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "red.700",
+            "$themes": {
+              "chat": {
+                "$ref": "red.600"
+              }
+            }
+          }
+        }
       },
       "onColorDark": {
         "$type": "color",
-        "$value": "#C9BEBA",
         "$ref": "brown.300"
       },
       "onColorLight": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white"
       },
       "onColorMid": {
         "$type": "color",
-        "$value": "#DED9D4",
         "$ref": "brown.200"
       },
       "positiveDark": {
         "$type": "color",
-        "$value": "#101F02",
         "$ref": "green.1000",
         "$themes": {
           "roast": {
-            "$value": "#E6F2C9",
             "$ref": "green.50"
           }
         }
       },
       "positiveLight": {
         "$type": "color",
-        "$value": "#E6F2C9",
         "$ref": "green.50",
         "$themes": {
           "roast": {
-            "$value": "#101F02",
             "$ref": "green.1000"
           }
         }
       },
       "positiveMid": {
         "$type": "color",
-        "$value": "#51623A",
         "$ref": "green.700",
         "$themes": {
           "roast": {
-            "$value": "#C8E585",
             "$ref": "green.200"
           }
         }
       },
       "userInput": {
         "$type": "color",
-        "$value": "#47201C",
         "$ref": "brown.800",
         "$themes": {
           "hype": {
-            "$value": "#354F4B",
             "$ref": "teal.800"
           }
         }
       },
       "waitingDark": {
         "$type": "color",
-        "$value": "#3C2859",
         "$ref": "purple.800"
       },
       "waitingLight": {
         "$type": "color",
-        "$value": "#E8E8FF",
         "$ref": "purple.50"
       },
       "waitingMid": {
         "$type": "color",
-        "$value": "#695F9A",
         "$ref": "purple.500"
       },
       "warningDark": {
         "$type": "color",
-        "$value": "#1F1700",
         "$ref": "yellow.1000"
       },
       "warningLight": {
         "$type": "color",
-        "$value": "#FAEFC5",
         "$ref": "yellow.50"
       },
       "warningMid": {
         "$type": "color",
-        "$value": "#866512",
-        "$ref": "yellow.700"
+        "$ref": "yellow.700",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "yellow.700",
+            "$themes": {
+              "chat": {
+                "$ref": "yellow.400"
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -1125,66 +1038,54 @@
       "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#041F1A",
           "$ref": "teal.1000"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#8CB5AA",
           "$ref": "teal.300"
         },
         "primary": {
           "$type": "color",
-          "$value": "#9DC9BD",
           "$ref": "teal.200"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#DAF0E5",
           "$ref": "teal.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#041F1A",
           "$ref": "teal.1000"
         }
       },
       "border": {
         "default": {
           "$type": "color",
-          "$value": "#7AA097",
           "$ref": "teal.400"
         },
         "selected": {
           "$type": "color",
-          "$value": "#7AA097",
           "$ref": "teal.400"
         },
         "selectedInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         }
       },
       "content": {
         "primary": {
           "$type": "color",
-          "$value": "#041F1A",
           "$ref": "teal.1000"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#354F4B",
           "$ref": "teal.800"
         }
       }
@@ -1193,71 +1094,58 @@
       "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#1F1700",
           "$ref": "yellow.1000"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#B48F2B",
           "$ref": "yellow.500"
         },
         "dataVisTertiary": {
           "$type": "color",
-          "$value": "#E3B844",
           "$ref": "yellow.300"
         },
         "primary": {
           "$type": "color",
-          "$value": "#FBCD51",
           "$ref": "yellow.200"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#FAEFC5",
           "$ref": "yellow.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#1F1700",
           "$ref": "yellow.1000"
         }
       },
       "border": {
         "default": {
           "$type": "color",
-          "$value": "#CCA338",
           "$ref": "yellow.400"
         },
         "selected": {
           "$type": "color",
-          "$value": "#CCA338",
           "$ref": "yellow.400"
         },
         "selectedInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         }
       },
       "content": {
         "primary": {
           "$type": "color",
-          "$value": "#1F1700",
           "$ref": "yellow.1000"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#6E5005",
           "$ref": "yellow.800"
         }
       }
@@ -1266,86 +1154,70 @@
       "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#210B3E",
           "$ref": "purple.1000"
         },
         "dataVisQuaternary": {
           "$type": "color",
-          "$value": "#7771B0",
           "$ref": "purple.400"
         },
         "dataVisQuinary": {
           "$type": "color",
-          "$value": "#8683C5",
           "$ref": "purple.300"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#3C2859",
           "$ref": "purple.800"
         },
         "dataVisTertiary": {
           "$type": "color",
-          "$value": "#5A4C84",
           "$ref": "purple.600"
         },
         "primary": {
           "$type": "color",
-          "$value": "#9595DB",
           "$ref": "purple.200"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#E8E8FF",
           "$ref": "purple.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#210B3E",
           "$ref": "purple.1000"
         }
       },
       "border": {
         "default": {
           "$type": "color",
-          "$value": "#7771B0",
           "$ref": "purple.400"
         },
         "selected": {
           "$type": "color",
-          "$value": "#7771B0",
           "$ref": "purple.400"
         },
         "selectedInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         }
       },
       "content": {
         "primary": {
           "$type": "color",
-          "$value": "#210B3E",
           "$ref": "purple.1000"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#3C2859",
           "$ref": "purple.800"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#4B3A6F",
           "$ref": "purple.700"
         }
       }
@@ -1354,81 +1226,66 @@
       "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#061A2E",
           "$ref": "blue.1000"
         },
         "dataVisQuaternary": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#567D96",
           "$ref": "blue.600"
         },
         "dataVisTertiary": {
           "$type": "color",
-          "$value": "#C3EAFB",
           "$ref": "blue.100"
         },
         "primary": {
           "$type": "color",
-          "$value": "#9ED9F7",
           "$ref": "blue.200"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#E8FAFF",
           "$ref": "blue.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#061A2E",
           "$ref": "blue.1000"
         }
       },
       "border": {
         "default": {
           "$type": "color",
-          "$value": "#7DAFCB",
           "$ref": "blue.400"
         },
         "selected": {
           "$type": "color",
-          "$value": "#7DAFCB",
           "$ref": "blue.400"
         },
         "selectedInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         }
       },
       "content": {
         "primary": {
           "$type": "color",
-          "$value": "#061A2E",
           "$ref": "blue.1000"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#2E4C62",
           "$ref": "blue.800"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#42657C",
           "$ref": "blue.700"
         }
       }
@@ -1437,66 +1294,54 @@
       "background": {
         "dataVisPrimary": {
           "$type": "color",
-          "$value": "#271300",
           "$ref": "orange.1000"
         },
         "dataVisSecondary": {
           "$type": "color",
-          "$value": "#BD753A",
           "$ref": "orange.500"
         },
         "primary": {
           "$type": "color",
-          "$value": "#FFAD73",
           "$ref": "orange.200"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#FFE3D1",
           "$ref": "orange.50"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#271300",
           "$ref": "orange.1000"
         }
       },
       "border": {
         "buttonSecondary": {
           "$type": "color",
-          "$value": "#D3884D",
           "$ref": "orange.400"
         },
         "default": {
           "$type": "color",
-          "$value": "#D3884D",
           "$ref": "orange.400"
         },
         "selectedInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         }
       },
       "content": {
         "primary": {
           "$type": "color",
-          "$value": "#271300",
           "$ref": "orange.1000"
         },
         "primaryInverse": {
           "$type": "color",
-          "$value": "#FFFEFB",
           "$ref": "monotone.white"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#7A3D00",
           "$ref": "orange.800"
         }
       }
@@ -1506,68 +1351,54 @@
     "background": {
       "level0": {
         "$type": "color",
-        "$value": "#F8F6F2",
         "$ref": "brown.50",
         "$themes": {
           "roast": {
-            "$value": "#291210",
             "$ref": "brown.900"
           }
         }
       },
       "level1": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           },
           "roast": {
-            "$value": "#FFFEFB0D",
             "$ref": "alpha.light.5"
           },
           "hype": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           }
         }
       },
       "level2": {
         "$type": "color",
-        "$value": "#F8F6F2",
         "$ref": "brown.50",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           },
           "roast": {
-            "$value": "#47201C",
             "$ref": "brown.800"
           },
           "hype": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           }
         }
       },
       "level3": {
         "$type": "color",
-        "$value": "#FFFEFB",
         "$ref": "monotone.white",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           },
           "roast": {
-            "$value": "#FFFEFB0D",
             "$ref": "alpha.light.5"
           },
           "hype": {
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50"
           }
         }
@@ -1576,60 +1407,48 @@
     "border": {
       "level0": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB0D",
             "$ref": "alpha.light.5"
           },
           "hype": {
-            "$value": "#0E06050D",
             "$ref": "alpha.dark.5"
           }
         }
       },
       "level1": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "chat": {
-            "$value": "#FFFEFBBF",
             "$ref": "alpha.light.75"
           },
           "roast": {
-            "$value": "#FFFEFB1A",
             "$ref": "alpha.light.10"
           },
           "hype": {
-            "$value": "#0E06050D",
             "$ref": "alpha.dark.5"
           }
         }
       },
       "level2": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB26",
             "$ref": "alpha.light.15"
           }
         }
       },
       "level3": {
         "$type": "color",
-        "$value": "#0E06051A",
         "$ref": "alpha.dark.10",
         "$themes": {
           "roast": {
-            "$value": "#FFFEFB1A",
             "$ref": "alpha.light.10"
           },
           "hype": {
-            "$value": "#0E06050D",
             "$ref": "alpha.dark.5"
           }
         }
@@ -1642,185 +1461,150 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700"
           },
           "default": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFDBD6",
             "$ref": "red.50",
             "$themes": {
               "roast": {
-                "$value": "#B4422F",
                 "$ref": "red.700"
               },
               "hype": {
-                "$value": "#B4422F",
                 "$ref": "red.700"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#A52D1A",
             "$ref": "red.800"
           }
         },
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#C35743",
             "$ref": "red.600",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         },
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         },
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#C35743",
             "$ref": "red.600",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
@@ -1829,181 +1613,147 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFC3B6",
             "$ref": "red.100",
             "$themes": {
               "chat": {
-                "$value": "#FFFEFB00",
                 "$ref": "alpha.light.0"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFC3B6",
             "$ref": "red.100"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFDBD6",
             "$ref": "red.50"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFC3B6",
             "$ref": "red.100"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#F09681",
             "$ref": "red.300"
           }
         },
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#FFAB96",
             "$ref": "red.200",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               },
               "hype": {
-                "$value": "#FFC3B6",
                 "$ref": "red.100"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#D26C58",
             "$ref": "red.500",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               },
               "hype": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           }
         },
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           }
         },
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFAB96",
             "$ref": "red.200",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               },
               "hype": {
-                "$value": "#FFC3B6",
                 "$ref": "red.100"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#D26C58",
             "$ref": "red.500",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               },
               "hype": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#3C0800",
             "$ref": "red.1000"
           }
         }
@@ -2012,65 +1762,52 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#F8F6F2",
             "$ref": "brown.50",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#DAF0E5",
                 "$ref": "teal.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#1B0C0B",
             "$ref": "brown.1000",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               },
               "hype": {
-                "$value": "#1D3733",
                 "$ref": "teal.900"
               }
             }
@@ -2079,158 +1816,128 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#9DC9BD",
                 "$ref": "teal.200"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         },
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         },
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
@@ -2239,47 +1946,38 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               },
               "hype": {
-                "$value": "#9DC9BD",
                 "$ref": "teal.200"
               }
             }
@@ -2288,108 +1986,87 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFC3B6",
                 "$ref": "red.100"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -2398,55 +2075,45 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
@@ -2455,71 +2122,57 @@
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFDBD6",
                 "$ref": "red.50"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFC3B6",
                 "$ref": "red.100"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFC3B6",
                 "$ref": "red.100"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -2530,31 +2183,25 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB0D",
                 "$ref": "alpha.light.5"
               }
             }
@@ -2563,122 +2210,98 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#E1816D",
                 "$ref": "red.400"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -2687,55 +2310,45 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
@@ -2744,75 +2357,60 @@
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFAB96",
                 "$ref": "red.200"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#E1816D",
                 "$ref": "red.400"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -2823,123 +2421,100 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         },
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#C35743",
                 "$ref": "red.600"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               }
             }
@@ -2948,55 +2523,45 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
@@ -3005,59 +2570,48 @@
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#3C0800",
                 "$ref": "red.1000"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#6D1709",
                 "$ref": "red.900"
               }
             }
@@ -3068,71 +2622,57 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#F0EDEA",
             "$ref": "brown.100",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB00",
                 "$ref": "alpha.light.0"
               },
               "hype": {
-                "$value": "#BCDDD1",
                 "$ref": "teal.100"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#F0EDEA",
             "$ref": "brown.100",
             "$themes": {
               "roast": {
-                "$value": "#DED9D4",
                 "$ref": "brown.200"
               },
               "hype": {
-                "$value": "#BCDDD1",
                 "$ref": "teal.100"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#F8F6F2",
             "$ref": "brown.50",
             "$themes": {
               "hype": {
-                "$value": "#DAF0E5",
                 "$ref": "teal.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#F0EDEA",
             "$ref": "brown.100",
             "$themes": {
               "hype": {
-                "$value": "#BCDDD1",
                 "$ref": "teal.100"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#C9BEBA",
             "$ref": "brown.300",
             "$themes": {
               "chat": {
-                "$value": "#DED9D4",
                 "$ref": "brown.200"
               },
               "roast": {
-                "$value": "#DED9D4",
                 "$ref": "brown.200"
               },
               "hype": {
-                "$value": "#9DC9BD",
                 "$ref": "teal.200"
               }
             }
@@ -3141,100 +2681,81 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#0E060500",
             "$ref": "alpha.dark.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E060500",
             "$ref": "alpha.dark.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E060540",
             "$ref": "alpha.dark.25"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#DED9D4",
                 "$ref": "brown.200"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#846A67",
                 "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
@@ -3243,98 +2764,79 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "default": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           }
         },
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#F8F6F2",
                 "$ref": "brown.50"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#846A67",
                 "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#846A67",
                 "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#587871",
                 "$ref": "teal.600"
               }
             }
@@ -3345,55 +2847,45 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -3402,132 +2894,108 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#6F514E",
                 "$ref": "brown.600"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "hype": {
-                "$value": "#DAF0E5",
                 "$ref": "teal.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         },
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB40",
             "$ref": "alpha.light.25"
           }
         },
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#6F514E",
                 "$ref": "brown.600"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "hype": {
-                "$value": "#DAF0E5",
                 "$ref": "teal.50"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           }
         }
@@ -3536,82 +3004,67 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E060500",
             "$ref": "alpha.dark.0"
           }
         },
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -3620,75 +3073,60 @@
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -3697,55 +3135,45 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
@@ -3754,75 +3182,60 @@
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#5B3935",
             "$ref": "brown.700",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB",
                 "$ref": "monotone.white"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               },
               "hype": {
-                "$value": "#354F4B",
                 "$ref": "teal.800"
               }
             }
@@ -3833,39 +3246,31 @@
         "background": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "chat": {
-                "$value": "#FFFEFB00",
                 "$ref": "alpha.light.0"
               },
               "roast": {
-                "$value": "#FFFEFB00",
                 "$ref": "alpha.light.0"
               },
               "hype": {
-                "$value": "#FFFEFB00",
                 "$ref": "alpha.light.0"
               }
             }
@@ -3874,104 +3279,84 @@
         "border": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "disabled": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB00",
             "$ref": "alpha.light.0"
           }
         },
         "content": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#47201C",
                 "$ref": "brown.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#C9BEBA",
             "$ref": "brown.300",
             "$themes": {
               "roast": {
-                "$value": "#846A67",
                 "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#C9BEBA",
             "$ref": "brown.300",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
@@ -3980,75 +3365,60 @@
         "iconBackground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               },
               "hype": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               },
               "hype": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               },
               "hype": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               },
               "hype": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#FFFEFB33",
             "$ref": "alpha.light.20",
             "$themes": {
               "roast": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               },
               "hype": {
-                "$value": "#0E06051A",
                 "$ref": "alpha.dark.10"
               }
             }
@@ -4057,71 +3427,57 @@
         "iconForeground": {
           "complete": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#47201C",
                 "$ref": "brown.800"
               }
             }
           },
           "default": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "disabled": {
             "$type": "color",
-            "$value": "#C9BEBA",
             "$ref": "brown.300",
             "$themes": {
               "roast": {
-                "$value": "#846A67",
                 "$ref": "brown.500"
               },
               "hype": {
-                "$value": "#698C84",
                 "$ref": "teal.500"
               }
             }
           },
           "loading": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
           },
           "onPress": {
             "$type": "color",
-            "$value": "#C9BEBA",
             "$ref": "brown.300",
             "$themes": {
               "roast": {
-                "$value": "#5B3935",
                 "$ref": "brown.700"
               },
               "hype": {
-                "$value": "#46635E",
                 "$ref": "teal.700"
               }
             }
@@ -4134,257 +3490,210 @@
         "active": {
           "background": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "border": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           },
           "hint": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "label": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "placeholder": {
             "$type": "color",
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "value": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           }
         },
         "complete": {
           "background": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200"
           },
           "border": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "hint": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           },
           "label": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "placeholder": {
             "$type": "color",
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "value": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           }
         },
         "default": {
           "background": {
             "$type": "color",
-            "$value": "#FFFEFB",
             "$ref": "monotone.white"
           },
           "border": {
             "$type": "color",
-            "$value": "#0E06051A",
             "$ref": "alpha.dark.10"
           },
           "hint": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "label": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "placeholder": {
             "$type": "color",
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "value": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           }
         },
         "disabled": {
           "background": {
             "$type": "color",
-            "$value": "#FFFEFB80",
             "$ref": "alpha.light.50",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "border": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200",
             "$themes": {
               "roast": {
-                "$value": "#FFFEFB33",
                 "$ref": "alpha.light.20"
               }
             }
           },
           "hint": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500",
             "$themes": {
               "roast": {
-                "$value": "#C9BEBA",
                 "$ref": "brown.300"
               }
             }
           },
           "label": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500"
           },
           "placeholder": {
             "$type": "color",
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "value": {
             "$type": "color",
-            "$value": "#846A67",
             "$ref": "brown.500"
           }
         },
         "error": {
           "background": {
             "$type": "color",
-            "$value": "#DED9D4",
             "$ref": "brown.200"
           },
           "border": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               }
             }
           },
           "hint": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700",
             "$themes": {
               "roast": {
-                "$value": "#D26C58",
                 "$ref": "red.500"
               }
             }
           },
           "iconForeground": {
             "$type": "color",
-            "$value": "#B4422F",
             "$ref": "red.700",
             "$themes": {
               "roast": {
-                "$value": "#A52D1A",
                 "$ref": "red.800"
               }
             }
           },
           "label": {
             "$type": "color",
-            "$value": "#6F514E",
             "$ref": "brown.600"
           },
           "placeholder": {
             "$type": "color",
-            "$value": "#AC9B98",
             "$ref": "brown.400"
           },
           "value": {
             "$type": "color",
-            "$value": "#47201C",
             "$ref": "brown.800"
           }
         }

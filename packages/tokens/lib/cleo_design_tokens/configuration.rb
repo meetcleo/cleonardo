@@ -48,9 +48,10 @@ module CleoDesignTokens
     private
 
     def build_palette(experience)
+      primitives = LookupBuilder.build_lookup(@primitives, experience: experience).freeze
       Palette.new(
-        primitives: LookupBuilder.build_lookup(@primitives, experience: experience).freeze,
-        semantic: LookupBuilder.build_semantic_lookup(@semantic, experience: experience).freeze,
+        primitives: primitives,
+        semantic: LookupBuilder.build_semantic_lookup(@semantic, experience: experience, primitives: primitives).freeze,
       )
     end
   end

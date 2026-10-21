@@ -121,3 +121,39 @@ describe('CleoDesignTokens.configure', () => {
     expect(SEMANTIC_LOOKUP['core.content.primary']?.value).toBe('#47201C');
   });
 });
+
+describe('reference-based semantics', () => {
+  it('resolves shared references against the active primitive experience', async () => {
+    const semantic = (await import('../spec/fixtures/reader/reference-semantics.json')).default;
+    const { CleoDesignTokens: tokens, UnknownTokenError } = await loadReader(primitives, semantic);
+    const { fetch } = tokens.colors.semantic;
+    expect(fetch('core.content.primary')).toBe('#47201C');
+    tokens.configure({ experience: 'refresh' });
+    expect(fetch('core.content.primary')).toBe('#192012');
+    expect(fetch('core.content.primary', 'roast')).toBe('#F9F9F8');
+    expect(fetch('core.content.secondary', 'roast')).toBe('#192012');
+    expect(fetch('core.border.level0', 'chat')).toBe('#F9F9F8');
+    expect(() => fetch('core.border.level0')).toThrow(UnknownTokenError);
+    expect(fetch('effects.background.glassMorphism')).toBe('#00000033');
+    tokens.configure({ experience: 'current' });
+    expect(fetch('core.content.primary')).toBe('#47201C');
+  });
+
+  it('rejects a dangling Refresh reference without changing either active bucket', async () => {
+    const semantic = JSON.parse(JSON.stringify((await import('../spec/fixtures/reader/reference-semantics.json')).default));
+    semantic.core.content.secondary.$experiences.cleoRefresh.$ref = 'missing';
+    const { CleoDesignTokens: tokens, UnknownExperienceError } = await loadReader(primitives, semantic);
+    expect(() => tokens.configure({ experience: 'refresh' })).toThrow(UnknownExperienceError);
+    expect(tokens.colors.primitives.fetch('brown.800')).toBe('#47201C');
+  });
+});
+
+it('requires Refresh primitive data even when every semantic binding is shared', async () => {
+  const semantic = {
+    $schema: 'cleo-semantic-references/1',
+    core: { content: { primary: { $type: 'color', $ref: 'brown.800' } } },
+  };
+  const { CleoDesignTokens: tokens, UnknownExperienceError } = await loadReader(currentPrimitives, semantic);
+  expect(() => tokens.configure({ experience: 'refresh' })).toThrow(UnknownExperienceError);
+  expect(tokens.colors.semantic.fetch('core.content.primary')).toBe('#47201C');
+});
