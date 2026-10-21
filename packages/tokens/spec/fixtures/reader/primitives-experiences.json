@@ -1,0 +1,9 @@
+{
+  "brown": {
+    "50": { "$type": "color", "$value": "#F8F6F2", "$experiences": { "cleoRefresh": { "$value": "#F9F9F8" } } },
+    "800": { "$type": "color", "$value": "#47201C", "$experiences": { "cleoRefresh": { "$value": "#192012" } } }
+  },
+  "monotone": {
+    "white": { "$type": "color", "$value": "#FFFEFB", "$experiences": { "cleoRefresh": { "$value": "#FFFEFB" } } }
+  }
+}

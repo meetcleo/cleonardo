@@ -1,0 +1,36 @@
+{
+  "primitives": {
+    "brown": {
+      "50": { "$type": "color", "$value": "#F8F6F2", "$experiences": { "cleoRefresh": { "$value": "#F9F9F8" } } },
+      "800": { "$type": "color", "$value": "#47201C", "$experiences": { "cleoRefresh": { "$value": "#192012" } } }
+    }
+  },
+  "semantic": {
+    "core": {
+      "content": {
+        "primary": {
+          "$type": "color", "$value": "#47201C", "$ref": "brown.800",
+          "$themes": { "roast": { "$value": "#F8F6F2", "$ref": "brown.50" } },
+          "$experiences": {
+            "cleoRefresh": {
+              "$value": "#192012", "$ref": "brown.800",
+              "$themes": { "roast": { "$value": "#F9F9F8", "$ref": "brown.50" } }
+            }
+          }
+        },
+        "secondary": {
+          "$type": "color", "$value": "#F8F6F2", "$ref": "brown.50",
+          "$themes": { "roast": { "$value": "#47201C", "$ref": "brown.800" } },
+          "$experiences": { "cleoRefresh": { "$value": "#F9F9F8", "$ref": "brown.50" } }
+        }
+      },
+      "border": {
+        "level0": {
+          "$type": "color",
+          "$themes": { "chat": { "$value": "#F8F6F2", "$ref": "brown.50" } },
+          "$experiences": { "cleoRefresh": { "$themes": { "chat": { "$value": "#F9F9F8", "$ref": "brown.50" } } } }
+        }
+      }
+    }
+  }
+}

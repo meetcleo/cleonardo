@@ -9,14 +9,20 @@ module CleoDesignTokens
   module LookupBuilder
     # Flattens one tree of plain (theme-free) leaves — e.g. the parsed
     # `primitives.json` — into a key -> hex lookup.
-    def self.build_lookup(tree)
-      flatten_tree(tree) { |leaf| leaf["$value"].freeze }
+    def self.build_lookup(tree, experience: :current)
+      flatten_tree(tree) do |leaf, key|
+        value = experience_leaf(leaf, experience, key)["$value"]
+        unless value.is_a?(String)
+          raise UnknownExperienceError, "design token #{key.inspect} has no primitive value for experience #{experience.inspect}"
+        end
+        value.freeze
+      end
     end
 
     # Flattens `semantic.json` into a key -> SemanticEntry lookup, one entry
     # per role — the theme axis lives inside the entry, not in the key.
-    def self.build_semantic_lookup(tree)
-      flatten_tree(tree) { |leaf| semantic_entry(leaf) }
+    def self.build_semantic_lookup(tree, experience: :current)
+      flatten_tree(tree) { |leaf, key| semantic_entry(experience_leaf(leaf, experience, key), experience, key) }
     end
 
     # Walks `tree`, turning each leaf into a lookup entry via the block —
@@ -43,19 +49,48 @@ module CleoDesignTokens
         end
 
         origins[key] = path
-        lookup[key] = yield(leaf)
+        lookup[key] = yield(leaf, key)
       end
       lookup
     end
     private_class_method :flatten_tree
 
-    def self.semantic_entry(leaf)
+    def self.experience_leaf(leaf, experience, key)
+      return leaf if experience.to_s == "current"
+      unless experience.to_s == "refresh"
+        raise UnknownExperienceError, "unknown experience: #{experience.inspect}; expected :current or :refresh"
+      end
+
+      snapshots = leaf["$experiences"]
+      snapshot = snapshots["cleoRefresh"] if snapshots.is_a?(Hash)
+      unless snapshot.is_a?(Hash)
+        raise UnknownExperienceError, "experience :refresh is unavailable for design token #{key.inspect}; sync the Refresh colour data first"
+      end
+      snapshot
+    end
+    private_class_method :experience_leaf
+
+    def self.semantic_entry(leaf, experience, key)
       themes = {}
-      (leaf["$themes"] || {}).each { |theme, override| themes[theme] = override["$value"].freeze }
+      raw_themes = leaf["$themes"] || {}
+      unless raw_themes.is_a?(Hash)
+        raise UnknownExperienceError, "design token #{key.inspect} has invalid themes for experience #{experience.inspect}"
+      end
+      raw_themes.each do |theme, override|
+        value = override.is_a?(Hash) ? override["$value"] : nil
+        unless value.is_a?(String)
+          raise UnknownExperienceError, "design token #{key.inspect} has no value for theme #{theme.inspect} in experience #{experience.inspect}"
+        end
+        themes[theme] = value.freeze
+      end
+      value = leaf["$value"]
+      if (leaf.key?("$value") && !value.is_a?(String)) || (value.nil? && themes.empty?)
+        raise UnknownExperienceError, "design token #{key.inspect} has no semantic values for experience #{experience.inspect}"
+      end
 
       # `Data#new` freezes the instance itself; the Hash inside it still
       # needs its own `.freeze` — freezing is shallow.
-      SemanticEntry.new(leaf["$value"]&.freeze, themes.freeze)
+      SemanticEntry.new(value&.freeze, themes.freeze)
     end
     private_class_method :semantic_entry
   end
