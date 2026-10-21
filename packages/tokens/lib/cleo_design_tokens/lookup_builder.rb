@@ -21,8 +21,21 @@ module CleoDesignTokens
 
     # Flattens `semantic.json` into a key -> SemanticEntry lookup, one entry
     # per role — the theme axis lives inside the entry, not in the key.
-    def self.build_semantic_lookup(tree, experience: :current)
-      flatten_tree(tree) { |leaf, key| semantic_entry(experience_leaf(leaf, experience, key), experience, key) }
+    def self.build_semantic_lookup(tree, experience: :current, primitives: nil)
+      schema = tree["$schema"]
+      if tree.key?("$schema") && schema != "cleo-semantic-references/1"
+        raise UnknownExperienceError, "unsupported semantic schema: #{schema.inspect}"
+      end
+      references = schema == "cleo-semantic-references/1"
+      flatten_tree(tree) do |leaf, key|
+        snapshots = leaf["$experiences"]
+        if references && leaf.key?("$experiences") && !snapshots.is_a?(Hash)
+          raise UnknownExperienceError, "invalid semantic experiences for #{key.inspect}"
+        end
+        shared = references && (experience.to_s == "current" || !snapshots.is_a?(Hash) || !snapshots.key?("cleoRefresh"))
+        snapshot = shared ? leaf : experience_leaf(leaf, experience, key)
+        semantic_entry(snapshot, experience, key, primitives: primitives, references: references)
+      end
     end
 
     # Walks `tree`, turning each leaf into a lookup entry via the block —
@@ -70,20 +83,20 @@ module CleoDesignTokens
     end
     private_class_method :experience_leaf
 
-    def self.semantic_entry(leaf, experience, key)
+    def self.semantic_entry(leaf, experience, key, primitives:, references:)
       themes = {}
       raw_themes = leaf["$themes"] || {}
       unless raw_themes.is_a?(Hash)
         raise UnknownExperienceError, "design token #{key.inspect} has invalid themes for experience #{experience.inspect}"
       end
       raw_themes.each do |theme, override|
-        value = override.is_a?(Hash) ? override["$value"] : nil
+        value = override.is_a?(Hash) ? semantic_value(override, key, primitives: primitives, references: references) : nil
         unless value.is_a?(String)
           raise UnknownExperienceError, "design token #{key.inspect} has no value for theme #{theme.inspect} in experience #{experience.inspect}"
         end
         themes[theme] = value.freeze
       end
-      value = leaf["$value"]
+      value = semantic_value(leaf, key, primitives: primitives, references: references)
       if (leaf.key?("$value") && !value.is_a?(String)) || (value.nil? && themes.empty?)
         raise UnknownExperienceError, "design token #{key.inspect} has no semantic values for experience #{experience.inspect}"
       end
@@ -93,5 +106,15 @@ module CleoDesignTokens
       SemanticEntry.new(value&.freeze, themes.freeze)
     end
     private_class_method :semantic_entry
+
+    def self.semantic_value(binding, key, primitives:, references:)
+      return binding["$value"] unless references && binding.key?("$ref")
+      ref = binding["$ref"]
+      if !ref.is_a?(String) || !primitives&.key?(ref) || binding.key?("$value")
+        raise UnknownExperienceError, "invalid primitive reference #{ref.inspect} for #{key.inspect}"
+      end
+      primitives.fetch(ref)
+    end
+    private_class_method :semantic_value
   end
 end

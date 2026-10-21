@@ -17,6 +17,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { walk, sortTree, naturalCompare, buildKeyUnions, renderTokenKeysFile, die } from "./transform-core.mjs";
 
+import { expandSemanticTokens } from "./semantic-format.mjs";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PRIM_PATH = join(ROOT, "tokens", "color", "primitives.json");
 const SEM_PATH = join(ROOT, "tokens", "color", "semantic.json");
@@ -62,10 +64,11 @@ function main() {
   const semRaw = readFileSync(SEM_PATH, "utf8");
   const keysRaw = readFileSync(KEYS_PATH, "utf8");
   const primTree = JSON.parse(primRaw);
-  const semTree = JSON.parse(semRaw);
+  const semStored = JSON.parse(semRaw);
+  const semTree = expandSemanticTokens(primTree, semStored);
 
   checkCanonicalForm(primTree, primRaw, "tokens/color/primitives.json");
-  checkCanonicalForm(semTree, semRaw, "tokens/color/semantic.json");
+  checkCanonicalForm(semStored, semRaw, "tokens/color/semantic.json");
   checkTokenKeys(primTree, semTree, keysRaw);
   checkReferenceIntegrity(primTree, semTree);
   checkPaletteGaps(semTree);
@@ -117,7 +120,7 @@ function canonicalLeaf(node) {
 }
 
 function canonicalTree(tree) {
-  const out = {};
+  const out = tree.$schema === undefined ? {} : { $schema: tree.$schema };
   for (const { path, node } of walk(tree)) {
     let cursor = out;
     for (let i = 0; i < path.length - 1; i++) {

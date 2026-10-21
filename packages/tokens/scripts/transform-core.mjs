@@ -481,6 +481,7 @@ export function naturalCompare(a, b) {
 /** Rebuild groups and experience names in canonical order. Leaf fields retain their build
  *  order, and $themes follows the configured theme order. */
 export function sortTree(node) {
+  if (node === null || typeof node !== "object") return node;
   if (isLeaf(node)) {
     if (!node.$experiences) return node;
     return {

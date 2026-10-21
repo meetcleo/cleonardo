@@ -19,10 +19,19 @@ import {
   naturalCompare,
 } from './transform-core.mjs';
 
+import { expandSemanticTokens } from './semantic-format.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DUMPS = join(HERE, '..', 'spec', 'fixtures', 'dumps');
 const EXPECTED = join(HERE, '..', 'spec', 'fixtures', 'expected-resolved.json');
 const TRANSFORM_SCRIPT = join(HERE, 'transform.mjs');
+
+function readSemantic(dir: string) {
+  return expandSemanticTokens(
+    JSON.parse(readFileSync(join(dir, 'tokens/color/primitives.json'), 'utf8')),
+    JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8')),
+  );
+}
 
 const dump = (name: string) => JSON.parse(readFileSync(join(DUMPS, `${name}.json`), 'utf8'));
 
@@ -36,6 +45,7 @@ function tempProject(fixture: string) {
   mkdirSync(join(dir, 'figma-exports'), { recursive: true });
   cpSync(TRANSFORM_SCRIPT, join(dir, 'scripts', 'transform.mjs'));
   cpSync(join(HERE, 'transform-core.mjs'), join(dir, 'scripts', 'transform-core.mjs'));
+  cpSync(join(HERE, 'semantic-format.mjs'), join(dir, 'scripts', 'semantic-format.mjs'));
   cpSync(join(HERE, 'semantic-contract.json'), join(dir, 'scripts', 'semantic-contract.json'));
   cpSync(join(DUMPS, `${fixture}.json`), join(dir, 'figma-exports', 'figma-dump.json'));
   return dir;
@@ -251,7 +261,7 @@ describe('primitive experiences × semantic themes', () => {
     expect(runCli(dir).exitCode).toBe(0);
     const file = join(dir, 'tokens/color/semantic.json');
     const original = readFileSync(file, 'utf8');
-    expect(JSON.parse(original).content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
+    expect(readSemantic(dir).content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
     expect(runCli(dir).exitCode).toBe(0);
     expect(readFileSync(file, 'utf8')).toBe(original);
     cpSync(join(DUMPS, 'modes.json'), join(dir, 'figma-exports/figma-dump.json'));
@@ -313,7 +323,7 @@ describe('experience snapshot verification', () => {
     const dir = generatedProject();
     const file = join(dir, 'tokens/color/semantic.json');
     const tree = JSON.parse(readFileSync(file, 'utf8'));
-    tree.core.content.primary.$experiences.cleoRefresh.$themes.roast.$value = '#FFFFFF';
+    tree.core.content.primary.$experiences = { cleoRefresh: { $ref: 'brown.800', $themes: { roast: { $value: '#FFFFFF', $ref: 'brown.50' } } } };
     writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
     const result = verify(dir);
     expect(result.exitCode).toBe(2);
@@ -328,14 +338,14 @@ describe('experience snapshot verification', () => {
     writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
     const result = verify(dir);
     expect(result.exitCode).toBe(2);
-    expect(result.output).toContain('brown.800 has inconsistent experience snapshots');
+    expect(result.output).toContain('inconsistent primitive experiences for brown.800');
   });
 
   it('rejects an unknown theme inside Refresh', () => {
     const dir = generatedProject();
     const file = join(dir, 'tokens/color/semantic.json');
     const tree = JSON.parse(readFileSync(file, 'utf8'));
-    tree.core.content.primary.$experiences.cleoRefresh.$themes.unknown = { $value: '#123456', $ref: 'brown.800' };
+    tree.core.content.primary.$experiences = { cleoRefresh: { $ref: 'brown.800', $themes: { unknown: { $ref: 'brown.800' } } } };
     writeFileSync(file, JSON.stringify(tree, null, 2) + '\n');
     const result = verify(dir);
     expect(result.exitCode).toBe(2);
@@ -369,7 +379,7 @@ describe('Color Roles vocabulary migration', () => {
     }
     const source = { ...modern, collections: [palette, modern.collections[1]], variables: [...primitives, ...roles] };
     writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
-    const previous = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const previous = readSemantic(dir);
     return { dir, source, previous };
   }
 
@@ -377,7 +387,7 @@ describe('Color Roles vocabulary migration', () => {
     const { dir, previous } = migrationProject();
     const result = runCli(dir);
     expect(result.exitCode, result.output.slice(-1500)).toBe(0);
-    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const tree = readSemantic(dir);
     const oldLeaves = [...walk(previous)];
     const newLeaves = [...walk(tree)];
     expect(newLeaves).toHaveLength(473);
@@ -404,7 +414,7 @@ describe('Color Roles vocabulary migration', () => {
     writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
     const result = runCli(dir);
     expect(result.exitCode, result.output.slice(-1500)).toBe(0);
-    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const tree = readSemantic(dir);
     expect(tree.core.content.primary.$value).toBe(previous.core.content.primary.$value);
     expect(tree.core.content.primary.$experiences.cleoRefresh.$ref).toBe('brown.50');
     expect(result.output).toContain('preserved Current');
@@ -446,7 +456,7 @@ describe('Color Roles vocabulary migration', () => {
     writeFileSync(join(dir, 'figma-exports/figma-dump.json'), JSON.stringify(source));
     const result = runCli(dir);
     expect(result.exitCode, result.output.slice(-1500)).toBe(0);
-    const tree = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const tree = readSemantic(dir);
     expect([...walk(tree)]).toHaveLength(474);
     expect(tree.background.navbar.$experiences.cleoRefresh).toBeDefined();
     expect(tree.core.content.primary.$experiences.cleoRefresh.$value).toBe('#112233');
@@ -568,7 +578,7 @@ describe('mode-based colour collections', () => {
     expect(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8')).toBe(oldSemantic);
     expect(readFileSync(join(dir, 'src/generated/tokenKeys.ts'), 'utf8')).toBe(oldKeys);
     expect(runCli(dir, ['--allow-removals']).exitCode).toBe(0);
-    const emitted = JSON.parse(readFileSync(join(dir, 'tokens/color/semantic.json'), 'utf8'));
+    const emitted = readSemantic(dir);
     expect(emitted.content.primary.$themes.roast.$value).toBe('#F8F6F2');
   });
 });

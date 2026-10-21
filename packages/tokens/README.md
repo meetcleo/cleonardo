@@ -34,7 +34,7 @@ Only `px`, `rem`, and `em` are supported units; another unit raises a clear erro
 
 ## Format
 
-Two files, both keyed by lowerCamel dot paths. Every `$value` is a fully-resolved hex string, so consumers never follow a reference.
+Two files, both keyed by lowerCamel dot paths. Primitives store hex values; semantic roles reference primitives. Both public readers return resolved hex strings.
 
 `tokens/color/primitives.json` — the palette. A single-palette leaf carries a value:
 
@@ -42,23 +42,22 @@ Two files, both keyed by lowerCamel dot paths. Every `$value` is a fully-resolve
 "brown": { "800": { "$type": "color", "$value": "#47201C" } }
 ```
 
-`tokens/color/semantic.json` — the roles. The `Base` theme sits on the leaf; other themes appear under `$themes` **only where they genuinely differ**:
+`tokens/color/semantic.json` uses the root marker `"$schema": "cleo-semantic-references/1"`. The `Base` binding sits on the leaf; other themes appear under `$themes` **only where they genuinely differ**:
 
 ```json
 "core": { "content": { "primary": {
   "$type": "color",
-  "$value": "#47201C",
   "$ref": "brown.800",
   "$themes": {
-    "roast": { "$value": "#F8F6F2", "$ref": "brown.50" }
+    "roast": { "$ref": "brown.50" }
   }
 } } }
 ```
 
-- **`$ref`** is the primitive the value came from, as a valid primitives fetch key. It records *intent* — that `core.content.primary` is meant to be `brown.800`, not merely that it happens to equal `#47201C`.
-- **No `$ref`** means a palette gap: no primitive carries that value. See [Known exceptions](#known-exceptions).
+- **`$ref`** is a primitive fetch key, resolved against the configured experience. It records *intent* — that `core.content.primary` is meant to be `brown.800`, not merely that it happens to equal `#47201C`.
+- **A literal `$value` without `$ref`** means a palette gap: no primitive carries that value. See [Known exceptions](#known-exceptions).
 - **A theme absent from `$themes` resolves to Base.** A theme earns an entry only by differing from Base in its value or its `$ref`.
-- **No `$value` on the leaf at all** means the role exists in some themes but not Base — a Figma-side gap, reported by the transform rather than papered over. A themeless read raises.
+- **Neither `$ref` nor `$value` on the leaf** means the role exists in some themes but not Base — a Figma-side gap, reported by the transform rather than papered over. A themeless read raises.
 
 The theme is an **axis**, not part of the key: `core.content.primary` is one role with per-theme values, not four keys. That's why 1880 leaf entries collapse to 473 roles plus 336 overrides.
 
@@ -74,11 +73,15 @@ When the primitive collection has multiple modes, `Current` supplies the existin
 } }
 ```
 
-Semantic aliases are resolved separately against each primitive palette. Each semantic `$experiences.cleoRefresh` snapshot contains its own Base `$value` / `$ref` and any `$themes` overrides relative to **that experience's Base**. For example, `background.primary` can resolve to `#F8F6F2` in Current and `#F9F9F8` in Refresh while both reference `brown.50`. A missing theme override in Refresh falls back to Refresh's Base; snapshots must not be merged with Current's theme overrides.
+Semantic bindings are shared across experiences. A role referencing `brown.50` automatically uses the Current or Refresh value from `primitives.json`. The reader resolves and caches each selected palette once, keeping subsequent fetches as lookup reads.
 
-All additional experiences are emitted on every primitive and semantic leaf, including unchanged values. An experience is independent of the Base/Chat/Roast/Hype theme axis. Multiple primitive modes require `Current`; colliding normalised experience names and missing per-mode primitive values fail validation. Single-palette dumps retain their existing output shape.
+Only roles whose bindings differ need `$experiences.cleoRefresh`. An explicit experience snapshot **replaces the whole semantic binding, including its theme overrides**; it never merges with Current. This preserves cases where Refresh removes a Current theme override or changes the primitive reference. Literal palette gaps remain literal. Missing a semantic snapshot means reuse the shared references and literals against the selected primitive palette.
 
-Diffs and release notes identify snapshots as `brown.50@experience:cleoRefresh` and themed semantic entries as `background.primary@experience:cleoRefresh@roast`. The removal guard covers dropped experiences as well as roles and theme overrides. The verifier checks references against the corresponding experience palette and requires matching experience coverage on all leaves.
+Every primitive still carries a complete value for each experience; missing primitive snapshots fail rather than falling back to Current. An experience is independent of the Base/Chat/Roast/Hype theme axis. Multiple primitive modes require `Current`; colliding normalised experience names and missing per-mode primitive values fail validation.
+
+The transform expands semantic references before compatibility mapping, value diffs, removal checks and release notes, then compacts the written file. Reports still identify resolved entries as `background.primary@experience:cleoRefresh@roast`. The verifier resolves every binding against every available primitive experience, including inherited bindings.
+
+The root schema distinguishes shared bindings from legacy complete snapshots. Both readers continue accepting the previous resolved format. Ship the new readers and reference-based data together; older readers cannot consume the new semantic JSON. Direct JSON imports are not a supported consumer API.
 
 Readers default to Current. Runtime experience selection is documented under Consumers; token fetch keys and their generated unions remain experience-free.
 
@@ -92,7 +95,8 @@ packages/tokens/
       semantic.json        # the roles — Base on the leaf, overrides under $themes
   scripts/
     transform.mjs          # CLI driver: reads the dump, writes the files
-    transform-core.mjs     # all the logic — parsing, resolution, key derivation
+    transform-core.mjs     # Figma parsing, alias resolution and key derivation
+    semantic-format.mjs    # compact references and lossless expansion for validation/diffs
   spec/
     synthesise-dump.mjs    # builds dump fixtures from a pre-restructure token pair
     fixtures/              # committed dumps + the value-equivalence expectations
@@ -186,7 +190,7 @@ Each bucket selects the first available source: `Base Colors` before `Color Prim
 
 For mode-based semantic collections, every mode is resolved independently, for each primitive experience. The `Base` mode supplies each snapshot's leaf value even if Figma's default mode is different; overrides are emitted only when the value or primitive reference differs. A missing `Base` mode, duplicate theme names (case-insensitive), or a missing value for any declared mode fails validation.
 
-Without an existing output baseline, paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`. When syncing a multi-experience `Color Roles` collection into the published vocabulary, the CLI applies the compatibility rules below. This format support does not add experiment selection to either reader.
+Without an existing output baseline, paths are preserved apart from casing normalisation: `content/primary` emits `content.primary`. When syncing a multi-experience `Color Roles` collection into the published vocabulary, the CLI applies the compatibility rules below. Reader experience selection is documented under Consumers.
 
 ### Migrating Color Roles without breaking published keys
 
@@ -228,7 +232,7 @@ Reported as warnings, not failures: palette gaps, roles missing from Base, alias
 `.github/workflows/tokens.yml` runs two jobs on every PR touching this package, both required to merge. `verify` covers the TypeScript side, in two layers, neither able to do the other's job:
 
 - **Generated files are generated** (`.github/workflows/tokens.yml`, layer 1). `tokens/color/**` and `src/generated/**` must be byte-identical to the PR's merge base, checked with `git diff` rather than a fixture — a committed fixture would go red on the first real Figma change. This is what catches a hand-edit on one of the 13 primitives nothing references (`alpha.dark.75`, `blue.300/500/900`, `green.300/500/600/800`, `orange.300/600/700/900`, `yellow.600`): nothing in `semantic.json` points at them, so a value-comparison check has nothing to compare against. Skip it by applying the **`token-regen`** label — that's how a human who ran `yarn tokens:transform` and reviewed the diff (see [Updating from Figma](#updating-from-figma)) tells the gate "yes, I regenerated these". It's a different label from `figma-sync`, kept separate so a reviewer can still tell an automated sync PR from a human one — but `figma-sync.yml` applies **both** to its own PRs: `token-regen` is true there by construction (the PR's entire content is generated output), and it's what keeps layer 1 from failing if a human later pushes a follow-up commit to that PR branch (that push isn't made with `GITHUB_TOKEN`, so it *does* trigger `tokens.yml`, unlike the PR's own `opened` event — see below).
-- **Invariants on the committed tree** (`yarn tokens:verify`, layer 2, every run). Layer 1 says "unchanged"; this says "correct". It rebuilds the canonical form of both JSON files and `tokenKeys.ts` and byte-compares, checks every `$ref` resolves and matches its primitive's value, and checks the two allowlists below. It's the only gate that runs on a `figma-sync` PR — see below — where the files legitimately move, so layer 1 doesn't apply.
+- **Invariants on the committed tree** (`yarn tokens:verify`, layer 2, every run). Layer 1 says "unchanged"; this says "correct". It rebuilds the canonical form of both JSON files and `tokenKeys.ts` and byte-compares, checks every `$ref` resolves in every primitive experience, and checks the two allowlists below. It's the only gate that runs on a `figma-sync` PR — see below — where the files legitimately move, so layer 1 doesn't apply.
 
 Both allowlists live as named consts at the top of `scripts/verify-tokens.mjs`, next to the *why*, mirroring [Known exceptions](#known-exceptions):
 
@@ -251,7 +255,7 @@ import { CleoDesignTokens } from '@meetcleo/design-tokens';
 const { fetch: fetchSemantic } = CleoDesignTokens.colors.semantic;
 
 CleoDesignTokens.configure({ experience: 'refresh' });
-fetchSemantic('core.content.primary'); // Reads $experiences.cleoRefresh
+fetchSemantic('core.content.primary'); // Resolves against Refresh primitives
 fetchSemantic('core.content.primary', 'roast'); // Refresh's Roast override or Refresh Base
 
 CleoDesignTokens.configure({ experience: 'current' }); // Reset on logout/account switching
@@ -259,7 +263,7 @@ CleoDesignTokens.configure({ experience: 'current' }); // Reset on logout/accoun
 
 `experience` accepts `'current'` (the default) or `'refresh'`. The public `refresh` name selects the Figma `Cleo Refresh` snapshots stored as `cleoRefresh`. The application owns experiment bucketing; the package receives the chosen experience. Configuration is synchronous and applies to subsequent primitive and semantic fetches, including functions destructured before configuration. Spacing is unaffected.
 
-Refresh requires synced snapshots on every primitive and semantic role in the installed package. Unsupported experiences, missing snapshots or incomplete values throw `UnknownExperienceError`. Both palettes are validated before switching, so a failed configuration leaves the previous selection intact. Successfully built palettes are cached, and resetting to Current restores the original values. The exported `PRIMITIVES_LOOKUP` and `SEMANTIC_LOOKUP` constants remain Current-only snapshots.
+Refresh requires synced snapshots on every primitive in the installed package. Semantic roles reuse shared bindings unless they carry an explicit Refresh replacement. Unsupported experiences, missing snapshots or incomplete values throw `UnknownExperienceError`. Both palettes are validated before switching, so a failed configuration leaves the previous selection intact. Successfully built palettes are cached, and resetting to Current restores the original values. The exported `PRIMITIVES_LOOKUP` and `SEMANTIC_LOOKUP` constants remain Current-only snapshots.
 
 Already-resolved hex strings do not change. The mobile app must configure after resolving its bucket and then rebuild its `colorRoles` / theme-provider value. Configuration does not trigger React renders. App-init integration is a separate change.
 
@@ -298,12 +302,12 @@ end
 
 The block returns its result and restores the previous selection on normal exit or exceptions, including nested scopes. Without a block, configuration persists in the current fiber until reset; use the block form for pooled request/job workers so the next user starts with the previous default. Application experiment bucketing and request/job middleware are separate integration work.
 
-Selecting Refresh requires complete synced snapshots in the installed gem. Invalid experiences or missing/incomplete values raise `CleoDesignTokens::UnknownExperienceError` before changing either bucket. Successfully built palettes are immutable and shared through a mutex-protected cache; each caller's active selection remains isolated. The API works with Current-only data until Refresh is selected, at which point unavailable snapshots fail clearly.
+Selecting Refresh requires complete synced primitive snapshots in the installed gem; semantic bindings are shared unless explicitly overridden. Invalid experiences or missing/incomplete values raise `CleoDesignTokens::UnknownExperienceError` before changing either bucket. Successfully built palettes are immutable and shared through a mutex-protected cache; each caller's active selection remains isolated. The API works with Current-only data until Refresh is selected, at which point unavailable snapshots fail clearly.
 
 `src/generated/tokenKeys.ts` type-checks the arguments on the TypeScript side and is generated, never hand-edited:
 
 - `ColorPrimitiveKey` — 106 members
-- `ColorSemanticKey` — 473 members
+- `ColorSemanticKey` — 475 members
 - `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
 
 ### Ruby — `cleo_design_tokens`
@@ -367,7 +371,7 @@ The source manifest carries the manual release version. On the first release it 
 
 **One palette gap.** `effects.background.glassMorphism` has no `$ref` in any theme: its value (`#00000033` — pure black at 20% alpha) matches no primitive. The closest is `alpha.dark.20` (`#0E060533`), which is Cleo's brand-black with alpha rather than pure black. Fixing it needs a design decision: add a pure-black primitive, or realign to `alpha.dark.20`.
 
-**Three roles missing from Base.** `core.border.level0`, `core.border.level3` and `core.border.level4` exist only in the `chat` theme. They emit `$themes` with no leaf `$value`, so reading them without a theme raises. That's a gap in Figma, not in the transform — adding them to Base there fixes it.
+**Three roles missing from Base.** `core.border.level0`, `core.border.level3` and `core.border.level4` exist only in the `chat` theme. They emit `$themes` with neither a leaf `$ref` nor `$value`, so reading them without a theme raises. That's a gap in Figma, not in the transform — adding them to Base there fixes it.
 
 ## Colour mapping to consumers
 

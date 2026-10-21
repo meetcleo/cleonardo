@@ -202,3 +202,24 @@ describe('planRelease', () => {
     expect(result.notes).toBe('No colour changes in this release.');
   });
 });
+
+
+describe('reference-format release notes', () => {
+  const primitives = { brown: { 800: leaf('#47201C') } };
+  const reference = { $schema: 'cleo-semantic-references/1', primary: { $type: 'color', $ref: 'brown.800' } };
+
+  it('does not report a format-only conversion as a colour change', () => {
+    const result = planRelease({ previousTag: 'tokens-v0.2.2', committedVersion: '0.2.2',
+      primOld: primitives, primNew: primitives,
+      semOld: { primary: leaf('#47201C', 'brown.800') }, semNew: reference });
+    expect(result.hasColourChange).toBe(false);
+    expect(result.notes).toBe('No colour changes in this release.');
+  });
+
+  it('reports semantic colour changes inherited from a primitive reference', () => {
+    const result = planRelease({ previousTag: 'tokens-v0.2.2', committedVersion: '0.2.2',
+      primOld: primitives, primNew: { brown: { 800: leaf('#112233') } }, semOld: reference, semNew: reference });
+    expect(result.hasColourChange).toBe(true);
+    expect(result.notes).toContain('~ primary: #47201C {brown.800} -> #112233 {brown.800}');
+  });
+});
