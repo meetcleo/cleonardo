@@ -116,6 +116,8 @@ export type ColorPrimitiveKey =
   | 'yellow.1000';
 
 export type ColorSemanticKey =
+  | 'background.dataVisSenary'
+  | 'background.navbar'
   | 'core.background.baseDark'
   | 'core.background.baseLight'
   | 'core.background.primary'
