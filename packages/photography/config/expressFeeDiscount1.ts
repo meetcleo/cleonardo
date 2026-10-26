@@ -5,12 +5,12 @@ const config: PhotographyConfig = {
   focalPoint: {
     originalImage: {
       dimensions: {
-        width: 465,
-        height: 582,
+        width: 672,
+        height: 1008,
       },
       focalPoint: {
-        x: 232.5,
-        y: 291,
+        x: 336,
+        y: 504,
         normalizedX: 0.5,
         normalizedY: 0.5,
       },
@@ -20,12 +20,12 @@ const config: PhotographyConfig = {
         extractParams: {
           top: 0,
           left: 0,
-          width: 465,
-          height: 582,
+          width: 672,
+          height: 1008,
         },
         targetDimensions: {
           width: 360,
-          height: 450,
+          height: 540,
         },
         zoom: 1,
       },
