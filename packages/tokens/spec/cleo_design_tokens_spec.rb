@@ -88,7 +88,7 @@ RSpec.describe CleoDesignTokens do
     end
 
     it "are non-empty, sized to the real files" do
-      expect(described_class::PRIMITIVES_LOOKUP.size).to eq(106)
+      expect(described_class::PRIMITIVES_LOOKUP.size).to eq(115)
       expect(described_class::SEMANTIC_LOOKUP.size).to be >= 473
     end
 

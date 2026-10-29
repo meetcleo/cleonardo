@@ -10,12 +10,30 @@
           }
         }
       },
+      "4": {
+        "$type": "color",
+        "$value": "#0E06050A",
+        "$experiences": {
+          "cleoRefresh": {
+            "$value": "#201A190A"
+          }
+        }
+      },
       "5": {
         "$type": "color",
         "$value": "#0E06050D",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E06050D"
+            "$value": "#201A190D"
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": "#0E06050F",
+        "$experiences": {
+          "cleoRefresh": {
+            "$value": "#201A190F"
           }
         }
       },
@@ -24,7 +42,16 @@
         "$value": "#0E06051A",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#19201214"
+            "$value": "#201A1914"
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": "#0E06051F",
+        "$experiences": {
+          "cleoRefresh": {
+            "$value": "#201A191F"
           }
         }
       },
@@ -33,7 +60,16 @@
         "$value": "#0E060526",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E060526"
+            "$value": "#201A1926"
+          }
+        }
+      },
+      "16": {
+        "$type": "color",
+        "$value": "#0E060529",
+        "$experiences": {
+          "cleoRefresh": {
+            "$value": "#201A1929"
           }
         }
       },
@@ -42,7 +78,7 @@
         "$value": "#0E060533",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E060533"
+            "$value": "#201A1933"
           }
         }
       },
@@ -51,7 +87,7 @@
         "$value": "#0E060540",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E060540"
+            "$value": "#201A1940"
           }
         }
       },
@@ -60,7 +96,7 @@
         "$value": "#0E060580",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E060580"
+            "$value": "#201A1980"
           }
         }
       },
@@ -69,7 +105,7 @@
         "$value": "#0E0605BF",
         "$experiences": {
           "cleoRefresh": {
-            "$value": "#0E0605BF"
+            "$value": "#201A19BF"
           }
         }
       }
@@ -265,7 +301,7 @@
       "$value": "#F0EDEA",
       "$experiences": {
         "cleoRefresh": {
-          "$value": "#1920121F"
+          "$value": "#201A191F"
         }
       }
     },
@@ -310,7 +346,7 @@
       "$value": "#6F514E",
       "$experiences": {
         "cleoRefresh": {
-          "$value": "#19201299"
+          "$value": "#201A1999"
         }
       }
     },
@@ -319,7 +355,7 @@
       "$value": "#5B3935",
       "$experiences": {
         "cleoRefresh": {
-          "$value": "#192012A6"
+          "$value": "#201A19A6"
         }
       }
     },
@@ -328,7 +364,7 @@
       "$value": "#47201C",
       "$experiences": {
         "cleoRefresh": {
-          "$value": "#192012"
+          "$value": "#201A19"
         }
       }
     },
@@ -347,6 +383,28 @@
       "$experiences": {
         "cleoRefresh": {
           "$value": "#1B0C0B"
+        }
+      }
+    }
+  },
+  "dataVis": {
+    "green": {
+      "$type": "color",
+      "$value": "#1B0C0B",
+      "$description": "Cleo Refresh. Valentin&#39;s kit: fill.greenSolid. Current mode copies today&#39;s value. Not in code yet.",
+      "$experiences": {
+        "cleoRefresh": {
+          "$value": "#589047"
+        }
+      }
+    },
+    "purple": {
+      "$type": "color",
+      "$value": "#6F514E",
+      "$description": "Cleo Refresh. Valentin&#39;s kit: fill.purpleSolid. Current mode copies today&#39;s value. Not in code yet.",
+      "$experiences": {
+        "cleoRefresh": {
+          "$value": "#9A60B1"
         }
       }
     }
@@ -420,7 +478,7 @@
       "$value": "#51623A",
       "$experiences": {
         "cleoRefresh": {
-          "$value": "#5D7D45"
+          "$value": "#437534"
         }
       }
     },
@@ -771,6 +829,38 @@
       "$experiences": {
         "cleoRefresh": {
           "$value": "#3C0800"
+        }
+      }
+    }
+  },
+  "tagText": {
+    "negative": {
+      "$type": "color",
+      "$value": "#3C0800",
+      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.negative. Current mode copies today&#39;s value. Not in code yet.",
+      "$experiences": {
+        "cleoRefresh": {
+          "$value": "#832A1B"
+        }
+      }
+    },
+    "positive": {
+      "$type": "color",
+      "$value": "#101F02",
+      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.positive. Current mode copies today&#39;s value. Not in code yet.",
+      "$experiences": {
+        "cleoRefresh": {
+          "$value": "#346119"
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "#1F1700",
+      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.warning. Current mode copies today&#39;s value. Not in code yet.",
+      "$experiences": {
+        "cleoRefresh": {
+          "$value": "#7F5410"
         }
       }
     }

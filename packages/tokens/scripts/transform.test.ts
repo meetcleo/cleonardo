@@ -50,6 +50,15 @@ function tempProject(fixture: string) {
   cpSync(join(DUMPS, `${fixture}.json`), join(dir, 'figma-exports', 'figma-dump.json'));
   return dir;
 }
+
+/** Fixture dumps still use the pre-Refresh 106-primitive palette; pin the verifier to match. */
+function installVerifier(dir: string, primitiveCount = 106) {
+  const source = readFileSync(join(HERE, 'verify-tokens.mjs'), 'utf8').replace(
+    /const EXPECTED_PRIMITIVE_COUNT = \d+;/,
+    `const EXPECTED_PRIMITIVE_COUNT = ${primitiveCount};`,
+  );
+  writeFileSync(join(dir, 'scripts/verify-tokens.mjs'), source);
+}
 // spawnSync, not execFileSync: the script writes its entire report — success
 // line included — to stderr, and execFileSync's return value is stdout only, so
 // a passing run would appear to have produced no output at all.
@@ -295,7 +304,7 @@ describe('primitive experiences × semantic themes', () => {
 describe('experience snapshot verification', () => {
   function generatedProject() {
     const dir = tempProject('full');
-    cpSync(join(HERE, 'verify-tokens.mjs'), join(dir, 'scripts/verify-tokens.mjs'));
+    installVerifier(dir);
     const source = dump('full');
     const palette = source.collections.find((c: { name: string }) => c.name === 'Base Colors');
     palette.modes = [{ modeId: palette.defaultModeId, name: 'Current' }, { modeId: 'refresh', name: 'Cleo Refresh' }];
@@ -357,7 +366,7 @@ describe('Color Roles vocabulary migration', () => {
   function migrationProject() {
     const dir = tempProject('full');
     expect(runCli(dir).exitCode).toBe(0);
-    cpSync(join(HERE, 'verify-tokens.mjs'), join(dir, 'scripts/verify-tokens.mjs'));
+    installVerifier(dir);
     const legacy = dump('full');
     const palette = legacy.collections.find((c: { name: string }) => c.name === 'Base Colors');
     const primitives = legacy.variables.filter((v: { collectionId: string }) => v.collectionId === palette.id);
