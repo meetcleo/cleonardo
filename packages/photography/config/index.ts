@@ -37,6 +37,8 @@ import fallgtmpromptcompositeConfig from './fallgtmpromptcomposite';
 import fallgtmsavingsConfig from './fallgtmsavings';
 import fallgtmsavingscompositeConfig from './fallgtmsavingscomposite';
 import fallingCoinsConfig from './fallingCoins';
+import flexCardBackConfig from './flexCardBack';
+import flexCardFrontConfig from './flexCardFront';
 import gaming1Config from './gaming1';
 import gaming2Config from './gaming2';
 import gaming3Config from './gaming3';
@@ -139,6 +141,8 @@ export const configs = {
   fallgtmsavings: fallgtmsavingsConfig,
   fallgtmsavingscomposite: fallgtmsavingscompositeConfig,
   fallingCoins: fallingCoinsConfig,
+  flexCardBack: flexCardBackConfig,
+  flexCardFront: flexCardFrontConfig,
   gaming1: gaming1Config,
   gaming2: gaming2Config,
   gaming3: gaming3Config,
