@@ -38,7 +38,7 @@ const TOKEN_KEYS_THEMES = ["Base", "Chat", "Roast", "Hype"];
 
 // Primitive count remains fixed. The semantic contract protects every published
 // key individually while permitting new roles from the replacement vocabulary.
-const EXPECTED_PRIMITIVE_COUNT = 106;
+const EXPECTED_PRIMITIVE_COUNT = 115;
 const REQUIRED_SEMANTIC_KEYS = JSON.parse(readFileSync(join(ROOT, "scripts", "semantic-contract.json"), "utf8"));
 
 // Semantic entries with a $value and no $ref: a genuine palette gap, not a
@@ -86,7 +86,7 @@ function main() {
     );
   }
 
-  console.error(`✓ ${EXPECTED_PRIMITIVE_COUNT} primitives, ${[...walk(semTree)].length} semantic roles — invariants hold.`);
+  console.error(`✓ ${[...walk(primTree)].length} primitives, ${[...walk(semTree)].length} semantic roles — invariants hold.`);
   console.error(`  palette-gap allowlist: ${Object.keys(PALETTE_GAP_ALLOWLIST).join(", ")}`);
   console.error(`  missing-Base allowlist: ${[...MISSING_BASE_ALLOWLIST].join(", ")}`);
 }
