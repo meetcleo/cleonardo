@@ -391,7 +391,7 @@
     "green": {
       "$type": "color",
       "$value": "#1B0C0B",
-      "$description": "Cleo Refresh. Valentin&#39;s kit: fill.greenSolid. Current mode copies today&#39;s value. Not in code yet.",
+      "$description": "Cleo Refresh. Valentin's kit: fill.greenSolid. Current mode copies today's value. Not in code yet.",
       "$experiences": {
         "cleoRefresh": {
           "$value": "#589047"
@@ -401,7 +401,7 @@
     "purple": {
       "$type": "color",
       "$value": "#6F514E",
-      "$description": "Cleo Refresh. Valentin&#39;s kit: fill.purpleSolid. Current mode copies today&#39;s value. Not in code yet.",
+      "$description": "Cleo Refresh. Valentin's kit: fill.purpleSolid. Current mode copies today's value. Not in code yet.",
       "$experiences": {
         "cleoRefresh": {
           "$value": "#9A60B1"
@@ -837,7 +837,7 @@
     "negative": {
       "$type": "color",
       "$value": "#3C0800",
-      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.negative. Current mode copies today&#39;s value. Not in code yet.",
+      "$description": "Cleo Refresh. Valentin's kit: tagText.negative. Current mode copies today's value. Not in code yet.",
       "$experiences": {
         "cleoRefresh": {
           "$value": "#832A1B"
@@ -847,7 +847,7 @@
     "positive": {
       "$type": "color",
       "$value": "#101F02",
-      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.positive. Current mode copies today&#39;s value. Not in code yet.",
+      "$description": "Cleo Refresh. Valentin's kit: tagText.positive. Current mode copies today's value. Not in code yet.",
       "$experiences": {
         "cleoRefresh": {
           "$value": "#346119"
@@ -857,7 +857,7 @@
     "warning": {
       "$type": "color",
       "$value": "#1F1700",
-      "$description": "Cleo Refresh. Valentin&#39;s kit: tagText.warning. Current mode copies today&#39;s value. Not in code yet.",
+      "$description": "Cleo Refresh. Valentin's kit: tagText.warning. Current mode copies today's value. Not in code yet.",
       "$experiences": {
         "cleoRefresh": {
           "$value": "#7F5410"
