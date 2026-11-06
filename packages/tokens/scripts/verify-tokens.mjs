@@ -38,7 +38,7 @@ const TOKEN_KEYS_THEMES = ["Base", "Chat", "Roast", "Hype"];
 
 // Primitive count remains fixed. The semantic contract protects every published
 // key individually while permitting new roles from the replacement vocabulary.
-const EXPECTED_PRIMITIVE_COUNT = 115;
+const EXPECTED_PRIMITIVE_COUNT = 130;
 const REQUIRED_SEMANTIC_KEYS = JSON.parse(readFileSync(join(ROOT, "scripts", "semantic-contract.json"), "utf8"));
 
 // Semantic entries with a $value and no $ref: a genuine palette gap, not a

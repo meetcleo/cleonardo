@@ -74,6 +74,22 @@
           "hype": {
             "$ref": "monotone.white"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.secondary",
+            "$themes": {
+              "chat": {
+                "$ref": "monotone.white"
+              },
+              "roast": {
+                "$ref": "monotone.white"
+              },
+              "hype": {
+                "$ref": "monotone.white"
+              }
+            }
+          }
         }
       },
       "secondaryInverse": {
@@ -97,6 +113,22 @@
           },
           "hype": {
             "$ref": "brown.100"
+          }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.tertiary",
+            "$themes": {
+              "chat": {
+                "$ref": "brown.100"
+              },
+              "roast": {
+                "$ref": "brown.700"
+              },
+              "hype": {
+                "$ref": "brown.100"
+              }
+            }
           }
         }
       },
@@ -128,6 +160,22 @@
           "hype": {
             "$ref": "teal.500"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.border",
+            "$themes": {
+              "chat": {
+                "$ref": "brown.500"
+              },
+              "roast": {
+                "$ref": "brown.400"
+              },
+              "hype": {
+                "$ref": "teal.500"
+              }
+            }
+          }
         }
       },
       "focused": {
@@ -136,6 +184,19 @@
         "$themes": {
           "hype": {
             "$ref": "teal.600"
+          }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.borderFocused",
+            "$themes": {
+              "roast": {
+                "$ref": "brown.500"
+              },
+              "hype": {
+                "$ref": "teal.600"
+              }
+            }
           }
         }
       },
@@ -252,6 +313,19 @@
           "hype": {
             "$ref": "teal.700"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.contentSecondary",
+            "$themes": {
+              "roast": {
+                "$ref": "brown.200"
+              },
+              "hype": {
+                "$ref": "teal.700"
+              }
+            }
+          }
         }
       },
       "secondaryInverse": {
@@ -275,6 +349,22 @@
           },
           "hype": {
             "$ref": "teal.600"
+          }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.contentTertiary",
+            "$themes": {
+              "chat": {
+                "$ref": "brown.500"
+              },
+              "roast": {
+                "$ref": "brown.300"
+              },
+              "hype": {
+                "$ref": "teal.600"
+              }
+            }
           }
         }
       },
@@ -382,6 +472,22 @@
           "hype": {
             "$ref": "teal.100"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.secondary",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.100"
+              },
+              "roast": {
+                "$ref": "brown.800"
+              },
+              "hype": {
+                "$ref": "teal.100"
+              }
+            }
+          }
         }
       },
       "accentMid": {
@@ -396,6 +502,22 @@
           },
           "hype": {
             "$ref": "teal.800"
+          }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.accentMid",
+            "$themes": {
+              "chat": {
+                "$ref": "brown.800"
+              },
+              "roast": {
+                "$ref": "red.800"
+              },
+              "hype": {
+                "$ref": "teal.800"
+              }
+            }
           }
         }
       },
@@ -522,7 +644,7 @@
         "$ref": "brown.600",
         "$experiences": {
           "cleoRefresh": {
-            "$ref": "brown.600",
+            "$ref": "derived.dataVisTertiary",
             "$themes": {
               "chat": {
                 "$ref": "orange.600"
@@ -573,6 +695,22 @@
           },
           "hype": {
             "$ref": "alpha.light.25"
+          }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.overlay",
+            "$themes": {
+              "chat": {
+                "$ref": "alpha.light.25"
+              },
+              "roast": {
+                "$ref": "alpha.dark.5"
+              },
+              "hype": {
+                "$ref": "alpha.light.25"
+              }
+            }
           }
         }
       },
@@ -691,6 +829,16 @@
           "roast": {
             "$ref": "alpha.light.15"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.skeleton",
+            "$themes": {
+              "roast": {
+                "$ref": "alpha.light.15"
+              }
+            }
+          }
         }
       },
       "skeletonMidInverse": {
@@ -767,7 +915,20 @@
       },
       "accentLight": {
         "$type": "color",
-        "$ref": "brown.100"
+        "$ref": "brown.100",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.border",
+            "$themes": {
+              "roast": {
+                "$ref": "brown.100"
+              },
+              "hype": {
+                "$ref": "brown.100"
+              }
+            }
+          }
+        }
       },
       "accentMid": {
         "$type": "color",
@@ -779,7 +940,20 @@
       },
       "disabledOnLight": {
         "$type": "color",
-        "$ref": "brown.200"
+        "$ref": "brown.200",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.borderDisabled",
+            "$themes": {
+              "roast": {
+                "$ref": "brown.200"
+              },
+              "hype": {
+                "$ref": "brown.200"
+              }
+            }
+          }
+        }
       },
       "focused": {
         "$type": "color",
@@ -872,6 +1046,22 @@
           "hype": {
             "$ref": "green.400"
           }
+        },
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.contentAccentMid",
+            "$themes": {
+              "chat": {
+                "$ref": "orange.200"
+              },
+              "roast": {
+                "$ref": "orange.200"
+              },
+              "hype": {
+                "$ref": "green.400"
+              }
+            }
+          }
         }
       },
       "categoryPrimary": {
@@ -925,7 +1115,20 @@
       },
       "disabled": {
         "$type": "color",
-        "$ref": "brown.500"
+        "$ref": "brown.500",
+        "$experiences": {
+          "cleoRefresh": {
+            "$ref": "derived.contentDisabled",
+            "$themes": {
+              "roast": {
+                "$ref": "brown.500"
+              },
+              "hype": {
+                "$ref": "brown.500"
+              }
+            }
+          }
+        }
       },
       "negativeDark": {
         "$type": "color",
