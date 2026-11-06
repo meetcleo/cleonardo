@@ -306,7 +306,7 @@ Selecting Refresh requires complete synced primitive snapshots in the installed 
 
 `src/generated/tokenKeys.ts` type-checks the arguments on the TypeScript side and is generated, never hand-edited:
 
-- `ColorPrimitiveKey` — 115 members
+- `ColorPrimitiveKey` — 130 members
 - `ColorSemanticKey` — 475 members
 - `ColorTheme` — `'base' | 'chat' | 'roast' | 'hype'`
 
