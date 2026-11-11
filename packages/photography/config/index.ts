@@ -103,6 +103,7 @@ import subscription4Config from './subscription4';
 import womanSmilingPhone1Config from './womanSmilingPhone1';
 import womanSmilingPhone2Config from './womanSmilingPhone2';
 import womanonphonePumpkin4Config from './womanonphonePumpkin4';
+import youreInBgConfig from './youreInBg';
 
 export const configs = {
   brandMoment1: brandMoment1Config,
@@ -207,6 +208,7 @@ export const configs = {
   womanSmilingPhone1: womanSmilingPhone1Config,
   womanSmilingPhone2: womanSmilingPhone2Config,
   womanonphonePumpkin4: womanonphonePumpkin4Config,
+  youreInBg: youreInBgConfig,
 };
 
 export type ConfigKeys = keyof typeof configs;
