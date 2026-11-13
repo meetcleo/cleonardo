@@ -78,6 +78,7 @@ import negative5Config from './negative5';
 import negative6Config from './negative6';
 import negative7Config from './negative7';
 import negative8Config from './negative8';
+import niftGiftBgConfig from './niftGiftBg';
 import outdoorGrocery1Config from './outdoorGrocery1';
 import partnerForest1Config from './partnerForest1';
 import placeholderConfig from './placeholder';
@@ -183,6 +184,7 @@ export const configs = {
   negative6: negative6Config,
   negative7: negative7Config,
   negative8: negative8Config,
+  niftGiftBg: niftGiftBgConfig,
   outdoorGrocery1: outdoorGrocery1Config,
   partnerForest1: partnerForest1Config,
   placeholder: placeholderConfig,
