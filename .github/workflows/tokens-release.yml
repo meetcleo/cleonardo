@@ -114,7 +114,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         if: steps.guard.outputs.already-released == 'false'
         with:
-          ruby-version: '3.2.0'
+          ruby-version: '3.2'
 
       - name: Publish the npm package to npmjs
         if: steps.guard.outputs.already-released == 'false'

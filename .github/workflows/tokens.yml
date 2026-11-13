@@ -95,11 +95,13 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          # cleo_design_tokens.gemspec declares >= 3.2 (Data.define) — pinned to that floor for
+          # cleo_design_tokens.gemspec declares >= 3.2 (Data.define) — pinned to that floor series for
           # the same reason the Node jobs are pinned rather than floating: a mismatch surfaces
-          # here, not on someone's machine. Gemfile.lock is gitignored (a gem, not an app), so
-          # bundler-cache below resolves fresh each run rather than reusing a committed lock.
-          ruby-version: '3.2.0'
+          # here, not on someone's machine. '3.2' resolves to the latest 3.2.x because newer runner
+          # images only build the latest patch of each series. Gemfile.lock is gitignored (a gem,
+          # not an app), so bundler-cache below resolves fresh each run rather than reusing a
+          # committed lock.
+          ruby-version: '3.2'
           bundler-cache: true
           working-directory: packages/tokens
 
