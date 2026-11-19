@@ -70,6 +70,7 @@ import general6Config from './general6';
 import general7Config from './general7';
 import general8Config from './general8';
 import general9Config from './general9';
+import merchantRewardsBgConfig from './merchantRewardsBg';
 import negative1Config from './negative1';
 import negative2Config from './negative2';
 import negative3Config from './negative3';
@@ -176,6 +177,7 @@ export const configs = {
   general7: general7Config,
   general8: general8Config,
   general9: general9Config,
+  merchantRewardsBg: merchantRewardsBgConfig,
   negative1: negative1Config,
   negative2: negative2Config,
   negative3: negative3Config,
