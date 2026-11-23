@@ -102,6 +102,7 @@ import subscription1Config from './subscription1';
 import subscription2Config from './subscription2';
 import subscription3Config from './subscription3';
 import subscription4Config from './subscription4';
+import weisenhofshot1Config from './weisenhofshot1';
 import womanSmilingPhone1Config from './womanSmilingPhone1';
 import womanSmilingPhone2Config from './womanSmilingPhone2';
 import womanonphonePumpkin4Config from './womanonphonePumpkin4';
@@ -209,6 +210,7 @@ export const configs = {
   subscription2: subscription2Config,
   subscription3: subscription3Config,
   subscription4: subscription4Config,
+  weisenhofshot1: weisenhofshot1Config,
   womanSmilingPhone1: womanSmilingPhone1Config,
   womanSmilingPhone2: womanSmilingPhone2Config,
   womanonphonePumpkin4: womanonphonePumpkin4Config,
